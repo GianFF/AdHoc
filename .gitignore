@@ -1,3 +1,10 @@
+/.idea/*
+# Ignore all logfiles and tempfiles.
+/log/*
+/tmp/*
+!/log/.keep
+!/tmp/.keep
+
 *.rbc
 capybara-*.html
 .rspec

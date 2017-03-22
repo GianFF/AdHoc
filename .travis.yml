@@ -1,0 +1,13 @@
+language: ruby
+
+rvm:
+  2.3.0
+
+script: bundle exec rspec spec --format documentation --color
+
+notifications:
+  email:
+    recipients:
+      - gf.fioriello@gmail.com
+    on_success: never
+    on_failure: always
