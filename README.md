@@ -1,7 +1,8 @@
-# AdHoc
+# AdHoc 
+
+[![Build Status](https://travis-ci.org/GianFF/AdHoc.svg?branch=master)](https://travis-ci.org/GianFF/AdHoc)
 
 <img src="https://github.com/GianFF/AdHoc/blob/master/logo.png" height="150px" width="150px"/>
-
 
 _AdHoc_ es una aplicación web para facilitar la autogestión del trabajo diario de un abogado.
 Las funcionalidades _core_ de esta herramienta son:
