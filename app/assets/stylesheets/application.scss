@@ -1,0 +1,78 @@
+/*
+ * This is a manifest file that'll be compiled into application.css, which will include all the files
+ * listed below.
+ *
+ * Any CSS and SCSS file within this directory, lib/assets/stylesheets, vendor/assets/stylesheets,
+ * or any plugin's vendor/assets/stylesheets directory can be referenced here using a relative path.
+ *
+ * You're free to add application-wide styles to this file and they'll appear at the bottom of the
+ * compiled file so the styles you add here take precedence over styles defined in any other CSS/SCSS
+ * files in this directory. Styles in this file should be added after the last require_* statement.
+ * It is generally better to create a new file per style scope.
+ *
+ *= require_tree .
+ *= require_self
+ */
+@import "bootstrap-sprockets";
+@import "bootstrap";
+
+.body__body-adhoc{
+  background: gray; /* For browsers that do not support gradients */
+  background: -webkit-linear-gradient(gray, whitesmoke); /* For Safari 5.1 to 6.0 */
+  background: -o-linear-gradient(gray, whitesmoke); /* For Opera 11.1 to 12.0 */
+  background: -moz-linear-gradient(gray, whitesmoke); /* For Firefox 3.6 to 15 */
+  background: linear-gradient(gray, whitesmoke); /* Standard syntax */
+  height:100vh;
+}
+
+.body__adhoc{
+  background-color: white;
+  padding : 5px 20px 50px;
+  border-radius: 8px 8px 8px 8px;
+  border: 1px solid #ddd;
+  margin-top: 40px;
+  box-shadow: 0 0 15px #3f3f3f;
+}
+
+.logo{
+  width: 60px;
+  height: 60px;
+  margin-top: -13px;
+}
+
+.tab-content {
+  padding : 5px 15px;
+  border: 1px solid #ddd;
+}
+
+.tab-inactive{
+  background-color: #f8f8f8;
+}
+
+.cabecera__nombre-abogado{
+  font-size: 125%;
+}
+
+.cliente__show-botones{
+  display: inline-flex;
+  float: right;
+
+  .cliente__show-boton-editar{
+    margin-right: 5px;
+  }
+}
+
+.cliente__edit-botones{
+  display: inline-flex;
+  float: right;
+  margin-right: 5px;
+}
+
+.cliente__form-guardar{
+  margin-left: -13px;
+}
+
+.cliente__edit-cancelar{
+  float: right;
+  margin-right: 17px;
+}

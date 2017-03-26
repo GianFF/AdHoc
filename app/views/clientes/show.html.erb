@@ -1,0 +1,62 @@
+<%= render 'tabs' do %>
+  <%= form_for :cliente, html: {class: 'form-horizontal'} do |f| %>
+
+        <div class="field form-group">
+          <%= f.label :nombre, class: 'col-sm-2 control-label' %>
+          <div class="col-sm-4">
+            <%= f.text_field :nombre, class: 'form-control', readonly: true %>
+          </div>
+        </div>
+
+        <div class="field form-group">
+          <%= f.label :apellido, class: 'col-sm-2 control-label' %>
+          <div class="col-sm-4">
+            <%= f.text_field :apellido, class: 'form-control', readonly: true %>
+          </div>
+        </div>
+
+        <!-- TODO: Direccion -->
+
+        <div class="field form-group">
+          <%= f.label :telefono, class: 'col-sm-2 control-label' %>
+          <div class="col-sm-4">
+            <%= f.number_field :telefono, class: 'form-control', readonly: true %>
+          </div>
+        </div>
+
+        <div class="field form-group">
+          <%= f.label :correo_electronico, class: 'col-sm-2 control-label' %>
+          <div class="col-sm-4">
+            <%= f.email_field :correo_electronico, class: 'form-control', readonly: true %>
+          </div>
+        </div>
+
+        <div class="field form-group">
+          <%= f.label :estado_civil, class: 'col-sm-2 control-label' %>
+          <div class="col-sm-4">
+            <%= f.text_field :estado_civil, class: 'form-control', readonly: true %>
+          </div>
+        </div>
+
+        <div class="field form-group">
+          <%= f.label :empresa, class: 'col-sm-2 control-label' %>
+          <div class="col-sm-4">
+            <%= f.text_field :empresa, class: 'form-control', readonly: true %>
+          </div>
+        </div>
+
+        <div class="field form-group">
+          <%= f.label 'trabaja en blanco', class: 'col-sm-2 control-label' %>
+          <div class="col-sm-4">
+            <%= f.check_box :esta_en_blanco, disabled: true %>
+          </div>
+        </div>
+
+
+  <% end %>
+  <div class="form-group cliente__show-botones" role="group">
+    <%= button_to 'Editar', edit_cliente_path(@cliente), :method => :get, class: 'btn btn-success cliente__show-boton-editar' %>
+    <%= button_to 'Borrar', @cliente, method: :delete, class: 'btn btn-danger',
+                  data: { confirm: "¿Seguro que quiere eliminar un cliente?" } %>
+  </div>
+<% end %>
