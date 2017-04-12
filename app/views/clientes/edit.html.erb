@@ -1,0 +1,64 @@
+<%= render 'tabs' do %>
+    <%= form_for :cliente, url: cliente_path(@cliente), method: :patch, html: {class: 'form-horizontal'} do |f| %>
+
+        <div class="field form-group">
+          <%= f.label :nombre, class: 'col-sm-2 control-label' %>
+          <div class="col-sm-4">
+            <%= f.text_field :nombre, class: 'form-control' %>
+          </div>
+        </div>
+
+        <div class="field form-group">
+          <%= f.label :apellido, class: 'col-sm-2 control-label' %>
+          <div class="col-sm-4">
+            <%= f.text_field :apellido, class: 'form-control' %>
+          </div>
+        </div>
+
+        <!-- TODO: Direccion -->
+
+        <div class="field form-group">
+          <%= f.label :telefono, class: 'col-sm-2 control-label' %>
+          <div class="col-sm-4">
+            <%= f.number_field :telefono, class: 'form-control' %>
+          </div>
+        </div>
+
+        <div class="field form-group">
+          <%= f.label :correo_electronico, class: 'col-sm-2 control-label' %>
+          <div class="col-sm-4">
+            <%= f.email_field :correo_electronico, class: 'form-control' %>
+          </div>
+        </div>
+
+        <div class="field form-group">
+          <%= f.label :estado_civil, class: 'col-sm-2 control-label' %>
+          <div class="col-sm-4">
+            <%= f.text_field :estado_civil, class: 'form-control' %>
+          </div>
+        </div>
+
+        <div class="field form-group">
+          <%= f.label :empresa, class: 'col-sm-2 control-label' %>
+          <div class="col-sm-4">
+            <%= f.text_field :empresa, class: 'form-control' %>
+          </div>
+        </div>
+
+        <div class="field form-group">
+          <%= f.label 'trabaja en blanco', class: 'col-sm-2 control-label' %>
+          <div class="col-sm-4">
+            <%= f.check_box :esta_en_blanco%>
+          </div>
+        </div>
+
+        <div class="actions form-group cliente__edit-botones">
+          <div class="col-sm-4">
+            <%= f.submit 'Guardar', {class: 'btn btn-success cliente__form-guardar'}%>
+          </div>
+        </div>
+
+    <% end %>
+
+  <%= link_to 'Cancelar', cliente_path, class: 'btn btn-warning cliente__edit-cancelar' %>
+<% end %>

@@ -8,7 +8,27 @@
     <%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>
   </head>
 
-  <body>
-    <%= yield %>
+  <body class="container-fluid body__body-adhoc">
+    <div class="body__adhoc">
+      <!-- CABECERA -->
+      <div class="row">
+        <%= render 'shared/cabecera' %>
+      </div>
+      <div class="row">
+        <!-- PANEL IZQUIERDO -->
+        <div class="col-xs-9 col-sm-3 header__contenedor">
+          <%= render 'shared/panel_izquierdo' %>
+        </div>
+        <!-- AREA DE TRABAJO -->
+        <div class="col-xs-9">
+          <%= render 'shared/alertas' %>
+          <%= yield %>
+        </div>
+      </div>
+      <!-- PIE DE PAGINA -->
+      <div class="row header__contenedor">
+        <%= render 'shared/pie_de_pagina' %>
+      </div>
+    </div>
   </body>
 </html>
