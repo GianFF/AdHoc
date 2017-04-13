@@ -49,3 +49,6 @@ gem 'autoprefixer-rails'
 
 # Cors
 gem 'rack-cors', :require => 'rack/cors'
+
+# Devise
+gem 'devise'
