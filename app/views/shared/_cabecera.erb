@@ -1,27 +1,57 @@
-<nav class="navbar navbar-default">
+<nav class="navbar navbar-default cabecera__container">
   <div class="container-fluid">
 
     <div class="navbar-header">
-      <a class="navbar-brand" href="#">
+      <a class="navbar-brand" href="/">
         <img alt="Adhoc" class="logo" src="/assets/adhoc-logo.png">
       </a>
     </div>
 
     <p class="navbar-text cabecera__nombre-abogado">
-        Dra. <a href="#" class="navbar-link">Dulce Noelia Fioriello</a>
+      <% if abogado_signed_in? %>
+          <% if current_abogado.sexo == 'Masculino' %>
+              Dr.
+          <% else %>
+              Dra.
+          <% end %>
+          <a href="/" class="navbar-link">
+            <%= current_abogado.nombre %> <%= current_abogado.apellido %>
+          </a>
+      <% else %>
+          <a href="" class="navbar-link">AdHoc</a>
+      <% end %>
     </p>
-
     <form class="navbar-form navbar-right">
-      <div class="form-group">
-        <button type="button" class="btn btn-primary navbar-btn navbar-right">
-          <i class="glyphicon glyphicon-user"></i> Perfil
-        </button>
-      </div>
-      <div class="form-group">
-        <button type="button" class="btn btn-danger navbar-btn navbar-right">
-          <i class="glyphicon glyphicon-log-out"></i> Salir
-        </button>
-      </div>
+      <% if abogado_signed_in? %>
+        <div class="form-group">
+          <i class="glyphicon glyphicon-user"></i>
+          <%= link_to('Perfil', edit_abogado_registration_path) %>
+        <!-- TODO: cambiar link_to por el siguiente boton
+          <button type="button" id="cabecera__modal" class="btn btn-primary navbar-btn navbar-right">
+            <i class="glyphicon glyphicon-user"></i> Perfil
+          </button>
+        -->
+        </div>
+        <div class="form-group">
+          <i class="glyphicon glyphicon-log-out"></i>
+          <%= link_to('Salir', destroy_abogado_session_path, :method => :delete, :popup => true) %>
+          <!-- TODO: cambiar link_to por el siguiente boton
+            <button type="button" class="btn btn-danger navbar-btn navbar-right">
+              <i class="glyphicon glyphicon-log-out"></i> Salir
+            </button>
+
+            <button type="button" class="btn btn-primary navbar-btn navbar-right" id="cabecera__entrar">
+              <i class="glyphicon glyphicon-log-in"></i> Entrar
+            </button>
+          -->
+        </div>
+      <% else %>
+        <div class="form-group">
+          <button type="button" class="btn btn-info navbar-btn navbar-right">
+            <i class="glyphicon glyphicon-phone"></i> Contactenos
+          </button>
+        </div>
+      <% end %>
     </form>
   </div>
 </nav>

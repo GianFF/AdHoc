@@ -15,15 +15,23 @@
         <%= render 'shared/cabecera' %>
       </div>
       <div class="row">
-        <!-- PANEL IZQUIERDO -->
-        <div class="col-xs-9 col-sm-3 header__contenedor">
-          <%= render 'shared/panel_izquierdo' %>
-        </div>
-        <!-- AREA DE TRABAJO -->
-        <div class="col-xs-9">
-          <%= render 'shared/alertas' %>
-          <%= yield %>
-        </div>
+        <% if abogado_signed_in? %>
+          <!-- PANEL IZQUIERDO -->
+          <div class="col-xs-9 col-sm-3 header__contenedor">
+            <%= render 'shared/panel_izquierdo' %>
+          </div>
+          <!-- AREA DE TRABAJO -->
+          <div class="col-xs-9">
+            <%= render 'shared/alertas' %>
+            <%= yield %>
+          </div>
+        <% else %>
+          <!-- LOGIN -->
+          <div class="col-xs-6">
+            <%= render 'shared/alertas' %>
+            <%= yield %>
+          </div>
+        <% end %>
       </div>
       <!-- PIE DE PAGINA -->
       <div class="row header__contenedor">
