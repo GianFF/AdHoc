@@ -24,26 +24,14 @@
     <form class="navbar-form navbar-right">
       <% if abogado_signed_in? %>
         <div class="form-group">
-          <i class="glyphicon glyphicon-user"></i>
-          <%= link_to('Perfil', edit_abogado_registration_path) %>
-        <!-- TODO: cambiar link_to por el siguiente boton
-          <button type="button" id="cabecera__modal" class="btn btn-primary navbar-btn navbar-right">
-            <i class="glyphicon glyphicon-user"></i> Perfil
-          </button>
-        -->
+          <%= link_to edit_abogado_registration_path, class: "btn btn-primary navbar-btn navbar-right" do %>
+              <i class="glyphicon glyphicon-user"></i> Perfil
+          <% end %>
         </div>
         <div class="form-group">
-          <i class="glyphicon glyphicon-log-out"></i>
-          <%= link_to('Salir', destroy_abogado_session_path, :method => :delete, :popup => true) %>
-          <!-- TODO: cambiar link_to por el siguiente boton
-            <button type="button" class="btn btn-danger navbar-btn navbar-right">
-              <i class="glyphicon glyphicon-log-out"></i> Salir
-            </button>
-
-            <button type="button" class="btn btn-primary navbar-btn navbar-right" id="cabecera__entrar">
-              <i class="glyphicon glyphicon-log-in"></i> Entrar
-            </button>
-          -->
+          <%= link_to destroy_abogado_session_path, method: :delete, class: "btn btn-danger navbar-btn navbar-right" do %>
+            <i class="glyphicon glyphicon-log-out"></i> Salir
+          <% end %>
         </div>
       <% else %>
         <div class="form-group">
