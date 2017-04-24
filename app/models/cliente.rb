@@ -46,8 +46,6 @@ class Cliente < ApplicationRecord
   end
 
   def pertenece_a?(un_abogado)
-    #TODO: se esta rompiendo el encapsulamiento acá... el abogado deberia saber si el cliente es suyo o no.
-   self.abogado.email  == un_abogado.email
+    self.abogado.tu_email_es?(un_abogado.email)
   end
-
 end

@@ -9,4 +9,8 @@ class Abogado < ApplicationRecord
   validates :apellido, presence: true
   validates :sexo,     presence: true
   validates :email, uniqueness: true
+
+  def tu_email_es?(un_email)
+    self.email  == un_email
+  end
 end
