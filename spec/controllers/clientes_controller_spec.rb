@@ -54,6 +54,7 @@ describe ClientesController do
 
       context 'Con campos opcionales' do
         let(:parametros) { {cliente: {
+            abogado_id: @abogado.id,
             nombre: 'Foo',
             apellido: 'Bar',
             telefono: 42545254,
@@ -83,6 +84,7 @@ describe ClientesController do
       context 'Con una direccion' do
         let(:parametros) { {
             cliente: {
+              abogado_id: @abogado.id,
               nombre: 'Foo',
               apellido: 'Bar'
             },
@@ -114,6 +116,7 @@ describe ClientesController do
       context 'Con hijos' do
         let(:parametros) { {
             cliente: {
+                abogado_id: @abogado.id,
                 nombre: 'Foo',
                 apellido: 'Bar'
             },
@@ -159,7 +162,7 @@ describe ClientesController do
     end
 
     context 'En la incorrecta creacion de un cliente' do
-      let (:parametros){ {cliente: {nombre: nil, apellido: nil}} }
+      let (:parametros){ {cliente: {abogado_id: @abogado.id, nombre: nil, apellido: nil}} }
 
       it 'sin nombre y apellido no puede ser creado' do
         subject
@@ -195,7 +198,7 @@ describe ClientesController do
   end
 
   context 'Edicion de clientes' do
-    let(:cliente){ Cliente.create!(nombre: 'Foo', apellido: 'Bar') }
+    let(:cliente){ Cliente.create!(abogado_id: @abogado.id, nombre: 'Foo', apellido: 'Bar') }
 
     context 'En la correcta creacion de un cliente' do
 
@@ -231,7 +234,7 @@ describe ClientesController do
   end
 
   context 'Borrado de clientes' do
-    let(:cliente){ Cliente.create!(nombre: 'Foo', apellido: 'Bar') }
+    let(:cliente){ Cliente.create!(abogado_id: @abogado.id, nombre: 'Foo', apellido: 'Bar') }
     subject { delete :destroy, id: cliente.id }
 
     it 'se puede eliminar un cliente' do
