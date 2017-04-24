@@ -3,7 +3,11 @@ class ClientesController < ApplicationController
   attr_reader :cliente
 
   def show
-    @cliente = Cliente.find(params[:id])
+    begin
+      @cliente = Cliente.where(["id = ? and abogado_id = ?", params[:id], current_abogado.id]).take!
+    rescue ActiveRecord::RecordNotFound
+      flash[:error] = "Cliente inexistente"
+    end
   end
 
   def new
@@ -11,14 +15,21 @@ class ClientesController < ApplicationController
   end
 
   def edit
-    @cliente = Cliente.find(params[:id])
+    begin
+      @cliente = Cliente.where(["id = ? and abogado_id = ?", params[:id], current_abogado.id]).take!
+    rescue ActiveRecord::RecordNotFound
+      flash[:error] = "Cliente inexistente"
+    end
   end
 
   def create
     begin
-      @cliente = Cliente.create!(validar_parametros_cliente)
+      @cliente = Cliente.new(validar_parametros_cliente)
+      @cliente.abogado = current_abogado
+      @cliente.save!
     rescue ActiveRecord::ActiveRecordError
       flash[:error] = 'Faltan datos para poder crear el cliente'
+      redirect_to :new and return
     else
       flash[:success] = 'Cliente creado satisfactoriamente'
     ensure
@@ -39,24 +50,29 @@ class ClientesController < ApplicationController
   end
 
   def destroy
-    Cliente.find(params[:id]).destroy
-
-    flash[:success] = "Cliente eliminado satisfactoriamente"
-    render :new
+    begin
+      @cliente = Cliente.where(["id = ? and abogado_id = ?", params[:id], current_abogado.id]).take!
+      @cliente.destroy
+      flash[:success] = "Cliente eliminado satisfactoriamente"
+      render :new
+    rescue ActiveRecord::RecordNotFound
+      flash[:error] = "Cliente inexistente"
+    end
   end
 
   def buscar
-    @cliente = Cliente.find_by_nombre(params.require(:nombre))
-
-    render :js => "window.location = '/clientes/#{@cliente.id}'" and return if @cliente
-
-    flash[:error] = "No se encontraron clientes con nombre: #{params[:nombre]}"
-    render :js => "window.location = '/'", status: :not_found
+    begin
+      @cliente = Cliente.where(["nombre = ? and abogado_id = ?", params.require(:nombre), current_abogado.id]).take!
+      render :js => "window.location = '/clientes/#{@cliente.id}'"
+    rescue ActiveRecord::RecordNotFound
+      flash[:error] = "No se encontraron clientes con nombre: #{params[:nombre]}"
+      render :js => "window.location = '/'", status: :not_found
+    end
   end
 
   private
   def validar_parametros_cliente
-    params.require(:cliente).permit(:abogado_id, :nombre, :apellido, :correo_electronico, :telefono, :estado_civil,
+    params.require(:cliente).permit(:nombre, :apellido, :correo_electronico, :telefono, :estado_civil,
                                     :empresa, :esta_en_blanco)
   end
 end

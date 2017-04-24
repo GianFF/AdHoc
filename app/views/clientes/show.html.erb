@@ -55,7 +55,7 @@
 
   <% end %>
   <div class="form-group cliente__show-botones" role="group">
-    <%= button_to 'Editar', edit_cliente_path(@cliente), :method => :get, class: 'btn btn-success cliente__show-boton-editar' %>
+    <%= button_to 'Editar', edit_cliente_path(current_abogado, @cliente), :method => :get, class: 'btn btn-success cliente__show-boton-editar' %>
     <%= button_to 'Borrar', @cliente, method: :delete, class: 'btn btn-danger',
                   data: { confirm: "¿Seguro que quiere eliminar un cliente?" } %>
   </div>
