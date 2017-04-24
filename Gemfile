@@ -41,7 +41,7 @@ end
 gem 'listen'
 
 # React
-  gem 'react-rails'
+gem 'react-rails'
 
 # Bootstrap
 gem 'bootstrap-sass', '~> 3.2.0'

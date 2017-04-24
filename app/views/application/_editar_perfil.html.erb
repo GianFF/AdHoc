@@ -3,24 +3,21 @@
     <%= devise_error_messages! %>
     <div class="col-xs-6">
       <div class="field">
-        <%= f.label :nombre %><br />
+        <%= f.label :nombre, id: "perfil_nombre" %><br />
         <%= f.text_field :nombre, autofocus: true %>
       </div>
 
       <div class="field">
-        <%= f.label :apellido %><br />
+        <%= f.label :apellido, id: "perfil_apellido" %><br />
         <%= f.text_field :apellido, autofocus: true %>
       </div>
 
       <div class="field">
-        <%= f.label :email %><br />
+        <%= f.label :email, id: "perfil_email"  %><br />
         <%= f.email_field :email, autofocus: true %>
       </div>
     </div>
     <div class="col-xs-6">
-      <% if devise_mapping.confirmable? && resource.pending_reconfirmation? %>
-          <div>Esperando confirmacion: <%= resource.unconfirmed_email %></div>
-      <% end %>
 
       <div class="field">
         <%= f.label :contraseña %> <br />
@@ -37,13 +34,15 @@
       </div>
 
       <div class="field">
-        <%= f.label :contraseña_actual%> <br />
+        <%= f.label :contraseña_actual, id: "perfil_password" %> <br />
         <%= f.password_field :current_password, autocomplete: "off" %>
       </div>
 
       <div class="actions">
         <br>
-        <%= f.submit "Editar", {class: 'btn btn-success', id: 'editar_pefil__boton-editar'}%>
+        <%= f.submit "Editar", {class: 'btn btn-success'}%>
+        <br>
+        <button id="editar_pefil__boton-editar" class="btn btn-success" type="button"></button>
       </div>
     </div>
   <% end %>
@@ -57,3 +56,21 @@
     </p>
   </div>
 </div>
+<script type="text/javascript">
+  $("#editar_pefil__boton-editar" ).click(function() {
+
+    var nombre   = $("#perfil_nombre").val();
+    var apellido = $("#perfil_apellido").val();
+    var email    = $("#perfil_email").val();
+    var password = $("#perfil_password").val();
+
+    $.ajax({
+      url: "http://0.0.0.0:3000/abogados",
+      type: 'PUT',
+      data: "nombre="+nombre+"&apellido="+apellido+"&email="+email+"&password="+password,
+      success: function(data) {
+        debugger;
+      }
+    });
+  });
+</script>
