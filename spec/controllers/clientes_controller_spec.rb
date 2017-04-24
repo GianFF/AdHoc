@@ -6,12 +6,21 @@ def login_abogado
                             nombre: 'Foo', apellido: 'Bar', sexo: 'Masculino')
   abogado.confirm
   sign_in abogado
+  abogado
+end
+
+def login_otro_abogado
+  abogado = Abogado.create!(email: 'otro_ejemplo@mail.com', password: 'password',
+                            nombre: 'Bar', apellido: 'Zaz', sexo: 'Femenino')
+  abogado.confirm
+  sign_in abogado
+  abogado
 end
 
 describe ClientesController do
 
   before(:each) do
-    login_abogado
+    @abogado = login_abogado
   end
 
 
@@ -19,7 +28,7 @@ describe ClientesController do
     subject { post :create, params: parametros }
 
     context 'En la correcta creacion de un cliente' do
-      let(:parametros) { {cliente: {nombre: 'Foo', apellido: 'Bar'}} }
+      let(:parametros) { {cliente: {nombre: 'Foo', apellido: 'Bar', abogado_id: @abogado.id}} }
 
       it 'con un nombre y un  apellido el cliente se crea satisfactoriamente' do
         subject
@@ -31,6 +40,16 @@ describe ClientesController do
 
         expect(response).to have_http_status(:ok)
         expect(flash[:success]).to eq 'Cliente creado satisfactoriamente'
+      end
+
+      it 'pertenece a un abogado' do
+        otro_abogado = login_otro_abogado
+        subject
+
+        cliente = Cliente.all.first
+
+        expect(cliente.pertenece_a? @abogado).to be true
+        expect(cliente.pertenece_a? otro_abogado).to be false
       end
 
       context 'Con campos opcionales' do

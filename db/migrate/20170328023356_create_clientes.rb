@@ -8,6 +8,7 @@ class CreateClientes < ActiveRecord::Migration[5.0]
       t.string  :estado_civil
       t.string  :empresa
       t.boolean :esta_en_blanco
+      t.integer :abogado_id
 
       t.timestamps
     end

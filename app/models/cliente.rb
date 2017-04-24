@@ -1,4 +1,5 @@
 class Cliente < ApplicationRecord
+  belongs_to :abogado
 
   def self.mensaje_de_error_para_nombre_invalido
     'El nombre no puede estar vacio'
@@ -14,6 +15,7 @@ class Cliente < ApplicationRecord
 
   validates :nombre,   presence: { message: mensaje_de_error_para_nombre_invalido}
   validates :apellido, presence: { message: mensaje_de_error_para_apellido_invalido}
+  validates :abogado_id, presence: { message: 'Abogado inexistente'}
 
   def calle
     self.direccion.calle
@@ -41,6 +43,10 @@ class Cliente < ApplicationRecord
 
   def agregar_hijo hijo
     self.hijos << hijo
+  end
+
+  def pertenece_a?(un_abogado)
+   self.abogado.email  == un_abogado.email
   end
 
 end

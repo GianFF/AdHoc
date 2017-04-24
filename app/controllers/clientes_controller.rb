@@ -56,7 +56,7 @@ class ClientesController < ApplicationController
 
   private
   def validar_parametros_cliente
-    params.require(:cliente).permit(:nombre, :apellido, :correo_electronico, :telefono, :estado_civil,
+    params.require(:cliente).permit(:abogado_id, :nombre, :apellido, :correo_electronico, :telefono, :estado_civil,
                                     :empresa, :esta_en_blanco)
   end
 end
