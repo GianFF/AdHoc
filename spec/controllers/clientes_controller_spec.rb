@@ -1,6 +1,19 @@
 require_relative '../rails_helper'
 
+# TODO: llevar a un helper
+def login_abogado
+  abogado = Abogado.create!(email: 'ejemplo@mail.com', password: 'password',
+                            nombre: 'Foo', apellido: 'Bar', sexo: 'Masculino')
+  abogado.confirm
+  sign_in abogado
+end
+
 describe ClientesController do
+
+  before(:each) do
+    login_abogado
+  end
+
 
   context 'Creacion de clientes' do
     subject { post :create, params: parametros }
@@ -8,7 +21,7 @@ describe ClientesController do
     context 'En la correcta creacion de un cliente' do
       let(:parametros) { {cliente: {nombre: 'Foo', apellido: 'Bar'}} }
 
-      it 'con un nombre y un apellido el cliente se crea satisfactoriamente' do
+      it 'con un nombre y un  apellido el cliente se crea satisfactoriamente' do
         subject
 
         cliente = Cliente.all.first
@@ -208,5 +221,4 @@ describe ClientesController do
       expect(response).to have_http_status(:ok)
     end
   end
-
 end

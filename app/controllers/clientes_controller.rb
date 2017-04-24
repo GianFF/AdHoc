@@ -1,4 +1,5 @@
 class ClientesController < ApplicationController
+  before_action :authenticate_abogado!
   attr_reader :cliente
 
   def show
