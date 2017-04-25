@@ -9,11 +9,10 @@ def login_abogado
   abogado
 end
 
-def login_otro_abogado
+def crear_cuenta_para_abogado
   abogado = Abogado.create!(email: 'otro_ejemplo@mail.com', password: 'password',
                             nombre: 'Bar', apellido: 'Zaz', sexo: 'Femenino')
   abogado.confirm
-  sign_in abogado
   abogado
 end
 
@@ -43,7 +42,7 @@ describe ClientesController do
       end
 
       it 'pertenece a un abogado' do
-        otro_abogado = login_otro_abogado
+        otro_abogado = crear_cuenta_para_abogado
         subject
 
         cliente = Cliente.all.first

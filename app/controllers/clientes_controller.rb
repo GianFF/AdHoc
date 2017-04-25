@@ -27,13 +27,11 @@ class ClientesController < ApplicationController
       @cliente = Cliente.new(validar_parametros_cliente)
       @cliente.abogado = current_abogado
       @cliente.save!
-    rescue ActiveRecord::ActiveRecordError
-      flash[:error] = 'Faltan datos para poder crear el cliente'
-      redirect_to :new and return
-    else
       flash[:success] = 'Cliente creado satisfactoriamente'
-    ensure
       render :show
+    rescue  ActiveRecord::RecordInvalid
+      flash[:error] = 'Faltan datos para poder crear el cliente'
+      render :new
     end
   end
 
