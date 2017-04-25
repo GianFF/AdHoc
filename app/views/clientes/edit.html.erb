@@ -1,5 +1,6 @@
 <%= render 'tabs' do %>
-    <%= form_for :cliente, url: cliente_path(@cliente), method: :patch, html: {class: 'form-horizontal'} do |f| %>
+    <%= form_for :cliente, url: cliente_path(current_abogado, @cliente), method: :patch,
+                 html: {class: 'form-horizontal'} do |f| %>
 
         <div class="field form-group">
           <%= f.label :nombre, class: 'col-sm-2 control-label' %>
