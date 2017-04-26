@@ -1,6 +1,5 @@
 <div class="row">
-  <%= form_for(resource, as: resource_name, url: registration_path(resource_name), controller: :registrations, html: { method: :put }) do |f| %>
-    <%= devise_error_messages! %>
+  <%= form_for(resource, url: registration_path(resource)) do |f| %>
     <div class="col-xs-6">
       <div class="field">
         <%= f.label :nombre, id: "perfil_nombre" %><br />
@@ -40,9 +39,7 @@
 
       <div class="actions">
         <br>
-        <%= f.submit "Editar", {class: 'btn btn-success'}%>
-        <br>
-        <button id="editar_pefil__boton-editar" class="btn btn-success" type="button"></button>
+        <%= f.submit "Editar", {class: 'btn btn-success', id: 'editar_pefil__boton-editar'}%>
       </div>
     </div>
   <% end %>
@@ -58,19 +55,7 @@
 </div>
 <script type="text/javascript">
   $("#editar_pefil__boton-editar" ).click(function() {
-
-    var nombre   = $("#perfil_nombre").val();
-    var apellido = $("#perfil_apellido").val();
-    var email    = $("#perfil_email").val();
-    var password = $("#perfil_password").val();
-
-    $.ajax({
-      url: "http://0.0.0.0:3000/abogados",
-      type: 'PUT',
-      data: "nombre="+nombre+"&apellido="+apellido+"&email="+email+"&password="+password,
-      success: function(data) {
-        debugger;
-      }
-    });
+    debugger;
+    $('#registracion__perfil-modal').modal('hide');
   });
 </script>
