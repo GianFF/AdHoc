@@ -177,8 +177,10 @@ describe ClientesController do
 
     context 'Cuando el cliente buscado existe' do
 
+      subject { get :buscar, params: { nombre: 'Foo'} }
+
       pending 'te redirecciona a la vista del cliente' do
-        get :buscar, params: { nombre: 'Foo'}
+        subject
 
         assert_template :new
         expect(response).to have_http_status(:ok)
@@ -187,8 +189,10 @@ describe ClientesController do
 
     context 'Cuando el cliente buscado no existe' do
 
+      subject { get buscar_clientes_path, nombre: 'Bar' }
+
       pending 'devuelve un mensaje de error' do
-        get buscar_clientes_path, nombre: 'Bar'
+        subject
 
         expect(flash[:error]).to eq 'No se encontraron clientes con nombre: Bar'
         expect(response).to have_http_status(:ok)
@@ -216,7 +220,6 @@ describe ClientesController do
     end
 
     context 'En la incorrecta edicion del cliente' do
-
       subject { put :update, id: cliente.id, cliente: {nombre: nil, apellido: nil}}
 
       it 'no se puede poner un nombre o apellido vacio' do
@@ -234,10 +237,12 @@ describe ClientesController do
 
   context 'Borrado de clientes' do
     let(:cliente){ Cliente.create!(abogado_id: @abogado.id, nombre: 'Foo', apellido: 'Bar') }
+
     subject { delete :destroy, id: cliente.id }
 
     it 'se puede eliminar un cliente' do
       subject
+
       expect(flash[:success]).to eq 'Cliente eliminado satisfactoriamente'
       expect(response).to have_http_status(:ok)
     end
