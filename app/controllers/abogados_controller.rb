@@ -20,11 +20,25 @@ class AbogadosController < Devise::RegistrationsController
   # PUT /resource
   def update
     unless params[:abogado][:current_password].blank?
-      super
+
+      unless @abogado.valid_password?(params[:abogado][:current_password])
+        flash[:error] = mensaje_de_error_para_contrasenia_invalida
+        redirect_to root_path
+      else
+        super
+      end
     else
-      flash[:error] = 'Debes completar tu contraseña actual para poder editar tu perfil'
+      flash[:error] = mensaje_de_error_para_contrasenia_no_proveida
       redirect_to root_path
     end
+  end
+
+  def mensaje_de_error_para_contrasenia_invalida
+    'La contraseña es incorrecta'
+  end
+
+  def mensaje_de_error_para_contrasenia_no_proveida
+    'Debes completar tu contraseña actual para poder editar tu perfil'
   end
 
   # DELETE /resource
@@ -48,6 +62,6 @@ class AbogadosController < Devise::RegistrationsController
   end
 
   def configure_account_update_params
-    devise_parameter_sanitizer.permit(:account_update, keys: [:nombre, :apellido, :sexo])
+    devise_parameter_sanitizer.permit(:account_update, keys: [:nombre, :apellido, :email])
   end
 end
