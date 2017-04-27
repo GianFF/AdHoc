@@ -1,36 +1,12 @@
 class AbogadosController < Devise::RegistrationsController
-  before_action :configure_sign_up_params, only: [:create]
-  before_action :configure_account_update_params, only: [:update]
+  before_action :configurar_parametros_para_crear_cuenta, only: [:create]
+  before_action :configurar_parametros_para_editar_la_cuenta, only: [:update]
 
-  # GET /resource/sign_up
-  # def new
-  #   super
-  # end
-
-  # POST /resource
-  # def create
-  #   super
-  # end
-
-  # GET /resource/edit
-  # def edit
-  #   super
-  # end
-
-  # PUT /resource
   def update
-    unless params[:abogado][:current_password].blank?
-
-      unless @abogado.valid_password?(params[:abogado][:current_password])
-        flash[:error] = mensaje_de_error_para_contrasenia_invalida
-        redirect_to root_path
-      else
-        super
-      end
-    else
-      flash[:error] = mensaje_de_error_para_contrasenia_no_proveida
-      redirect_to root_path
+    validar_contrasenia do
+      redirect_to root_path and return
     end
+    super
   end
 
   def mensaje_de_error_para_contrasenia_invalida
@@ -41,27 +17,47 @@ class AbogadosController < Devise::RegistrationsController
     'Debes completar tu contraseña actual para poder editar tu perfil'
   end
 
-  # DELETE /resource
-  # def destroy
-  #   super
-  # end
-
-  # GET /resource/cancel
-  # Forces the session data which is usually expired after sign
-  # in to be expired now. This is useful if the user wants to
-  # cancel oauth signing in/up in the middle of the process,
-  # removing all OAuth session data.
-  # def cancel
-  #   super
-  # end
-
   protected
 
-  def configure_sign_up_params
+  def configurar_parametros_para_crear_cuenta
     devise_parameter_sanitizer.permit(:sign_up, keys: [:nombre, :apellido, :sexo])
   end
 
-  def configure_account_update_params
+  def configurar_parametros_para_editar_la_cuenta
     devise_parameter_sanitizer.permit(:account_update, keys: [:nombre, :apellido, :email])
+  end
+
+  private
+
+  def la_contrasenia_es_invalida?
+    @abogado.valid_password? params[:abogado][:current_password]
+  end
+
+  def la_contrasenia_es_blanca?
+    params[:abogado][:current_password].blank?
+  end
+
+  def validar_contrasenia(&block)
+    validar_que_la_contrasenia_no_sea_blanca do
+      block.call
+    end
+
+    validar_que_la_contrasenia_no_sea_invalida do
+      block.call
+    end
+  end
+
+  def validar_que_la_contrasenia_no_sea_invalida(&block)
+    unless la_contrasenia_es_invalida?
+      flash[:error] = mensaje_de_error_para_contrasenia_invalida
+      block.call
+    end
+  end
+
+  def validar_que_la_contrasenia_no_sea_blanca(&block)
+    if la_contrasenia_es_blanca?
+      flash[:error] = mensaje_de_error_para_contrasenia_no_proveida
+      block.call
+    end
   end
 end
