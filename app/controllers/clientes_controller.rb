@@ -16,7 +16,7 @@ class ClientesController < ApplicationController
 
   def edit
     begin
-      @cliente = Cliente.where(["id = ? and abogado_id = ?", params[:id], current_abogado.id]).take!
+      @cliente = Cliente.where(["id = ? and abogado_id = ?", params[:format], current_abogado.id]).take!
     rescue ActiveRecord::RecordNotFound
       flash[:error] = "Cliente inexistente"
     end
@@ -30,13 +30,14 @@ class ClientesController < ApplicationController
       flash[:success] = 'Cliente creado satisfactoriamente'
       render :show
     rescue  ActiveRecord::RecordInvalid
+      @cliente = nil
       flash[:error] = 'Faltan datos para poder crear el cliente'
       render :new
     end
   end
 
   def update
-    @cliente = Cliente.find(params[:id])
+    @cliente = Cliente.find(params[:format])
     begin
       @cliente.update!(validar_parametros_cliente)
     rescue ActiveRecord::ActiveRecordError
@@ -52,10 +53,11 @@ class ClientesController < ApplicationController
       @cliente = Cliente.where(["id = ? and abogado_id = ?", params[:id], current_abogado.id]).take!
       @cliente.destroy
       flash[:success] = "Cliente eliminado satisfactoriamente"
-      render :new
+      @cliente = nil
     rescue ActiveRecord::RecordNotFound
       flash[:error] = "Cliente inexistente"
     end
+    render :new
   end
 
   def buscar
