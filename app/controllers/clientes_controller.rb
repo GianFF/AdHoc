@@ -16,7 +16,7 @@ class ClientesController < ApplicationController
 
   def edit
     begin
-      @cliente = Cliente.where(["id = ? and abogado_id = ?", params[:format], current_abogado.id]).take!
+      @cliente = Cliente.where(["id = ? and abogado_id = ?", cliente_id, current_abogado.id]).take!
     rescue ActiveRecord::RecordNotFound
       flash.discard[:error] = "Cliente inexistente"
     end
@@ -37,7 +37,7 @@ class ClientesController < ApplicationController
   end
 
   def update
-    @cliente = Cliente.find(params[:format])
+    @cliente = Cliente.find(cliente_id)
     begin
       @cliente.update!(validar_parametros_cliente)
     rescue ActiveRecord::ActiveRecordError
@@ -74,5 +74,11 @@ class ClientesController < ApplicationController
   def validar_parametros_cliente
     params.require(:cliente).permit(:nombre, :apellido, :correo_electronico, :telefono, :estado_civil,
                                     :empresa, :esta_en_blanco)
+  end
+
+  # TODO: eliminar cuanto antes este parche.
+  # Entender porque en el form de edicion viene el ID delcliente como format en vez de como id
+  def cliente_id
+    params[:format] || params[:id]
   end
 end
