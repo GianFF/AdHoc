@@ -10,6 +10,7 @@ Rails.application.config.middleware.insert_before 0, Rack::Cors do
     origins 'http://localhost:3000'
     resource 'clientes',
              headers: :any,
-             methods: [:get]
+             methods: [:get],
+             :expose  => ['access-token', 'expiry', 'token-type', 'uid', 'client']
   end
 end

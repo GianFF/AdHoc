@@ -29,7 +29,7 @@ class AbogadosController < Devise::RegistrationsController
 
   private
 
-  def la_contrasenia_es_invalida?
+  def la_contrasenia_es_valida?
     @abogado.valid_password? params[:abogado][:current_password]
   end
 
@@ -48,7 +48,7 @@ class AbogadosController < Devise::RegistrationsController
   end
 
   def validar_que_la_contrasenia_no_sea_invalida(&block)
-    unless la_contrasenia_es_invalida?
+    unless la_contrasenia_es_valida?
       flash[:error] = mensaje_de_error_para_contrasenia_invalida
       block.call
     end

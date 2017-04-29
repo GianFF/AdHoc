@@ -6,7 +6,7 @@ class ClientesController < ApplicationController
     begin
       @cliente = Cliente.where(["id = ? and abogado_id = ?", params[:id], current_abogado.id]).take!
     rescue ActiveRecord::RecordNotFound
-      flash[:error] = "Cliente inexistente"
+      flash.discard[:error] = "Cliente inexistente"
     end
   end
 
@@ -16,9 +16,9 @@ class ClientesController < ApplicationController
 
   def edit
     begin
-      @cliente = Cliente.where(["id = ? and abogado_id = ?", params[:id], current_abogado.id]).take!
+      @cliente = Cliente.where(["id = ? and abogado_id = ?", cliente_id, current_abogado.id]).take!
     rescue ActiveRecord::RecordNotFound
-      flash[:error] = "Cliente inexistente"
+      flash.discard[:error] = "Cliente inexistente"
     end
   end
 
@@ -27,23 +27,24 @@ class ClientesController < ApplicationController
       @cliente = Cliente.new(validar_parametros_cliente)
       @cliente.abogado = current_abogado
       @cliente.save!
-      flash[:success] = 'Cliente creado satisfactoriamente'
+      flash.discard[:success] = 'Cliente creado satisfactoriamente'
       render :show
     rescue  ActiveRecord::RecordInvalid
-      flash[:error] = 'Faltan datos para poder crear el cliente'
+      @cliente = nil
+      flash.discard[:error] = 'Faltan datos para poder crear el cliente'
       render :new
     end
   end
 
   def update
-    @cliente = Cliente.find(params[:id])
+    @cliente = Cliente.find(cliente_id)
     begin
       @cliente.update!(validar_parametros_cliente)
     rescue ActiveRecord::ActiveRecordError
-      flash[:error] = 'El nombre y el apellido no pueden ser vacios'
+      flash.discard[:error] = 'El nombre y el apellido no pueden ser vacios'
       redirect_to action: :edit, status: :bad_request and return
     end
-      flash[:success] = 'Cliente editado satisfactoriamente'
+      flash.discard[:success] = 'Cliente editado satisfactoriamente'
       render :show
   end
 
@@ -51,11 +52,12 @@ class ClientesController < ApplicationController
     begin
       @cliente = Cliente.where(["id = ? and abogado_id = ?", params[:id], current_abogado.id]).take!
       @cliente.destroy
-      flash[:success] = "Cliente eliminado satisfactoriamente"
-      render :new
+      flash.now[:success] = "Cliente eliminado satisfactoriamente"
+      @cliente = nil
     rescue ActiveRecord::RecordNotFound
-      flash[:error] = "Cliente inexistente"
+      flash.discard[:error] = "Cliente inexistente"
     end
+    render :new
   end
 
   def buscar
@@ -63,7 +65,7 @@ class ClientesController < ApplicationController
       @cliente = Cliente.where(["nombre = ? and abogado_id = ?", params.require(:nombre), current_abogado.id]).take!
       render :js => "window.location = '/clientes/#{@cliente.id}'"
     rescue ActiveRecord::RecordNotFound
-      flash[:error] = "No se encontraron clientes con nombre: #{params[:nombre]}"
+      flash.discard[:error] = "No se encontraron clientes con nombre: #{params[:nombre]}"
       render :js => "window.location = '/'", status: :not_found
     end
   end
@@ -72,5 +74,11 @@ class ClientesController < ApplicationController
   def validar_parametros_cliente
     params.require(:cliente).permit(:nombre, :apellido, :correo_electronico, :telefono, :estado_civil,
                                     :empresa, :esta_en_blanco)
+  end
+
+  # TODO: eliminar cuanto antes este parche.
+  # Entender porque en el form de edicion viene el ID delcliente como format en vez de como id
+  def cliente_id
+    params[:format] || params[:id]
   end
 end
