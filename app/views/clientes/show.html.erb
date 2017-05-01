@@ -34,7 +34,9 @@
         <div class="field form-group">
           <%= f.label :estado_civil, class: 'col-sm-2 control-label' %>
           <div class="col-sm-4">
-            <%= f.text_field :estado_civil, class: 'form-control', readonly: true %>
+            <%= f.select(:estado_civil, EstadoCivil.estados, options = {},
+                         html_options = {class: 'registrations__input', disabled:true}) %>
+            <br />
           </div>
         </div>
 

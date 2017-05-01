@@ -3,6 +3,6 @@ class Sexo
   FEMENINO  = 'Femenino'
 
   def self.sexos
-    ['Elegir', MASCULINO, FEMENINO]
+    [MASCULINO, FEMENINO]
   end
 end

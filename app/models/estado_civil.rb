@@ -5,6 +5,6 @@ class EstadoCivil
   DIVORCIADO = 'Divorciado/a'
 
   def self.estados
-    ['Elegir', SOLTERO, CASADO, VIUDO, DIVORCIADO]
+    [SOLTERO, CASADO, VIUDO, DIVORCIADO]
   end
 end
