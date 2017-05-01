@@ -34,7 +34,7 @@
         <div class="field form-group">
           <%= f.label :estado_civil, class: 'col-sm-2 control-label' %>
           <div class="col-sm-4">
-            <%= f.text_field :estado_civil, class: 'form-control' %>
+            <%= f.select :estado_civil, options_for_select(EstadoCivil.estados)%><br />
           </div>
         </div>
 

@@ -9,7 +9,7 @@
 
     <p class="navbar-text cabecera__nombre-abogado">
       <% if abogado_signed_in? %>
-          <% if current_abogado.sexo == 'Masculino' %>
+          <% if current_abogado.sexo == Sexo::MASCULINO %>
               Dr.
           <% else %>
               Dra.

@@ -40,7 +40,7 @@ describe AbogadosController do
           current_password: 'password'
       }}
 
-      pending 'un abogado puede cambiar su email' do
+      it 'un abogado puede cambiar su email' do
         subject
         abogado = Abogado.find(un_abogado.id)
 

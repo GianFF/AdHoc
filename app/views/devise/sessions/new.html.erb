@@ -1,15 +1,14 @@
 <h2>Ingresar</h2><br/>
 <%= form_for(resource, as: resource_name, url: session_path(resource_name), html: {class: 'form-horizontal'}) do |f| %>
-  <%= devise_error_messages! %>
   <div class="row">
 
     <div class="col-xs-6 field">
       <%= f.label :email, class: 'control-label' %><br/>
-      <%= f.email_field :email, autofocus: true %>
+      <%= f.email_field :email, autofocus: true, class: 'registrations__input' %>
     </div>
     <div class="col-xs-6 field">
       <%= f.label :contraseña, class: 'control-label' %><br/>
-      <%= f.password_field :password, autocomplete: "off" %>
+      <%= f.password_field :password, autocomplete: "off", class: 'registrations__input' %>
     </div>
   </div>
   <% if devise_mapping.rememberable? -%>
