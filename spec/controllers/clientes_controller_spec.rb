@@ -4,7 +4,7 @@ require_relative '../rails_helper'
 def login_abogado
   abogado = Abogado.create!(email: 'ejemplo@mail.com', password: 'password',
                             nombre: 'Foo', apellido: 'Bar', sexo: 'Masculino')
-  abogado.confirm
+  #abogado.confirm
   sign_in abogado
   abogado
 end
@@ -12,7 +12,7 @@ end
 def crear_cuenta_para_abogado
   abogado = Abogado.create!(email: 'otro_ejemplo@mail.com', password: 'password',
                             nombre: 'Bar', apellido: 'Zaz', sexo: 'Femenino')
-  abogado.confirm
+  #abogado.confirm
   abogado
 end
 

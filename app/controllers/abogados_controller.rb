@@ -2,6 +2,13 @@ class AbogadosController < Devise::RegistrationsController
   before_action :configurar_parametros_para_crear_cuenta, only: [:create]
   before_action :configurar_parametros_para_editar_la_cuenta, only: [:update]
 
+  def create
+    super do
+      errores = resource.errors.full_messages.map { |msg| "<li>#{msg}</li>" }.join
+      flash.now[:error] = errores.html_safe if errores.length > 0
+    end
+  end
+
   def update
     validar_contrasenia do
       redirect_to root_path and return
