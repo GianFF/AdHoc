@@ -166,7 +166,7 @@ describe ClientesController do
       it 'sin nombre y apellido no puede ser creado' do
         subject
 
-        expect(flash[:error]).to eq 'Faltan datos para poder crear el cliente'
+        expect(flash[:error]).to eq 'El nombre y el apellido no pueden ser vacios'
         expect(response).to have_http_status(:ok)
       end
     end

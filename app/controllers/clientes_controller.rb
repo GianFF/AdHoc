@@ -6,7 +6,7 @@ class ClientesController < ApplicationController
     begin
       @cliente = Cliente.where(["id = ? and abogado_id = ?", params[:id], current_abogado.id]).take!
     rescue ActiveRecord::RecordNotFound
-      flash.discard[:error] = "Cliente inexistente"
+      flash.now[:error] = "Cliente inexistente"
     end
   end
 
@@ -18,7 +18,7 @@ class ClientesController < ApplicationController
     begin
       @cliente = Cliente.where(["id = ? and abogado_id = ?", cliente_id, current_abogado.id]).take!
     rescue ActiveRecord::RecordNotFound
-      flash.discard[:error] = "Cliente inexistente"
+      flash.now[:error] = "Cliente inexistente"
     end
   end
 
@@ -27,11 +27,11 @@ class ClientesController < ApplicationController
       @cliente = Cliente.new(validar_parametros_cliente)
       @cliente.abogado = current_abogado
       @cliente.save!
-      flash.discard[:success] = 'Cliente creado satisfactoriamente'
+      flash.now[:success] = 'Cliente creado satisfactoriamente'
       render :show
     rescue  ActiveRecord::RecordInvalid
       @cliente = nil
-      flash.discard[:error] = 'Faltan datos para poder crear el cliente'
+      flash.now[:error] = 'El nombre y el apellido no pueden ser vacios'
       render :new
     end
   end
@@ -41,10 +41,10 @@ class ClientesController < ApplicationController
     begin
       @cliente.update!(validar_parametros_cliente)
     rescue ActiveRecord::ActiveRecordError
-      flash.discard[:error] = 'El nombre y el apellido no pueden ser vacios'
+      flash.now[:error] = 'El nombre y el apellido no pueden ser vacios'
       redirect_to action: :edit, status: :bad_request and return
     end
-      flash.discard[:success] = 'Cliente editado satisfactoriamente'
+      flash.now[:success] = 'Cliente editado satisfactoriamente'
       render :show
   end
 
@@ -55,7 +55,7 @@ class ClientesController < ApplicationController
       flash.now[:success] = "Cliente eliminado satisfactoriamente"
       @cliente = nil
     rescue ActiveRecord::RecordNotFound
-      flash.discard[:error] = "Cliente inexistente"
+      flash.now[:error] = "Cliente inexistente"
     end
     render :new
   end
@@ -65,7 +65,7 @@ class ClientesController < ApplicationController
       @cliente = Cliente.where(["nombre = ? and abogado_id = ?", params.require(:nombre), current_abogado.id]).take!
       render :js => "window.location = '/clientes/#{@cliente.id}'"
     rescue ActiveRecord::RecordNotFound
-      flash.discard[:error] = "No se encontraron clientes con nombre: #{params[:nombre]}"
+      flash.now[:error] = "No se encontraron clientes con nombre: #{params[:nombre]}"
       render :js => "window.location = '/'", status: :not_found
     end
   end

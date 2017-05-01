@@ -2,14 +2,14 @@
     <%= form_for :cliente, url: clientes_path, html: {class: 'form-horizontal'} do |f| %>
 
         <div class="field form-group">
-          <%= f.label :nombre, class: 'col-sm-2 control-label' %>
+          <%= f.label :nombre, class: 'col-sm-2 control-label' %>*
           <div class="col-sm-4">
             <%= f.text_field :nombre, class: 'form-control', autofocus: true %>
           </div>
         </div>
 
         <div class="field form-group">
-          <%= f.label :apellido, class: 'col-sm-2 control-label' %>
+          <%= f.label :apellido, class: 'col-sm-2 control-label' %>*
           <div class="col-sm-4">
             <%= f.text_field :apellido, class: 'form-control' %>
           </div>
