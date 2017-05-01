@@ -34,7 +34,9 @@
         <div class="field form-group">
           <%= f.label :estado_civil, class: 'col-sm-2 control-label' %>
           <div class="col-sm-4">
-            <%= f.select :estado_civil, options_for_select(EstadoCivil.estados)%><br />
+            <%= f.select(:estado_civil, EstadoCivil.estados, options = {include_blank: true},
+                         html_options = {class: 'registrations__input'}) %>
+            <br />
           </div>
         </div>
 

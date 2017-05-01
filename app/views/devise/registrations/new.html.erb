@@ -15,8 +15,7 @@
 
     <div class="col-xs-6 field">
       <%= f.label :sexo %><br />
-      <%= f.select :sexo, options_for_select(Sexo.sexos) %><br />
-
+      <%= f.select(:sexo, Sexo.sexos, options = {include_blank: true}, html_options = {class: 'registrations__input'}) %>
       <%= f.label :contraseña %>
       <% if @minimum_password_length%>
           <em>(<%= @minimum_password_length %> caracteres minimo)</em>
