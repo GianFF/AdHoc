@@ -63,5 +63,6 @@
 
     <% end %>
 
-  <%= link_to 'Cancelar', cliente_path, class: 'btn btn-warning cliente__edit-cancelar' %>
+  <%= link_to 'Cancelar', cliente_path(@cliente.id), method: :get,
+              class: 'btn btn-warning cliente__edit-cancelar' %>
 <% end %>

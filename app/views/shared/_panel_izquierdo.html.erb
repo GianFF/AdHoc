@@ -1,11 +1,9 @@
 <% if abogado_signed_in? %>
   <ul class="nav nav-pills nav-stacked">
     <li role="presentation" class="active">
-      <!-- TODO: BUG. ¿Usar un form de rails? O quizas un link_to o button_to como lo siguiente: -->
-      <%#= link_to destroy_abogado_session_path, method: :delete, class: "btn btn-danger navbar-btn navbar-right" do %> <!-- <i class="glyphicon glyphicon-log-out"></i> Salir --> <%# end %>
       <div class="input-group">
         <span class="input-group-btn">
-          <button class="btn btn-default" type="button" id="panel_izquierdo__buscar">
+          <button class="btn btn-default" type="button" id="panel_izquierdo__buscar" >
             <i class="glyphicon glyphicon-search"></i>
           </button>
         </span>
@@ -42,13 +40,30 @@
 <% end %>
 <script type="text/javascript">
   var url = "http://0.0.0.0:3000/clientes/buscar/";
+  $( "#panel_izquierdo__buscar" ).prop('disabled', true);
+
+  $("#panel_izquierdo__query").on('change keyup paste', function() {
+    nombre = $("#panel_izquierdo__query").val();
+    if(nombre != "" ){
+
+      $( "#panel_izquierdo__buscar" ).prop('disabled', false);
+    }else{
+
+      $( "#panel_izquierdo__buscar" ).prop('disabled', true);
+    }
+  });
 
   $( "#panel_izquierdo__buscar" ).click(function() {
-    var nombre = $("#panel_izquierdo__query").val();
-
-    nombre == "" ? alert("Primero agrega un nombre al buscador") : $.ajax({
+    $.ajax({
       method: "GET",
       url: url + nombre
     });
+  });
+
+  $('#panel_izquierdo__query').keypress(function(e){
+    if(e.keyCode==13){
+
+      $('#panel_izquierdo__buscar').click();
+    }
   });
 </script>
