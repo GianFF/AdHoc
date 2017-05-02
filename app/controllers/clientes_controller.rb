@@ -65,7 +65,7 @@ class ClientesController < ApplicationController
       @cliente = Cliente.where(["nombre = ? and abogado_id = ?", params.require(:nombre), current_abogado.id]).take!
       render :js => "window.location = '/clientes/#{@cliente.id}'"
     rescue ActiveRecord::RecordNotFound
-      flash.now[:error] = "No se encontraron clientes con nombre: #{params[:nombre]}"
+      flash[:error] = "No se encontraron clientes con nombre: #{params[:nombre]}"
       render :js => "window.location = '/'", status: :not_found
     end
   end
