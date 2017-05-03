@@ -2,6 +2,19 @@ class ClientesController < ApplicationController
   before_action :authenticate_abogado!
   attr_reader :cliente
 
+  def index
+    begin
+      @cliente = Cliente.where(['nombre like ? or apellido like ? and abogado_id = ?',
+                                "%#{params.require(:query)}%",
+                                "%#{params.require(:query)}%",
+                                current_abogado.id]).take!
+      render :show
+    rescue ActiveRecord::RecordNotFound
+      flash.now[:error] = "No se encontraron clientes con nombre: #{params[:query]}"
+      render :new
+    end
+  end
+
   def show
     begin
       @cliente = Cliente.where(["id = ? and abogado_id = ?", params[:id], current_abogado.id]).take!
@@ -58,16 +71,6 @@ class ClientesController < ApplicationController
       flash.now[:error] = "Cliente inexistente"
     end
     render :new
-  end
-
-  def buscar
-    begin
-      @cliente = Cliente.where(["nombre = ? and abogado_id = ?", params.require(:nombre), current_abogado.id]).take!
-      render :js => "window.location = '/clientes/#{@cliente.id}'"
-    rescue ActiveRecord::RecordNotFound
-      flash[:error] = "No se encontraron clientes con nombre: #{params[:nombre]}"
-      render :js => "window.location = '/'", status: :not_found
-    end
   end
 
   private

@@ -1,15 +1,16 @@
 <% if abogado_signed_in? %>
   <ul class="nav nav-pills nav-stacked">
     <li role="presentation" class="active">
-      <div class="input-group">
-        <span class="input-group-btn">
-          <button class="btn btn-default" type="button" id="panel_izquierdo__buscar" >
-            <i class="glyphicon glyphicon-search"></i>
-          </button>
-        </span>
-        <input type="text" class="form-control" placeholder="Clientes" id="panel_izquierdo__query">
-      </div>
-
+      <%= form_tag(clientes_path, method: 'get') do %>
+        <div class="input-group">
+          <span class="input-group-btn">
+            <%= button_tag(type: "submit", class: "btn btn-default", id: 'panel_izquierdo__buscar') do %>
+                <i class="glyphicon glyphicon-search panel_izquierdo__buscar"></i>
+            <% end %>
+          </span>
+          <%= text_field_tag :query, params[:query], class: 'form-control', id: 'panel_izquierdo__query' %>
+        </div>
+      <% end %>
     </li>
     <li role="presentation">
       <button type="button" class="btn btn-default btn-block">
@@ -39,31 +40,19 @@
   </ul>
 <% end %>
 <script type="text/javascript">
-  var url = "http://0.0.0.0:3000/clientes/buscar/";
+  $("#panel_izquierdo__query").val("");
+
   $( "#panel_izquierdo__buscar" ).prop('disabled', true);
 
   $("#panel_izquierdo__query").on('change keyup paste', function() {
-    nombre = $("#panel_izquierdo__query").val();
-    if(nombre != "" ){
+    var busqueda = $("#panel_izquierdo__query").val();
+
+    if(busqueda != "" ){
 
       $( "#panel_izquierdo__buscar" ).prop('disabled', false);
     }else{
 
       $( "#panel_izquierdo__buscar" ).prop('disabled', true);
-    }
-  });
-
-  $( "#panel_izquierdo__buscar" ).click(function() {
-    $.ajax({
-      method: "GET",
-      url: url + nombre
-    });
-  });
-
-  $('#panel_izquierdo__query').keypress(function(e){
-    if(e.keyCode==13){
-
-      $('#panel_izquierdo__buscar').click();
     }
   });
 </script>

@@ -36,7 +36,7 @@
           <%= f.label :estado_civil, class: 'col-sm-2 control-label' %>
           <div class="col-sm-4">
             <%= f.select(:estado_civil, EstadoCivil.estados, options = {include_blank: true},
-                         html_options = {class: 'registrations__input'}) %>
+                         html_options = {class: 'form-control'}) %>
             <br />
           </div>
         </div>
