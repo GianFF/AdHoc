@@ -4,11 +4,11 @@
 
     <div class="col-xs-6 field">
       <%= f.label :email, class: 'control-label' %><br/>
-      <%= f.email_field :email, autofocus: true, class: 'registrations__input' %>
+      <%= f.email_field :email, autofocus: true, class: 'form-control' %>
     </div>
     <div class="col-xs-6 field">
       <%= f.label :contraseña, class: 'control-label' %><br/>
-      <%= f.password_field :password, autocomplete: "off", class: 'registrations__input' %>
+      <%= f.password_field :password, autocomplete: "off", class: 'form-control' %>
     </div>
   </div>
   <% if devise_mapping.rememberable? -%>

@@ -3,24 +3,24 @@
     <div class="col-xs-6">
       <div class="field">
         <%= f.label :nombre, id: "perfil_nombre" %><br />
-        <%= f.text_field :nombre, autofocus: true, class: 'registrations__input' %>
+        <%= f.text_field :nombre, autofocus: true, class: 'form-control registrations__input' %>
       </div>
 
       <div class="field">
         <%= f.label :apellido, id: "perfil_apellido" %><br />
-        <%= f.text_field :apellido, autofocus: true, class: 'registrations__input' %>
+        <%= f.text_field :apellido, autofocus: true, class: 'form-control registrations__input' %>
       </div>
 
       <div class="field">
         <%= f.label :email, id: "perfil_email"  %><br />
-        <%= f.email_field :email, autofocus: true, class: 'registrations__input' %>
+        <%= f.email_field :email, autofocus: true, class: 'form-control registrations__input' %>
       </div>
     </div>
     <div class="col-xs-6">
 
       <div class="field">
         <%= f.label :nueva_contraseña %> <br />
-        <%= f.password_field :password, autocomplete: "off", class: 'registrations__input' %>
+        <%= f.password_field :password, autocomplete: "off", class: 'form-control registrations__input' %>
         <% if @minimum_password_length %>
             <br />
             <em><%= @minimum_password_length %> caracteres minimo</em>
@@ -29,12 +29,12 @@
 
       <div class="field">
         <%= f.label :confirmacion_de_contraseña %><br />
-        <%= f.password_field :password_confirmation, autocomplete: "off", class: 'registrations__input' %>
+        <%= f.password_field :password_confirmation, autocomplete: "off", class: 'form-control registrations__input' %>
       </div>
 
       <div class="field">
         <%= f.label :contraseña_actual, id: "perfil_password" %> <br />
-        <%= f.password_field :current_password, autocomplete: "off", class: 'registrations__input' %>
+        <%= f.password_field :current_password, autocomplete: "off", class: 'form-control registrations__input' %>
       </div>
 
       <div class="actions">
