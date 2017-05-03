@@ -173,28 +173,59 @@ describe ClientesController do
   end
 
   context 'Busqueda de clientes' do
-    let(:cliente){ Cliente.create!(nombre: 'Foo', apellido: 'Bar') }
+
+    before(:each) do
+      Cliente.create!(nombre: 'Foo', apellido: 'Bar', abogado_id: @abogado.id)
+    end
 
     context 'Cuando el cliente buscado existe' do
 
-      subject { get :buscar, params: { nombre: 'Foo'} }
+      context 'Cuando se busca por nombre' do
 
-      pending 'te redirecciona a la vista del cliente' do
-        subject
+        subject { get :index, params: { query: 'Foo'} }
 
-        assert_template :new
-        expect(response).to have_http_status(:ok)
+        it 'te redirecciona a la vista del cliente' do
+          subject
+
+          assert_template :show
+          expect(response).to have_http_status(:ok)
+        end
+      end
+
+      context 'Cuando se busca por apellido' do
+
+        subject { get :index, params: { query: 'Bar'} }
+
+        it 'te redirecciona a la vista del cliente' do
+          subject
+
+          assert_template :show
+          expect(response).to have_http_status(:ok)
+        end
+      end
+
+      context 'Cuando se busca por una letra' do
+
+        subject { get :index, params: { query: 'o'} }
+
+        it 'te redirecciona a la vista del cliente' do
+          subject
+
+          assert_template :show
+          expect(response).to have_http_status(:ok)
+        end
       end
     end
 
     context 'Cuando el cliente buscado no existe' do
 
-      subject { get buscar_clientes_path, nombre: 'Bar' }
+      subject { get :index, query: 'Zaz' }
 
-      pending 'devuelve un mensaje de error' do
+      it 'devuelve un mensaje de error' do
         subject
 
-        expect(flash[:error]).to eq 'No se encontraron clientes con nombre: Bar'
+        expect(flash[:error]).to eq 'No se encontraron clientes con nombre: Zaz'
+        assert_template :new
         expect(response).to have_http_status(:ok)
       end
     end
