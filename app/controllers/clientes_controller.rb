@@ -72,8 +72,9 @@ class ClientesController < ApplicationController
     end
     render :new
   end
-
+  
   private
+  
   def validar_parametros_cliente
     params.require(:cliente).permit(:nombre, :apellido, :correo_electronico, :telefono, :estado_civil,
                                     :empresa, :esta_en_blanco)

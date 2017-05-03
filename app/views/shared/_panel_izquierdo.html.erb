@@ -54,5 +54,13 @@
 
       $( "#panel_izquierdo__buscar" ).prop('disabled', true);
     }
+
+  });
+
+  $('#panel_izquierdo__query').keypress(function(e){
+    if(e.keyCode==13){
+
+      $('#panel_izquierdo__buscar').click();
+    }
   });
 </script>
