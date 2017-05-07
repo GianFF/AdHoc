@@ -2,12 +2,6 @@ class ClientesController < ApplicationController
   before_action :authenticate_abogado!
   attr_reader :cliente
 
-  def initialize
-    # TODO: ver la forma de hacer inversion de control para pasar la aplicacion por parametro
-      @ad_hoc = AdHocAplicacion.new
-    super
-  end
-
   def index
     begin
       @cliente = @ad_hoc.buscar_cliente_por_nombre_o_apellido!(validar_parametro_query, current_abogado.id)
