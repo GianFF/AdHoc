@@ -1,10 +1,9 @@
 class AdHocAplicacion
 
   def buscar_cliente_por_nombre_o_apellido!(query, abogado_id)
-    #TODO: la query se forma mal. Al parecer la precedencia del and y el or no esta bien, ver de separar el abogado_id del resto de la query.
-    Cliente.where(
-        ['nombre like ? or apellido like ? and abogado_id = ?', "%#{query}%", "%#{query}%", abogado_id]
-    ).take!
+    Cliente.where(['nombre like ? or apellido like ?', "%#{query}%", "%#{query}%"]).
+        where('abogado_id = :abogado_id', {abogado_id: abogado_id}).
+        take!
   end
 
   def buscar_cliente_por_id!(cliente_id, abogado_id)
