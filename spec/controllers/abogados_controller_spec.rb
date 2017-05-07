@@ -60,7 +60,7 @@ describe AbogadosController do
       it 'se muestra un mensaje de error y se redirije a la pagina de inicio' do
         subject
 
-        expect(flash[:error]).to eq @controller.mensaje_de_error_para_contrasenia_no_proveida
+        expect(flash[:error]).to eq @controller.ad_hoc.mensaje_de_error_para_contrasenia_no_proveida
         expect(response).to have_http_status(:found)
         assert_redirected_to root_path
       end
@@ -76,7 +76,7 @@ describe AbogadosController do
       it 'se muestra un mensaje de error y se redirije a la pagina de inicio' do
         subject
 
-        expect(flash[:error]).to eq @controller.mensaje_de_error_para_contrasenia_invalida
+        expect(flash[:error]).to eq @controller.ad_hoc.mensaje_de_error_para_contrasenia_invalida
         expect(response).to have_http_status(:found)
         assert_redirected_to root_path
       end
