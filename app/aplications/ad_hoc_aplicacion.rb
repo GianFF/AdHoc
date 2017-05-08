@@ -1,5 +1,7 @@
 class AdHocAplicacion
 
+  # Clientes
+
   def buscar_cliente_por_nombre_o_apellido!(query, abogado_id)
     Cliente.where(['nombre like ? or apellido like ?', "%#{query}%", "%#{query}%"]).
         where('abogado_id = :abogado_id', {abogado_id: abogado_id}).
@@ -35,6 +37,20 @@ class AdHocAplicacion
     validar_que_la_contrasenia_no_sea_invalida(contrasenia_del_abogado, abogado, &block)
   end
 
+  # Expedientes:
+
+  def crear_expediente_nuevo!(parametros_expediente)
+    expediente = Expediente.new(parametros_expediente)
+    expediente.save!
+    expediente
+  end
+
+  def buscar_expediente_por_id!(expediente_id)
+    Cliente.find(expediente_id)
+  end
+
+  # Mensajes de error:
+
   def mensaje_de_confirmacion_para_correcta_eliminacion_de_un_cliente
     'Cliente eliminado satisfactoriamente'
   end
@@ -65,6 +81,14 @@ class AdHocAplicacion
 
   def mensaje_de_error_para_contrasenia_no_proveida
     'Debes completar tu contraseña actual para poder editar tu perfil'
+  end
+
+  def mensaje_de_confirmacion_para_la_correcta_creacion_de_un_expediente
+    'Expediente creado satisfactoriamente'
+  end
+
+  def mensaje_de_error_para_expediente_invalido
+    'El Actor, Demandado, y Materia no pueden ser vacios'
   end
 
   private
