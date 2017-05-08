@@ -5,6 +5,10 @@ class ExpedientesController < ApplicationController
     @expediente = @ad_hoc.buscar_expediente_por_id!(params[:id])
   end
 
+  def new
+    @expediente = Expediente.new
+  end
+
   def create
     begin
       @expediente = @ad_hoc.crear_expediente_nuevo!(validar_parametros_expediente, current_abogado)
