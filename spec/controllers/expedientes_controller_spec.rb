@@ -11,7 +11,7 @@ end
 def asertar_que_el_expediente_fue_correctamente_creado()
   un_expediente = Expediente.first
 
-  expect(un_expediente.actor).to eq 'Juan Gonzalez'
+  expect(un_expediente.actor).to eq "#{@cliente.nombre} #{@cliente.apellido}"
   expect(un_expediente.demandado).to eq 'Maria Perez'
   expect(un_expediente.materia).to eq 'Daños y Perjuicios'
 end
@@ -41,6 +41,12 @@ def crear_cuenta_para_abogado
   abogado
 end
 
+def asertar_que_un_expediente_pertenece_a_un_abogado(otro_abogado)
+  un_expediente = Expediente.first
+  expect(un_expediente.pertenece_a? @abogado).to be true
+  expect(un_expediente.pertenece_a? otro_abogado).to be false
+end
+
 describe ExpedientesController do
 
   before(:each) do
@@ -50,7 +56,7 @@ describe ExpedientesController do
 
   subject { post :create, params: {
       expediente: {
-          actor: 'Juan Gonzalez',
+          actor: "#{@cliente.nombre} #{@cliente.apellido}",
           demandado: 'Maria Perez',
           materia: 'Daños y Perjuicios',
           cliente: @cliente.id
@@ -63,15 +69,27 @@ describe ExpedientesController do
 
     un_expediente = Expediente.first
 
-    expect(un_expediente.actor).to be @cliente
+    expect(un_expediente.actor).to eq "#{@cliente.nombre} #{@cliente.apellido}"
   end
 
   it 'un abogado no puede ver los expedientes de otro abogado' do
+    otro_abogado = crear_cuenta_para_abogado
 
+    subject
+
+    asertar_que_un_expediente_pertenece_a_un_abogado(otro_abogado)
   end
 
   context 'En la correcta creacion de un Expediente' do
-    subject { post :create, params: { expediente: {actor: 'Juan Gonzalez', demandado: 'Maria Perez', materia: 'Daños y Perjuicios'} }}
+    subject { post :create, params: {
+        expediente: {
+            actor: "#{@cliente.nombre} #{@cliente.apellido}",
+            demandado: 'Maria Perez',
+            materia: 'Daños y Perjuicios',
+            cliente: @cliente.id
+        }
+      }
+    }
 
     it 'se compone de actor, demandado y materia' do
       subject
@@ -86,7 +104,7 @@ describe ExpedientesController do
   context 'En la incorrecta creacion de un Expediente' do
     subject {post :create, params: parametros}
 
-    let(:parametros) {{ expediente: { demandado: 'Maria Perez', materia: 'Daños y Perjuicios'} }}
+    let(:parametros) {{ expediente: { demandado: 'Maria Perez', materia: 'Daños y Perjuicios', cliente: @cliente.id} }}
 
     it 'un expediente no se puede crear sin actor' do
       subject
@@ -97,7 +115,12 @@ describe ExpedientesController do
       asertar_que_el_expediente_no_fue_creado
     end
 
-    let(:parametros) {{ expediente: { actor: 'Juan Gonzalez', materia: 'Daños y Perjuicios'} }}
+    let(:parametros) {{ expediente: {
+        actor: "#{@cliente.nombre} #{@cliente.apellido}",
+        materia: 'Daños y Perjuicios',
+        cliente: @cliente.id}
+      }
+    }
 
     it 'un expediente no se puede crear sin demandado' do
       subject
@@ -108,7 +131,12 @@ describe ExpedientesController do
       asertar_que_el_expediente_no_fue_creado
     end
 
-    let(:parametros) {{ expediente: { actor: 'Juan Gonzalez', demandado: 'Maria Perez'} }}
+    let(:parametros) {{ expediente: {
+        actor: "#{@cliente.nombre} #{@cliente.apellido}",
+        demandado: 'Maria Perez',
+        cliente: @cliente.id}
+      }
+    }
 
     it 'un expediente no se puede crear sin materia' do
       subject

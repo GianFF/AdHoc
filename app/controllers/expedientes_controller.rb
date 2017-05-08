@@ -1,13 +1,13 @@
 class ExpedientesController < ApplicationController
-  #TODO: before_action :authenticate_abogado!
+  before_action :authenticate_abogado!
 
   def show
-    @cliente = @ad_hoc.buscar_expediente_por_id!(params[:id])
+    @expediente = @ad_hoc.buscar_expediente_por_id!(params[:id])
   end
 
   def create
     begin
-      @expediente = @ad_hoc.crear_expediente_nuevo!(validar_parametros_expediente)
+      @expediente = @ad_hoc.crear_expediente_nuevo!(validar_parametros_expediente, current_abogado)
       flash.now[:success] = @ad_hoc.mensaje_de_confirmacion_para_la_correcta_creacion_de_un_expediente
       render :show
     rescue ActiveRecord::RecordInvalid
