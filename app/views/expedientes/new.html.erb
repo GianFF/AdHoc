@@ -1,10 +1,10 @@
 <%= render 'tabs' do %>
-    <%= form_for :expediente, url: expedientes_path, html: {class: 'form-horizontal'} do |f| %>
+    <%= form_for :expediente, url: new_cliente_expediente_path(@cliente.id), html: {class: 'form-horizontal'} do |f| %>
 
         <div class="field form-group">
           <%= f.label :actor, class: 'col-sm-2 control-label' %>*
           <div class="col-sm-8">
-            <%= f.text_field :actor, class: 'form-control', autofocus: true %>
+            <%= f.text_field :actor, value: @cliente.nombre_completo, class: 'form-control', autofocus: true %>
           </div>
         </div>
 
@@ -29,4 +29,9 @@
         </div>
 
     <% end %>
+    <ul class="nav nav-tabs">
+      <li role="presentation" class="active">
+        <%= link_to "#{@cliente.nombre_completo}", cliente_path(@cliente.id), :method => :get, class: 'active' %>
+      </li>
+    </ul>
 <% end %>

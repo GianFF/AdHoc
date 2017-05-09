@@ -7,6 +7,8 @@ class ExpedientesController < ApplicationController
 
   def new
     @expediente = Expediente.new
+    @cliente = Cliente.find(params[:cliente_id])
+    @expediente.cliente = @cliente
   end
 
   def create

@@ -1,6 +1,6 @@
 class Expediente < ApplicationRecord
   belongs_to :cliente
-  belongs_to :abogado
+  belongs_to :abogado # TODO: revisar esta asociacion...
 
   validates :actor, :demandado, :materia, :cliente_id, :abogado_id, presence: true
 

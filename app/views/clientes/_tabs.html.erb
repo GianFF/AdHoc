@@ -2,7 +2,7 @@
   <li role="presentation" class="active">
     <a href="#" id="tabs__tab-activa">
       <% if @cliente &&  @cliente.nombre && @cliente.apellido %>
-          <%= @cliente.nombre %> <%= @cliente.apellido %>
+          <%= @cliente.nombre_completo %>
       <% else %>
           Nuevo cliente
       <% end %>

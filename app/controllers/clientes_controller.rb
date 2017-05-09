@@ -5,6 +5,7 @@ class ClientesController < ApplicationController
   def index
     begin
       @cliente = @ad_hoc.buscar_cliente_por_nombre_o_apellido!(validar_parametro_query, current_abogado.id)
+      #@expedientes = @cliente.expedientes
       render :show
     rescue ActiveRecord::RecordNotFound
       flash.now[:error] = @ad_hoc.mensaje_de_error_para_busqueda_de_cliente_fallida(params[:query])
