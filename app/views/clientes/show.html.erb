@@ -61,9 +61,5 @@
     <%= button_to 'Borrar', @cliente, method: :delete, class: 'btn btn-danger',
                   data: { confirm: "¿Seguro que quiere eliminar un cliente?" } %>
   </div>
-  <ul class="nav nav-tabs">
-    <li role="presentation" class="active">
-      <%= link_to 'Nuevo expediente', new_cliente_expediente_path(@cliente.id), class: 'active' %>
-    </li>
-  </ul>
 <% end %>
+<%= render 'tabs_expedientes' %>

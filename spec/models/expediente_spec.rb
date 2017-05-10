@@ -1,5 +1,10 @@
 require 'rails_helper'
 
-RSpec.describe Expediente, type: :model do
-  pending "add some examples to (or delete) #{__FILE__}"
+describe Expediente, type: :model do
+
+  it "tiene un titulo" do
+    expediente = Expediente.new(actor: "Juan Pepe", demandado: "Maria Perez", materia: "Daños y Perjuicios")
+
+    expect(expediente.titulo).to eq "#{expediente.actor} c/ #{expediente.demandado}"
+  end
 end

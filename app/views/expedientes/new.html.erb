@@ -1,7 +1,5 @@
 <%= render 'tabs' do %>
-
   <%= form_for [@cliente, @expediente] do |f| %>
-  <%#= form_for :expediente, url: new_cliente_expedientes_path(@cliente.id), html: {class: 'form-horizontal'} do |f| %>
 
     <div class="field form-group">
       <%= f.label :actor, class: 'col-sm-2 control-label' %>*
@@ -31,9 +29,5 @@
     </div>
 
   <% end %>
-  <ul class="nav nav-tabs">
-    <li role="presentation" class="active">
-      <%= link_to "#{@cliente.nombre_completo}", cliente_path(@cliente.id), :method => :get, class: 'active' %>
-    </li>
-  </ul>
 <% end %>
+<%= render 'tab_cliente' %>
