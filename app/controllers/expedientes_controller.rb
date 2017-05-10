@@ -43,7 +43,10 @@ class ExpedientesController < ApplicationController
   end
 
   def destroy
-    #TODO
+    @ad_hoc.eliminar_expediente(params[:id])
+    flash.now[:success] = @ad_hoc.mensaje_de_confirmacion_para_la_correcta_eliminacion_de_un_expediente
+
+    redirect_to cliente_url(validar_parametros_cliente)
   end
 
   private

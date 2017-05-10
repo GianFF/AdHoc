@@ -278,4 +278,24 @@ describe ExpedientesController do
     end
 
   end
+
+  context 'Borrado de Expedientes' do
+    let(:expediente) {Expediente.create!(actor: "#{@cliente.nombre_completo}",
+                                         demandado: 'Maria Perez',
+                                         materia: 'Daños y Perjuicios',
+                                         cliente_id: @cliente.id)}
+
+    subject { delete :destroy, params: {
+        id: expediente.id,
+        cliente_id: @cliente.id,
+    }}
+
+    it 'se puede eliminar un expediente' do
+      subject
+
+      expect(flash[:success]).to eq @ad_hoc.mensaje_de_confirmacion_para_la_correcta_eliminacion_de_un_expediente
+      expect(Expediente.all.count).to eq 0
+      expect(response).to have_http_status(:ok)
+    end
+  end
 end

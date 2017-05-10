@@ -60,6 +60,12 @@ class AdHocAplicacion
     expediente
   end
 
+  def eliminar_expediente(expediente_id)
+    expediente = self.buscar_expediente_por_id(expediente_id)
+    expediente.destroy
+  end
+
+
   # Mensajes de error:
 
   def mensaje_de_confirmacion_para_correcta_eliminacion_de_un_cliente
@@ -104,6 +110,10 @@ class AdHocAplicacion
 
   def mensaje_de_confirmacion_para_la_correcta_edicion_de_un_expediente
     'Expediente editado satisfactoriamente'
+  end
+
+  def mensaje_de_confirmacion_para_la_correcta_eliminacion_de_un_expediente
+    'Expediente eliminado satisfactoriamente'
   end
 
   private

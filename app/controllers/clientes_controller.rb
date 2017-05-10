@@ -38,6 +38,7 @@ class ClientesController < ApplicationController
   def create
     begin
       @cliente = @ad_hoc.crear_cliente_nuevo!(validar_parametros_cliente, current_abogado)
+      @expedientes = @cliente.expedientes
       flash.now[:success] = @ad_hoc.mensaje_de_confirmacion_para_la_correcta_creacion_de_un_cliente
       render :show
     rescue  ActiveRecord::RecordInvalid

@@ -25,7 +25,7 @@
   <% end %>
 
   <div class="form-group cliente__show-botones" role="group">
-    <%= button_to 'Editar', edit_cliente_expediente_path(@cliente.id), :method => :get, class: 'btn btn-success cliente__show-boton-editar' %>
+    <%= button_to 'Editar', edit_cliente_expediente_path(@cliente.id, @expediente.id), :method => :get, class: 'btn btn-success cliente__show-boton-editar' %>
     <%= button_to 'Borrar', [@cliente, @expediente], method: :delete, class: 'btn btn-danger',
                   data: { confirm: "¿Seguro que quiere eliminar éste expediente?" } %>
   </div>
