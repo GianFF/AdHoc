@@ -30,8 +30,10 @@ class AdHocAplicacion
     cliente
   end
 
-  def editar_cliente!(cliente, parametros_cliente)
+  def editar_cliente!(cliente_id, parametros_cliente)
+    cliente = self.buscar_cliente_por_id(cliente_id)
     cliente.update!(parametros_cliente)
+    cliente
   end
 
   def eliminar_cliente!(cliente_id, abogado_id)
@@ -48,8 +50,14 @@ class AdHocAplicacion
     expediente
   end
 
-  def buscar_expediente_por_id!(expediente_id)
+  def buscar_expediente_por_id(expediente_id)
     Expediente.find(expediente_id)
+  end
+
+  def editar_expediente!(expediente_id, parametros_expediente)
+    expediente = self.buscar_expediente_por_id(expediente_id)
+    expediente.update!(parametros_expediente)
+    expediente
   end
 
   # Mensajes de error:
@@ -92,6 +100,10 @@ class AdHocAplicacion
 
   def mensaje_de_error_para_expediente_invalido
     'El Actor, Demandado, y Materia no pueden ser vacios'
+  end
+
+  def mensaje_de_confirmacion_para_la_correcta_edicion_de_un_expediente
+    'Expediente editado satisfactoriamente'
   end
 
   private

@@ -48,9 +48,9 @@ class ClientesController < ApplicationController
   end
 
   def update
-    @cliente = @ad_hoc.buscar_cliente_por_id(cliente_id)
     begin
-      @ad_hoc.editar_cliente!(@cliente, validar_parametros_cliente)
+      @cliente = @ad_hoc.editar_cliente!(cliente_id, validar_parametros_cliente)
+      @expedientes = @cliente.expedientes
       flash.now[:success] = @ad_hoc.mensaje_de_confirmacion_para_la_correcta_edicion_de_un_cliente
       render :show
     rescue ActiveRecord::ActiveRecordError

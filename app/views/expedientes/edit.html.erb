@@ -29,5 +29,7 @@
     </div>
 
   <% end %>
+  <%= link_to 'Cancelar', cliente_expediente_path(@cliente.id), method: :get,
+              class: 'btn btn-warning cliente__edit-cancelar' %>
 <% end %>
 <%= render 'tab_cliente' %>

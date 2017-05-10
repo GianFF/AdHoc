@@ -234,7 +234,7 @@ describe ClientesController do
   context 'Edicion de clientes' do
     let(:cliente){ Cliente.create!(abogado_id: @abogado.id, nombre: 'Foo', apellido: 'Bar') }
 
-    context 'En la correcta creacion de un cliente' do
+    context 'En la correcta edicion de un cliente' do
 
       subject { put :update, id: cliente.id, cliente: {nombre: 'Foo1', apellido: 'Bar1'}}
 

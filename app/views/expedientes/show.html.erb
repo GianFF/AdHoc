@@ -3,31 +3,31 @@
 
     <div class="field form-group">
       <%= f.label :actor, class: 'col-sm-2 control-label' %>
-      <div class="col-sm-10">
+      <div class="col-sm-8">
         <%= f.text_field :actor, class: 'form-control', readonly: true %>
       </div>
     </div>
 
     <div class="field form-group">
       <%= f.label :demandado, class: 'col-sm-2 control-label' %>
-      <div class="col-sm-10">
+      <div class="col-sm-8">
         <%= f.text_field :demandado, class: 'form-control', readonly: true %>
       </div>
     </div>
 
     <div class="field form-group">
       <%= f.label :materia, class: 'col-sm-2 control-label' %>
-      <div class="col-sm-10">
+      <div class="col-sm-8">
         <%= f.text_field :materia, class: 'form-control', readonly: true %>
       </div>
     </div>
 
-    <div class="actions form-group cliente__edit-botones">
-      <div class="col-sm-4">
-        <%= f.submit 'Guardar', {class: 'btn btn-success cliente__form-guardar'}%>
-      </div>
-    </div>
-
   <% end %>
+
+  <div class="form-group cliente__show-botones" role="group">
+    <%= button_to 'Editar', edit_cliente_expediente_path(@cliente.id), :method => :get, class: 'btn btn-success cliente__show-boton-editar' %>
+    <%= button_to 'Borrar', [@cliente, @expediente], method: :delete, class: 'btn btn-danger',
+                  data: { confirm: "¿Seguro que quiere eliminar éste expediente?" } %>
+  </div>
 <% end %>
 <%= render 'tab_cliente' %>
