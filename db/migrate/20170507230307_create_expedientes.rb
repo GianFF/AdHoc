@@ -5,7 +5,6 @@ class CreateExpedientes < ActiveRecord::Migration[5.0]
       t.text :demandado
       t.text :materia
       t.integer :cliente_id
-      t.integer :abogado_id
 
       t.timestamps
     end

@@ -1,5 +1,3 @@
-#TODO: ver si se le puede cambiar el nombre a "CrearDirecciones"
-
 class CreateDireccions < ActiveRecord::Migration[5.0]
   def change
     create_table :direccions do |t|

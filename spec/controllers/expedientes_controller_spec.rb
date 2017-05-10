@@ -58,9 +58,9 @@ describe ExpedientesController do
       expediente: {
           actor: "#{@cliente.nombre} #{@cliente.apellido}",
           demandado: 'Maria Perez',
-          materia: 'Daños y Perjuicios',
-          cliente: @cliente.id
-      }
+          materia: 'Daños y Perjuicios'
+      },
+      cliente_id: @cliente.id
     }
   }
 
@@ -83,11 +83,11 @@ describe ExpedientesController do
   context 'En la correcta creacion de un Expediente' do
     subject { post :create, params: {
         expediente: {
-            actor: "#{@cliente.nombre} #{@cliente.apellido}",
+            actor: "#{@cliente.nombre_completo}",
             demandado: 'Maria Perez',
-            materia: 'Daños y Perjuicios',
-            cliente: @cliente.id
-        }
+            materia: 'Daños y Perjuicios'
+        },
+        cliente_id: @cliente.id
       }
     }
 
@@ -104,7 +104,13 @@ describe ExpedientesController do
   context 'En la incorrecta creacion de un Expediente' do
     subject {post :create, params: parametros}
 
-    let(:parametros) {{ expediente: { demandado: 'Maria Perez', materia: 'Daños y Perjuicios', cliente: @cliente.id} }}
+    let(:parametros) {{
+        expediente: {
+            demandado: 'Maria Perez',
+            materia: 'Daños y Perjuicios'
+        },
+        cliente_id: @cliente.id
+    }}
 
     it 'un expediente no se puede crear sin actor' do
       subject
@@ -115,12 +121,13 @@ describe ExpedientesController do
       asertar_que_el_expediente_no_fue_creado
     end
 
-    let(:parametros) {{ expediente: {
-        actor: "#{@cliente.nombre} #{@cliente.apellido}",
-        materia: 'Daños y Perjuicios',
-        cliente: @cliente.id}
-      }
-    }
+    let(:parametros) {{
+        expediente: {
+            actor: "#{@cliente.nombre} #{@cliente.apellido}",
+            materia: 'Daños y Perjuicios'
+        },
+        cliente_id: @cliente.id
+    }}
 
     it 'un expediente no se puede crear sin demandado' do
       subject
@@ -131,12 +138,13 @@ describe ExpedientesController do
       asertar_que_el_expediente_no_fue_creado
     end
 
-    let(:parametros) {{ expediente: {
-        actor: "#{@cliente.nombre} #{@cliente.apellido}",
-        demandado: 'Maria Perez',
-        cliente: @cliente.id}
-      }
-    }
+    let(:parametros) {{
+        expediente: {
+            actor: "#{@cliente.nombre} #{@cliente.apellido}",
+            demandado: 'Maria Perez'
+        },
+        cliente_id: @cliente.id
+    }}
 
     it 'un expediente no se puede crear sin materia' do
       subject

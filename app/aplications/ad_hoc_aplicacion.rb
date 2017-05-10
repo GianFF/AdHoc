@@ -41,13 +41,9 @@ class AdHocAplicacion
 
   # Expedientes:
 
-  def crear_expediente_nuevo!(parametros_expediente, abogado)
-    cliente = Cliente.find(parametros_expediente[:cliente].to_i) #TODO: que pasa si el cliente no existe?
-    parametros = sanitizar_parametros_para_el_cliente(cliente, parametros_expediente)
-
-    expediente = Expediente.new(parametros)
-    expediente.cliente = cliente
-    expediente.abogado = abogado
+  def crear_expediente_nuevo!(parametros_expediente, cliente_id)
+    expediente = Expediente.new(parametros_expediente)
+    expediente.cliente = buscar_cliente_por_id(cliente_id)
     expediente.save!
     expediente
   end
@@ -118,13 +114,5 @@ class AdHocAplicacion
     if la_contrasenia_es_blanca?(contrasenia_del_abogado)
       block.call(mensaje_de_error_para_contrasenia_no_proveida)
     end
-  end
-
-  def sanitizar_parametros_para_el_cliente(cliente, parametros_expediente)
-    {
-        actor: "#{cliente.nombre} #{cliente.apellido}",
-        demandado: parametros_expediente[:demandado],
-        materia: parametros_expediente[:materia]
-    }
   end
 end

@@ -1,37 +1,39 @@
 <%= render 'tabs' do %>
-    <%= form_for :expediente, url: new_cliente_expediente_path(@cliente.id), html: {class: 'form-horizontal'} do |f| %>
 
-        <div class="field form-group">
-          <%= f.label :actor, class: 'col-sm-2 control-label' %>*
-          <div class="col-sm-8">
-            <%= f.text_field :actor, value: @cliente.nombre_completo, class: 'form-control', autofocus: true %>
-          </div>
-        </div>
+  <%= form_for [@cliente, @expediente] do |f| %>
+  <%#= form_for :expediente, url: new_cliente_expedientes_path(@cliente.id), html: {class: 'form-horizontal'} do |f| %>
 
-        <div class="field form-group">
-          <%= f.label :demandado, class: 'col-sm-2 control-label' %>*
-          <div class="col-sm-8">
-            <%= f.text_field :demandado, class: 'form-control' %>
-          </div>
-        </div>
+    <div class="field form-group">
+      <%= f.label :actor, class: 'col-sm-2 control-label' %>*
+      <div class="col-sm-8">
+        <%= f.text_field :actor, value: @cliente.nombre_completo, class: 'form-control', autofocus: true %>
+      </div>
+    </div>
 
-        <div class="field form-group">
-          <%= f.label :materia, class: 'col-sm-2 control-label' %>*
-          <div class="col-sm-8">
-            <%= f.text_field :materia, class: 'form-control' %>
-          </div>
-        </div>
+    <div class="field form-group">
+      <%= f.label :demandado, class: 'col-sm-2 control-label' %>*
+      <div class="col-sm-8">
+        <%= f.text_field :demandado, class: 'form-control' %>
+      </div>
+    </div>
 
-        <div class="actions form-group cliente__edit-botones">
-          <div class="col-sm-4">
-            <%= f.submit 'Guardar', {class: 'btn btn-success cliente__form-guardar'}%>
-          </div>
-        </div>
+    <div class="field form-group">
+      <%= f.label :materia, class: 'col-sm-2 control-label' %>*
+      <div class="col-sm-8">
+        <%= f.text_field :materia, class: 'form-control' %>
+      </div>
+    </div>
 
-    <% end %>
-    <ul class="nav nav-tabs">
-      <li role="presentation" class="active">
-        <%= link_to "#{@cliente.nombre_completo}", cliente_path(@cliente.id), :method => :get, class: 'active' %>
-      </li>
-    </ul>
+    <div class="actions form-group cliente__edit-botones">
+      <div class="col-sm-4">
+        <%= f.submit 'Guardar', {class: 'btn btn-success cliente__form-guardar'}%>
+      </div>
+    </div>
+
+  <% end %>
+  <ul class="nav nav-tabs">
+    <li role="presentation" class="active">
+      <%= link_to "#{@cliente.nombre_completo}", cliente_path(@cliente.id), :method => :get, class: 'active' %>
+    </li>
+  </ul>
 <% end %>
