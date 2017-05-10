@@ -278,9 +278,5 @@ describe ClientesController do
       expect(Cliente.all.count).to eq 0
       expect(response).to have_http_status(:ok)
     end
-
-    it 'cuando se elimina un cliente se eliminan todos los expedientes asociados a el' do
-      fail
-    end
   end
 end

@@ -60,6 +60,14 @@ def asertar_que_el_expediente_no_cambio(un_actor, un_demandado, una_materia)
   expect(expediente.materia).to eq una_materia
 end
 
+def asertar_que_se_redirecciono_a(url)
+  assert_redirected_to url
+end
+
+def asertar_que_se_elimino_el_expediente
+  expect(Expediente.all.count).to eq 0
+end
+
 describe ExpedientesController do
 
   before(:each) do
@@ -293,9 +301,10 @@ describe ExpedientesController do
     it 'se puede eliminar un expediente' do
       subject
 
-      expect(flash[:success]).to eq @ad_hoc.mensaje_de_confirmacion_para_la_correcta_eliminacion_de_un_expediente
-      expect(Expediente.all.count).to eq 0
-      expect(response).to have_http_status(:ok)
+      asertar_que_se_muestra_un_mensaje_de_confirmacion(@ad_hoc.mensaje_de_confirmacion_para_la_correcta_eliminacion_de_un_expediente)
+      asertar_que_se_elimino_el_expediente
+      asertar_que_la_respuesta_tiene_estado(:found)
+      asertar_que_se_redirecciono_a(cliente_url(@cliente.id))
     end
   end
 end
