@@ -1,0 +1,7 @@
+<%= render 'shared/tabs_contenedor' do %>
+  <ul class="nav nav-tabs">
+    <li role="presentation" class="active">
+      <%= link_to "#{@cliente.nombre_completo}", cliente_path(@cliente.id), :method => :get, class: 'active' %>
+    </li>
+  </ul>
+<% end %>

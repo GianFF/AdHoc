@@ -2,18 +2,16 @@
   <li role="presentation" class="active">
     <a href="#" id="tabs__tab-activa">
       <% if @cliente &&  @cliente.nombre && @cliente.apellido %>
-          <%= @cliente.nombre %> <%= @cliente.apellido %>
+          <%= @cliente.nombre_completo %>
       <% else %>
           Nuevo cliente
       <% end %>
     </a>
   </li>
-  <li role="presentation">
+  <li role="presentation" class="tab_inactiva">
     <a href="/">Nuevo cliente</a>
   </li>
 </ul>
-<div class="tab-content clearfix">
-  <div class="tab-pane active">
-    <%= yield %>
-  </div>
-</div>
+<%= render 'shared/tabs_contenedor' do %>
+  <%= yield %>
+<% end %>

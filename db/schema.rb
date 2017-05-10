@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170413161719) do
+ActiveRecord::Schema.define(version: 20170507230307) do
 
   create_table "abogados", force: :cascade do |t|
     t.string   "email",                  default: "", null: false
@@ -60,6 +60,15 @@ ActiveRecord::Schema.define(version: 20170413161719) do
     t.string   "localidad"
     t.string   "provincia"
     t.string   "pais"
+    t.integer  "cliente_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "expedientes", force: :cascade do |t|
+    t.text     "actor"
+    t.text     "demandado"
+    t.text     "materia"
     t.integer  "cliente_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false

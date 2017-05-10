@@ -1,0 +1,14 @@
+<ul class="nav nav-tabs">
+  <li role="presentation" class="active">
+    <a href="#" id="tabs__tab-activa">
+      <% if @expediente &&  @expediente.actor && @expediente.demandado %>
+          <%= @expediente.titulo %>
+      <% else %>
+          Nuevo expediente
+      <% end %>
+    </a>
+  </li>
+</ul>
+<%= render 'shared/tabs_contenedor' do %>
+    <%= yield %>
+<% end %>
