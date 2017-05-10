@@ -8,6 +8,10 @@ class ApplicationController < ActionController::Base
 
   before_action :crear_aplicacion
 
+  def abogado_actual
+    current_abogado
+  end
+
   private
 
   def crear_aplicacion

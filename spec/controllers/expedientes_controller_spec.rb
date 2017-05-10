@@ -42,7 +42,7 @@ def asertar_que_el_expediente_no_fue_creado()
   expect(un_expediente).to be nil
 end
 
-def asertar_que_un_expediente_pertenece_a_un_abogado(otro_abogado)
+def asertar_que_un_expediente_no_pertenece_a(otro_abogado)
   un_expediente = Expediente.first
   expect(un_expediente.pertenece_a? @abogado).to be true
   expect(un_expediente.pertenece_a? otro_abogado).to be false
@@ -99,7 +99,7 @@ describe ExpedientesController do
 
     subject
 
-    asertar_que_un_expediente_pertenece_a_un_abogado(otro_abogado)
+    asertar_que_un_expediente_no_pertenece_a(otro_abogado)
   end
 
   context 'Creacion de Expedientes' do

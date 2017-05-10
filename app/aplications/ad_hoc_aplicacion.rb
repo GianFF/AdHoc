@@ -19,10 +19,6 @@ class AdHocAplicacion
     Cliente.where(["id = ? and abogado_id = ?", cliente_id, abogado_id]).take!
   end
 
-  def buscar_cliente_por_id(cliente_id)
-    Cliente.find(cliente_id)
-  end
-
   def crear_cliente_nuevo!(parametros_cliente, abogado_actual)
     cliente = Cliente.new(parametros_cliente)
     cliente.abogado = abogado_actual
@@ -30,8 +26,8 @@ class AdHocAplicacion
     cliente
   end
 
-  def editar_cliente!(cliente_id, parametros_cliente)
-    cliente = self.buscar_cliente_por_id(cliente_id)
+  def editar_cliente!(cliente_id, parametros_cliente, abogado)
+    cliente = self.buscar_cliente_por_id!(cliente_id, abogado)
     cliente.update!(parametros_cliente)
     cliente
   end
@@ -43,25 +39,27 @@ class AdHocAplicacion
 
   # Expedientes:
 
-  def crear_expediente_nuevo!(parametros_expediente, cliente_id)
+  def crear_expediente_nuevo!(parametros_expediente, cliente_id, abogado)
     expediente = Expediente.new(parametros_expediente)
-    expediente.cliente = buscar_cliente_por_id(cliente_id)
+    expediente.cliente = buscar_cliente_por_id!(cliente_id, abogado)
     expediente.save!
     expediente
   end
 
-  def buscar_expediente_por_id(expediente_id)
-    Expediente.find(expediente_id)
+  def buscar_expediente_por_id!(expediente_id, un_abogado)
+    expediente = Expediente.find(expediente_id)
+    raise ActiveRecord::RecordNotFound unless expediente.pertenece_a? un_abogado
+    expediente
   end
 
-  def editar_expediente!(expediente_id, parametros_expediente)
-    expediente = self.buscar_expediente_por_id(expediente_id)
+  def editar_expediente!(expediente_id, parametros_expediente, abogado)
+    expediente = self.buscar_expediente_por_id!(expediente_id, abogado)
     expediente.update!(parametros_expediente)
     expediente
   end
 
-  def eliminar_expediente(expediente_id)
-    expediente = self.buscar_expediente_por_id(expediente_id)
+  def eliminar_expediente!(expediente_id, abogado)
+    expediente = self.buscar_expediente_por_id!(expediente_id, abogado)
     expediente.destroy
   end
 
@@ -106,6 +104,10 @@ class AdHocAplicacion
 
   def mensaje_de_error_para_expediente_invalido
     'El Actor, Demandado, y Materia no pueden ser vacios'
+  end
+
+  def mensaje_de_error_para_expediente_inexistente
+    'Expediente inexistente'
   end
 
   def mensaje_de_confirmacion_para_la_correcta_edicion_de_un_expediente
