@@ -102,6 +102,58 @@ describe ExpedientesController do
     asertar_que_un_expediente_no_pertenece_a(otro_abogado)
   end
 
+  context 'Numeracion de Expedientes' do
+    subject {
+      post :numerar!,
+           params: {
+              id: expediente.id,
+              datos: {
+                  numero_de_expediente: 123,
+                  anio:  DateTime.now.year,
+                  juzgado: "Juzgado Civil y Comercial",
+                  numero_de_juzgado: 7,
+                  departamento: "Departamento Judicial de Quilmes",
+                  ubicacion_del_departamento: "Alvear 465 piso N°1 de Quilmes"
+              },
+              cliente_id: @cliente.id,
+          }
+    }
+
+    subject {
+      post :realizar_numeraracion,
+           params: {
+             id: expediente.id,
+             numero: 123,
+             anio:  DateTime.now.year,
+             juzgado: "Juzgado Civil y Comercial",
+             numero_de_juzgado: 7,
+             departamento: "Departamento Judicial de Quilmes",
+             ubicacion_del_departamento: "Alvear 465 piso N°1 de Quilmes",
+             cliente_id: @cliente.id,
+           }
+    }
+
+    let(:expediente) {Expediente.create!(actor: "#{@cliente.nombre_completo}",
+                                         demandado: 'Maria Perez',
+                                         materia: 'Daños y Perjuicios',
+                                         cliente_id: @cliente.id)}
+
+    it 'un expediente puede ser numerado' do
+      numero = 123
+      anio = DateTime.now.year
+      juzgado = "Juzgado Civil y Comercial" #TODO: extraer a un ENUM, para ello averiguar que entidad engloba a un Juzgado o un Tribunal
+      numero_de_juzgado = 7
+      departamento = "Departamento Judicial de Quilmes" #TODO: este dato podria ir capturandolo para guardar en una base de datos retroalimentable.
+      ubicacion_del_departamento = "Alvear 465 piso N°1 de Quilmes"
+      caratula_del_expediente_numerado = "#{expediente.titulo} s/ #{expediente.materia} (#{numero}/#{anio}) en tramite ante el #{juzgado} N°#{numero_de_juzgado} del #{departamento} sito en #{ubicacion_del_departamento}"
+
+      subject
+      expediente.reload
+
+      expect(expediente.caratula).to eq caratula_del_expediente_numerado
+    end
+  end
+
   context 'Creacion de Expedientes' do
 
     context 'En la correcta creacion de un Expediente' do
