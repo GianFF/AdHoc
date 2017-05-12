@@ -68,6 +68,23 @@ def asertar_que_se_elimino_el_expediente
   expect(Expediente.all.count).to eq 0
 end
 
+def numerar_expediente
+  post :realizar_numeraracion,
+       params: {
+           id: expediente.id,
+           cliente_id: @cliente.id,
+           expediente: {
+               numero: 123,
+               anio: DateTime.now.year,
+               juzgado: "Juzgado Civil y Comercial",
+               numero_de_juzgado: 7,
+               departamento: "Departamento Judicial de Quilmes",
+               ubicacion_del_departamento: "Alvear 465 piso N°1 de Quilmes",
+
+           }
+       }
+end
+
 describe ExpedientesController do
 
   before(:each) do
@@ -104,33 +121,7 @@ describe ExpedientesController do
 
   context 'Numeracion de Expedientes' do
     subject {
-      post :numerar!,
-           params: {
-              id: expediente.id,
-              datos: {
-                  numero_de_expediente: 123,
-                  anio:  DateTime.now.year,
-                  juzgado: "Juzgado Civil y Comercial",
-                  numero_de_juzgado: 7,
-                  departamento: "Departamento Judicial de Quilmes",
-                  ubicacion_del_departamento: "Alvear 465 piso N°1 de Quilmes"
-              },
-              cliente_id: @cliente.id,
-          }
-    }
-
-    subject {
-      post :realizar_numeraracion,
-           params: {
-             id: expediente.id,
-             numero: 123,
-             anio:  DateTime.now.year,
-             juzgado: "Juzgado Civil y Comercial",
-             numero_de_juzgado: 7,
-             departamento: "Departamento Judicial de Quilmes",
-             ubicacion_del_departamento: "Alvear 465 piso N°1 de Quilmes",
-             cliente_id: @cliente.id,
-           }
+      numerar_expediente
     }
 
     let(:expediente) {Expediente.create!(actor: "#{@cliente.nombre_completo}",
@@ -140,7 +131,7 @@ describe ExpedientesController do
 
     it 'un expediente puede ser numerado' do
       numero = 123
-      anio = DateTime.now.year
+      anio = DateTime.now.year % 100
       juzgado = "Juzgado Civil y Comercial" #TODO: extraer a un ENUM, para ello averiguar que entidad engloba a un Juzgado o un Tribunal
       numero_de_juzgado = 7
       departamento = "Departamento Judicial de Quilmes" #TODO: este dato podria ir capturandolo para guardar en una base de datos retroalimentable.
@@ -151,6 +142,33 @@ describe ExpedientesController do
       expediente.reload
 
       expect(expediente.caratula).to eq caratula_del_expediente_numerado
+    end
+
+    it 'un expediente no puede ser numerado dos veces' do
+      numero = 123
+      anio = DateTime.now.year % 100
+      juzgado = "Juzgado Civil y Comercial" #TODO: extraer a un ENUM, para ello averiguar que entidad engloba a un Juzgado o un Tribunal
+      numero_de_juzgado = 7
+      departamento = "Departamento Judicial de Quilmes" #TODO: este dato podria ir capturandolo para guardar en una base de datos retroalimentable.
+      ubicacion_del_departamento = "Alvear 465 piso N°1 de Quilmes"
+      caratula_del_expediente_numerado = "#{expediente.titulo} s/ #{expediente.materia} (#{numero}/#{anio}) en tramite ante el #{juzgado} N°#{numero_de_juzgado} del #{departamento} sito en #{ubicacion_del_departamento}"
+
+      subject
+      expediente.reload
+
+      expect{numerar_expediente}.to raise_error StandardError, expediente.mensaje_de_error_para_expediente_numerado
+    end
+
+    it 'todos los campos son requeridos a la hora de numerar' do
+      numero = 123
+      anio = DateTime.now.year % 100
+      juzgado = "Juzgado Civil y Comercial" #TODO: extraer a un ENUM, para ello averiguar que entidad engloba a un Juzgado o un Tribunal
+      numero_de_juzgado = 7
+      departamento = "Departamento Judicial de Quilmes" #TODO: este dato podria ir capturandolo para guardar en una base de datos retroalimentable.
+      ubicacion_del_departamento = "Alvear 465 piso N°1 de Quilmes"
+      caratula_del_expediente_numerado = "#{expediente.titulo} s/ #{expediente.materia} (#{numero}/#{anio}) en tramite ante el #{juzgado} N°#{numero_de_juzgado} del #{departamento} sito en #{ubicacion_del_departamento}"
+
+      fail
     end
   end
 

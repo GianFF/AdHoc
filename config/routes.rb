@@ -3,9 +3,7 @@ Rails.application.routes.draw do
   resources :clientes do
     resources :expedientes
 
-    post 'numerar/:id/:numero/:anio/:juzgado/:numero_de_juzgado/:departamento/:ubicacion_del_departamento',
-        to: 'expedientes#realizar_numeraracion', as: :expediente_realizar_numeracion
-
+    patch 'numerar/:id', to: 'expedientes#realizar_numeraracion', as: :expediente_realizar_numeracion
 
     get 'numerar/:id', to: 'expedientes#numerar', as: :expediente_numerar
   end

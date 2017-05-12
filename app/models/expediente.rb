@@ -13,12 +13,12 @@ class Expediente < ApplicationRecord
   end
 
   def numerar!(datos) #TODO: hay un mejor nombre para datos? serian los datos necesarios para numerar el expediente...
-    raise StandardError, 'Este expediente ya ha sido numerado' if self.ha_sido_numerado
+    raise StandardError, mensaje_de_error_para_expediente_numerado if self.ha_sido_numerado?
 
     self.ha_sido_numerado = true
 
     self.numero = datos[:numero]
-    self.anio = datos[:anio]
+    self.anio = DateTime.now.year % 100
     self.juzgado = datos[:juzgado]
     self.numero_de_juzgado = datos[:numero_de_juzgado]
     self.departamento = datos[:departamento]
@@ -27,5 +27,13 @@ class Expediente < ApplicationRecord
 
   def pertenece_a?(un_abogado)
     self.cliente.pertenece_a?(un_abogado)
+  end
+
+  def ha_sido_numerado?
+    self.ha_sido_numerado
+  end
+
+  def mensaje_de_error_para_expediente_numerado
+    'Este expediente ya ha sido numerado'
   end
 end

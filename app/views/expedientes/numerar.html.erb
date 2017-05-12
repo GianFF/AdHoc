@@ -1,8 +1,6 @@
 <%= render 'tabs' do %>
 
-  <!-- TODO: La idea en este formulario es terminar de llenar el objeto expediente. Basicamente le podria pegar a la accion update pero no, porque la idea es pegarle a realizar_numeracion-->
-
-  <%= form_for [@cliente, @expediente], html: {class: 'form-horizontal'} do |f| %>
+  <%= form_for [@cliente, @expediente], :url => cliente_expediente_realizar_numeracion_path, html: {class: 'form-horizontal'} do |f| %>
 
     <div class="field form-group">
       <%= f.label :actor, class: 'col-sm-2 control-label' %>*
@@ -28,14 +26,7 @@
     <div class="field form-group">
       <%= f.label :numero, class: 'col-sm-2 control-label' %>*
       <div class="col-sm-8">
-        <%= f.text_field :numero, class: 'form-control' %>
-      </div>
-    </div>
-
-    <div class="field form-group">
-      <%= f.label :anio, class: 'col-sm-2 control-label' %>*
-      <div class="col-sm-8">
-        <%= f.text_field :anio, class: 'form-control' %>
+        <%= f.number_field :numero, class: 'form-control' %>
       </div>
     </div>
 
@@ -49,7 +40,7 @@
     <div class="field form-group">
       <%= f.label :numero_de_juzgado, class: 'col-sm-2 control-label' %>*
       <div class="col-sm-8">
-        <%= f.text_field :numero_de_juzgado, class: 'form-control' %>
+        <%= f.number_field :numero_de_juzgado, class: 'form-control' %>
       </div>
     </div>
 

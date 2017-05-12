@@ -22,6 +22,44 @@
       </div>
     </div>
 
+    <% if @expediente.ha_sido_numerado? %>
+
+      <div class="field form-group">
+        <%= f.label :numero, class: 'col-sm-2 control-label' %>*
+        <div class="col-sm-8">
+          <%= f.number_field :numero, class: 'form-control' %>
+        </div>
+      </div>
+
+      <div class="field form-group">
+        <%= f.label :juzgado, class: 'col-sm-2 control-label' %>*
+        <div class="col-sm-8">
+          <%= f.text_field :juzgado, class: 'form-control' %>
+        </div>
+      </div>
+
+      <div class="field form-group">
+        <%= f.label :numero_de_juzgado, class: 'col-sm-2 control-label' %>*
+        <div class="col-sm-8">
+          <%= f.number_field :numero_de_juzgado, class: 'form-control' %>
+        </div>
+      </div>
+
+      <div class="field form-group">
+        <%= f.label :departamento, class: 'col-sm-2 control-label' %>*
+        <div class="col-sm-8">
+          <%= f.text_field :departamento, class: 'form-control' %>
+        </div>
+      </div>
+
+      <div class="field form-group">
+        <%= f.label :ubicacion_del_departamento, class: 'col-sm-2 control-label' %>*
+        <div class="col-sm-8">
+          <%= f.text_field :ubicacion_del_departamento, class: 'form-control' %>
+        </div>
+      </div>
+    <% end %>
+
     <div class="actions form-group cliente__edit-botones">
       <div class="col-sm-4">
         <%= f.submit 'Guardar', {class: 'btn btn-success cliente__form-guardar'}%>

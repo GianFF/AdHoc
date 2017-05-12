@@ -3,7 +3,8 @@
     <%= @expediente.caratula %>
   </h1>
 
-  <%= button_to 'Numerar', cliente_expediente_numerar_path, :method => :get, class: 'btn btn-warning expediente__numerar' %>
+  <%= button_to 'Numerar', cliente_expediente_numerar_path(@cliente.id, @expediente.id), :method => :get,
+                disabled: @expediente.ha_sido_numerado?, class: 'btn btn-warning expediente__numerar'%>
   <div class="form-group cliente__show-botones" role="group">
     <%= button_to 'Editar', edit_cliente_expediente_path(@cliente.id, @expediente.id), :method => :get, class: 'btn btn-success cliente__show-boton-editar' %>
     <%= button_to 'Borrar', [@cliente, @expediente], method: :delete, class: 'btn btn-danger',
