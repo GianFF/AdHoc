@@ -55,8 +55,8 @@ class ClientesController < ApplicationController
       flash.now[:success] = @ad_hoc.mensaje_de_confirmacion_para_la_correcta_edicion_de_un_cliente
       render :show
     rescue ActiveRecord::RecordInvalid
-      flash.now[:error] = @ad_hoc.mensaje_de_error_para_nombre_y_apellido_vacios
-      redirect_to action: :edit, status: :bad_request
+      flash.keep[:error] = @ad_hoc.mensaje_de_error_para_nombre_y_apellido_vacios
+      redirect_to action: :edit
     rescue ActiveRecord::RecordNotFound
       flash.keep[:error] = @ad_hoc.mensaje_de_error_para_cliente_inexistente
       redirect_back(fallback_location: root_path)

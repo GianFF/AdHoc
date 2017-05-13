@@ -261,7 +261,7 @@ describe ClientesController do
         expect(cliente.nombre).to eq 'Foo'
         expect(cliente.apellido).to eq 'Bar'
         expect(flash[:error]).to eq 'El nombre y el apellido no pueden ser vacios'
-        expect(response).to have_http_status(:bad_request)
+        expect(response).to have_http_status(:found)
       end
     end
   end
