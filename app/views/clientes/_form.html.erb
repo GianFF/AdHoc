@@ -1,0 +1,51 @@
+<div class="field form-group">
+  <%= cliente.label :nombre, class: 'col-sm-2 control-label' %>
+  <div class="col-sm-4">
+    <%= cliente.text_field :nombre, class: 'form-control', readonly: read_only, autofocus: true %>
+  </div>
+</div>
+
+<div class="field form-group">
+  <%= cliente.label :apellido, class: 'col-sm-2 control-label' %>
+  <div class="col-sm-4">
+    <%= cliente.text_field :apellido, class: 'form-control', readonly: read_only %>
+  </div>
+</div>
+
+<div class="field form-group">
+  <%= cliente.label :telefono, class: 'col-sm-2 control-label' %>
+  <div class="col-sm-4">
+    <%= cliente.number_field :telefono, class: 'form-control', readonly: read_only %>
+  </div>
+</div>
+
+<div class="field form-group">
+  <%= cliente.label :correo_electronico, class: 'col-sm-2 control-label' %>
+  <div class="col-sm-4">
+    <%= cliente.email_field :correo_electronico, class: 'form-control', readonly: read_only %>
+  </div>
+</div>
+
+<div class="field form-group">
+  <%= cliente.label :estado_civil, class: 'col-sm-2 control-label' %>
+  <div class="col-sm-4">
+    <%= cliente.select(:estado_civil, EstadoCivil.estados,
+                       options = {include_blank: true},
+                       html_options = {class: 'form-control', disabled: read_only}) %>
+    <br />
+  </div>
+</div>
+
+<div class="field form-group">
+  <%= cliente.label :empresa, class: 'col-sm-2 control-label' %>
+  <div class="col-sm-4">
+    <%= cliente.text_field :empresa, class: 'form-control', readonly: read_only %>
+  </div>
+</div>
+
+<div class="field form-group">
+  <%= cliente.label 'trabaja en blanco', class: 'col-sm-2 control-label' %>
+  <div class="col-sm-4">
+    <%= cliente.check_box :esta_en_blanco, disabled: read_only %>
+  </div>
+</div>
