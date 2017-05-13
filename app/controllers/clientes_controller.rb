@@ -7,8 +7,8 @@ class ClientesController < ApplicationController
       @cliente = @ad_hoc.buscar_cliente_por_nombre_o_apellido!(validar_parametro_query, abogado_actual.id)
       @expedientes = @cliente.expedientes
       render :show
-    rescue ActiveRecord::RecordNotFound
-      flash.now[:error] = @ad_hoc.mensaje_de_error_para_busqueda_de_cliente_fallida(params[:query])
+    rescue Exception => excepcion
+      flash.now[:error] = excepcion.message
       render :new
     end
   end
@@ -17,8 +17,8 @@ class ClientesController < ApplicationController
     begin
       @cliente = @ad_hoc.buscar_cliente_por_id!(params[:id], abogado_actual.id)
       @expedientes = @cliente.expedientes
-    rescue ActiveRecord::RecordNotFound
-      flash.now[:error] = @ad_hoc.mensaje_de_error_para_cliente_inexistente
+    rescue Exception => excepcion
+      flash.now[:error] = excepcion.message
       render :new
     end
   end
@@ -30,8 +30,9 @@ class ClientesController < ApplicationController
   def edit
     begin
       @cliente = @ad_hoc.buscar_cliente_por_id!(cliente_id, abogado_actual.id)
-    rescue ActiveRecord::RecordNotFound
-      flash.now[:error] = @ad_hoc.mensaje_de_error_para_cliente_inexistente
+    rescue Exception => excepcion
+      flash.now[:error] = excepcion.message
+      render :new
     end
   end
 
@@ -41,9 +42,9 @@ class ClientesController < ApplicationController
       @expedientes = @cliente.expedientes
       flash.now[:success] = @ad_hoc.mensaje_de_confirmacion_para_la_correcta_creacion_de_un_cliente
       render :show
-    rescue  ActiveRecord::RecordInvalid
+    rescue  Exception => excepcion
       @cliente = nil
-      flash.now[:error] = @ad_hoc.mensaje_de_error_para_nombre_y_apellido_vacios
+      flash.now[:error] = excepcion.message
       render :new
     end
   end
@@ -54,9 +55,10 @@ class ClientesController < ApplicationController
       @expedientes = @cliente.expedientes
       flash.now[:success] = @ad_hoc.mensaje_de_confirmacion_para_la_correcta_edicion_de_un_cliente
       render :show
-    rescue ActiveRecord::RecordInvalid
-      flash.keep[:error] = @ad_hoc.mensaje_de_error_para_nombre_y_apellido_vacios
-      redirect_to action: :edit
+    rescue ArgumentError => excepcion
+      @cliente = @ad_hoc.buscar_cliente_por_id!(cliente_id, abogado_actual.id)
+      flash.keep[:error] = excepcion
+      render :edit
     rescue ActiveRecord::RecordNotFound
       flash.keep[:error] = @ad_hoc.mensaje_de_error_para_cliente_inexistente
       redirect_back(fallback_location: root_path)
@@ -68,8 +70,8 @@ class ClientesController < ApplicationController
       @ad_hoc.eliminar_cliente!(params[:id], abogado_actual.id)
       flash.now[:success] = @ad_hoc.mensaje_de_confirmacion_para_correcta_eliminacion_de_un_cliente
       @cliente = nil
-    rescue ActiveRecord::RecordNotFound
-      flash.now[:error] = @ad_hoc.mensaje_de_error_para_cliente_inexistente
+    rescue Exception => excepcion
+      flash.now[:error] = excepcion.message
     end
     render :new
   end

@@ -10,25 +10,41 @@ class AdHocAplicacion
   # Clientes
 
   def buscar_cliente_por_nombre_o_apellido!(query, abogado_id)
-    Cliente.where(['nombre like ? or apellido like ?', "%#{query}%", "%#{query}%"]).
-        where('abogado_id = :abogado_id', {abogado_id: abogado_id}).
-        take!
+    begin
+      Cliente.where(['nombre like ? or apellido like ?', "%#{query}%", "%#{query}%"]).
+          where('abogado_id = :abogado_id', {abogado_id: abogado_id}).
+          take!
+    rescue ActiveRecord::RecordNotFound
+      raise ActiveRecord::RecordNotFound, self.mensaje_de_error_para_busqueda_de_cliente_fallida(query)
+    end
   end
 
   def buscar_cliente_por_id!(cliente_id, abogado_id)
-    Cliente.where(["id = ? and abogado_id = ?", cliente_id, abogado_id]).take!
+    begin
+      Cliente.where(["id = ? and abogado_id = ?", cliente_id, abogado_id]).take!
+    rescue ActiveRecord::RecordNotFound
+      raise ActiveRecord::RecordNotFound, self.mensaje_de_error_para_cliente_inexistente
+    end
   end
 
   def crear_cliente_nuevo!(parametros_cliente, abogado_actual)
     cliente = Cliente.new(parametros_cliente)
     cliente.abogado = abogado_actual
-    cliente.save!
+    begin
+      cliente.save!
+    rescue ActiveRecord::RecordInvalid
+      raise RuntimeError, self.mensaje_de_error_para_nombre_y_apellido_vacios
+    end
     cliente
   end
 
   def editar_cliente!(cliente_id, parametros_cliente, abogado)
     cliente = self.buscar_cliente_por_id!(cliente_id, abogado)
-    cliente.update!(parametros_cliente)
+    begin
+      cliente.update!(parametros_cliente)
+    rescue ActiveRecord::RecordInvalid
+      raise ArgumentError, self.mensaje_de_error_para_nombre_y_apellido_vacios
+    end
     cliente
   end
 
