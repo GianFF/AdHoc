@@ -28,7 +28,7 @@ def asertar_que_se_muestra_un_mensaje_de_error(un_mensaje)
   expect(flash[:error]).to eq un_mensaje
 end
 
-def asertar_que_el_expediente_fue_correctamente_creado()
+def asertar_que_el_expediente_fue_correctamente_creado
   un_expediente = Expediente.first
 
   expect(un_expediente.actor).to eq "#{@cliente.nombre} #{@cliente.apellido}"
@@ -36,10 +36,18 @@ def asertar_que_el_expediente_fue_correctamente_creado()
   expect(un_expediente.materia).to eq 'Daños y Perjuicios'
 end
 
-def asertar_que_el_expediente_no_fue_creado()
+def asertar_que_el_expediente_no_fue_creado
   un_expediente = Expediente.first
 
   expect(un_expediente).to be nil
+end
+
+def asertar_que_el_expediente_no_fue_numerado
+  expect(expediente.ha_sido_numerado?).to be nil
+end
+
+def asertar_que_el_expediente_fue_numerado
+  expect(expediente.ha_sido_numerado?).to be true
 end
 
 def asertar_que_un_expediente_no_pertenece_a(otro_abogado)
@@ -75,12 +83,10 @@ def numerar_expediente
            cliente_id: @cliente.id,
            expediente: {
                numero: 123,
-               anio: DateTime.now.year,
                juzgado: "Juzgado Civil y Comercial",
                numero_de_juzgado: 7,
                departamento: "Departamento Judicial de Quilmes",
-               ubicacion_del_departamento: "Alvear 465 piso N°1 de Quilmes",
-
+               ubicacion_del_departamento: "Alvear 465 piso N°1 de Quilmes"
            }
        }
 end
@@ -129,46 +135,64 @@ describe ExpedientesController do
                                          materia: 'Daños y Perjuicios',
                                          cliente_id: @cliente.id)}
 
-    it 'un expediente puede ser numerado' do
-      numero = 123
-      anio = DateTime.now.year % 100
-      juzgado = "Juzgado Civil y Comercial" #TODO: extraer a un ENUM, para ello averiguar que entidad engloba a un Juzgado o un Tribunal
-      numero_de_juzgado = 7
-      departamento = "Departamento Judicial de Quilmes" #TODO: este dato podria ir capturandolo para guardar en una base de datos retroalimentable.
-      ubicacion_del_departamento = "Alvear 465 piso N°1 de Quilmes"
-      caratula_del_expediente_numerado = "#{expediente.titulo} s/ #{expediente.materia} (#{numero}/#{anio}) en tramite ante el #{juzgado} N°#{numero_de_juzgado} del #{departamento} sito en #{ubicacion_del_departamento}"
+    context 'En la correcta numeracion de un Expediente' do
 
-      subject
-      expediente.reload
+      let(:caratula_del_expediente_numerado){ "#{expediente.titulo} s/ #{expediente.materia} (#{numero}/#{anio}) en tramite ante el #{juzgado} N°#{numero_de_juzgado} del #{departamento} sito en #{ubicacion_del_departamento}"}
 
-      expect(expediente.caratula).to eq caratula_del_expediente_numerado
+      let(:ubicacion_del_departamento){ "Alvear 465 piso N°1 de Quilmes"}
+
+      let(:departamento){ "Departamento Judicial de Quilmes"} #TODO: este dato podria ir capturandolo para guardar en una base de datos retroalimentable.
+
+      let(:numero_de_juzgado){ 7}
+
+      let(:juzgado){ "Juzgado Civil y Comercial"} #TODO: extraer a un ENUM, para ello averiguar que entidad engloba a un Juzgado o un Tribunal
+
+      let(:anio){ DateTime.now.year % 100}
+
+      let(:numero){ 123}
+
+      it 'puede ser numerado' do
+        subject
+        expediente.reload
+
+        expect(expediente.caratula).to eq caratula_del_expediente_numerado
+      end
+
+      it 'no puede ser numerado dos veces' do
+        subject
+        expediente.reload
+        numerar_expediente
+
+        asertar_que_la_respuesta_tiene_estado(:ok)
+        assert_template :numerar
+        asertar_que_se_muestra_un_mensaje_de_error(expediente.mensaje_de_error_para_expediente_numerado)
+        asertar_que_el_expediente_fue_numerado
+      end
     end
 
-    it 'un expediente no puede ser numerado dos veces' do
-      numero = 123
-      anio = DateTime.now.year % 100
-      juzgado = "Juzgado Civil y Comercial" #TODO: extraer a un ENUM, para ello averiguar que entidad engloba a un Juzgado o un Tribunal
-      numero_de_juzgado = 7
-      departamento = "Departamento Judicial de Quilmes" #TODO: este dato podria ir capturandolo para guardar en una base de datos retroalimentable.
-      ubicacion_del_departamento = "Alvear 465 piso N°1 de Quilmes"
-      caratula_del_expediente_numerado = "#{expediente.titulo} s/ #{expediente.materia} (#{numero}/#{anio}) en tramite ante el #{juzgado} N°#{numero_de_juzgado} del #{departamento} sito en #{ubicacion_del_departamento}"
-
-      subject
-      expediente.reload
-
-      expect{numerar_expediente}.to raise_error StandardError, expediente.mensaje_de_error_para_expediente_numerado
-    end
-
-    it 'todos los campos son requeridos a la hora de numerar' do
-      numero = 123
-      anio = DateTime.now.year % 100
-      juzgado = "Juzgado Civil y Comercial" #TODO: extraer a un ENUM, para ello averiguar que entidad engloba a un Juzgado o un Tribunal
-      numero_de_juzgado = 7
-      departamento = "Departamento Judicial de Quilmes" #TODO: este dato podria ir capturandolo para guardar en una base de datos retroalimentable.
-      ubicacion_del_departamento = "Alvear 465 piso N°1 de Quilmes"
-      caratula_del_expediente_numerado = "#{expediente.titulo} s/ #{expediente.materia} (#{numero}/#{anio}) en tramite ante el #{juzgado} N°#{numero_de_juzgado} del #{departamento} sito en #{ubicacion_del_departamento}"
-
-      fail
+    context 'En la incorrecta numeracion de un Expediente' do
+      subject{
+        post :realizar_numeraracion,
+             params: {
+                 id: expediente.id,
+                 cliente_id: @cliente.id,
+                 expediente: {
+                     numero: nil,
+                     juzgado: nil,
+                     numero_de_juzgado: nil,
+                     departamento: nil,
+                     ubicacion_del_departamento: nil
+                 }
+             }
+      }
+      it 'todos los campos son requeridos a la hora de numerar' do
+        subject
+        
+        asertar_que_la_respuesta_tiene_estado(:ok)
+        assert_template :numerar
+        asertar_que_se_muestra_un_mensaje_de_error(expediente.mensaje_de_error_para_datos_faltantes_en_la_numeracion)
+        asertar_que_el_expediente_no_fue_numerado
+      end
     end
   end
 

@@ -83,8 +83,10 @@ class ExpedientesController < ApplicationController
       @cliente = @expediente.cliente
       flash.now[:success] = @ad_hoc.mensaje_de_confirmacion_para_la_correcta_numeracion_de_un_expediente
       render :show
-    rescue ActiveRecord::RecordNotFound
-      flash.now[:error] = @ad_hoc.mensaje_de_error_para_expediente_inexistente
+    rescue Exception => excepcion # TODO: usar esta forma en el resto de los metodos del controller y de los demas controllers.
+      flash.now[:error] = excepcion.message
+      buscar_expediente_y_cliente
+      render :numerar
     end
   end
 
