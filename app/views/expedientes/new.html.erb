@@ -1,33 +1,10 @@
 <%= render 'tabs' do %>
-  <%= form_for [@cliente, @expediente], html: {class: 'form-horizontal'} do |f| %>
-
-    <div class="field form-group">
-      <%= f.label :actor, class: 'col-sm-2 control-label' %>*
-      <div class="col-sm-8">
-        <%= f.text_field :actor, class: 'form-control', autofocus: true %>
-      </div>
-    </div>
-
-    <div class="field form-group">
-      <%= f.label :demandado, class: 'col-sm-2 control-label' %>*
-      <div class="col-sm-8">
-        <%= f.text_field :demandado, class: 'form-control' %>
-      </div>
-    </div>
-
-    <div class="field form-group">
-      <%= f.label :materia, class: 'col-sm-2 control-label' %>*
-      <div class="col-sm-8">
-        <%= f.text_field :materia, class: 'form-control' %>
-      </div>
-    </div>
-
-    <div class="actions form-group cliente__edit-botones">
-      <div class="col-sm-4">
-        <%= f.submit 'Guardar', {class: 'btn btn-success cliente__form-guardar'}%>
-      </div>
-    </div>
-
-  <% end %>
+    <%= render partial: 'form',
+               locals: {
+                   hay_que_mostrar_datos_de_numeracion: @expediente.ha_sido_numerado?,
+                   url: cliente_expedientes_path,
+                   metodo: :post
+               }
+    %>
 <% end %>
 <%= render 'tab_cliente' %>
