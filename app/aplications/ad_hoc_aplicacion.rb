@@ -10,25 +10,41 @@ class AdHocAplicacion
   # Clientes
 
   def buscar_cliente_por_nombre_o_apellido!(query, abogado_id)
-    Cliente.where(['nombre like ? or apellido like ?', "%#{query}%", "%#{query}%"]).
-        where('abogado_id = :abogado_id', {abogado_id: abogado_id}).
-        take!
+    begin
+      Cliente.where(['nombre like ? or apellido like ?', "%#{query}%", "%#{query}%"]).
+          where('abogado_id = :abogado_id', {abogado_id: abogado_id}).
+          take!
+    rescue ActiveRecord::RecordNotFound
+      raise ActiveRecord::RecordNotFound, self.mensaje_de_error_para_busqueda_de_cliente_fallida(query)
+    end
   end
 
   def buscar_cliente_por_id!(cliente_id, abogado_id)
-    Cliente.where(["id = ? and abogado_id = ?", cliente_id, abogado_id]).take!
+    begin
+      Cliente.where(["id = ? and abogado_id = ?", cliente_id, abogado_id]).take!
+    rescue ActiveRecord::RecordNotFound
+      raise ActiveRecord::RecordNotFound, self.mensaje_de_error_para_cliente_inexistente
+    end
   end
 
   def crear_cliente_nuevo!(parametros_cliente, abogado_actual)
     cliente = Cliente.new(parametros_cliente)
     cliente.abogado = abogado_actual
-    cliente.save!
+    begin
+      cliente.save!
+    rescue ActiveRecord::RecordInvalid
+      raise RuntimeError, self.mensaje_de_error_para_nombre_y_apellido_vacios
+    end
     cliente
   end
 
   def editar_cliente!(cliente_id, parametros_cliente, abogado)
     cliente = self.buscar_cliente_por_id!(cliente_id, abogado)
-    cliente.update!(parametros_cliente)
+    begin
+      cliente.update!(parametros_cliente)
+    rescue ActiveRecord::RecordInvalid
+      raise ArgumentError, self.mensaje_de_error_para_nombre_y_apellido_vacios
+    end
     cliente
   end
 
@@ -42,20 +58,32 @@ class AdHocAplicacion
   def crear_expediente_nuevo!(parametros_expediente, cliente_id, abogado)
     expediente = Expediente.new(parametros_expediente)
     expediente.cliente = buscar_cliente_por_id!(cliente_id, abogado)
-    expediente.save!
+    begin
+      expediente.save!
+    rescue ActiveRecord::RecordInvalid
+      raise RuntimeError, self.mensaje_de_error_para_expediente_invalido
+    end
     expediente
   end
 
   def buscar_expediente_por_id!(expediente_id, un_abogado)
-    expediente = Expediente.find(expediente_id)
-    # TODO: que pasa si el expediente no pertenece al cliente?
-    raise ActiveRecord::RecordNotFound unless expediente.pertenece_a? un_abogado
+    begin
+      expediente = Expediente.find(expediente_id)
+    rescue ActiveRecord::RecordNotFound
+      raise ActiveRecord::RecordNotFound, self.mensaje_de_error_para_expediente_inexistente
+    end
+    raise ActiveRecord::RecordNotFound, self.mensaje_de_error_para_expediente_inexistente unless expediente.pertenece_a? un_abogado
     expediente
   end
 
   def editar_expediente!(expediente_id, parametros_expediente, abogado)
     expediente = self.buscar_expediente_por_id!(expediente_id, abogado)
-    expediente.update!(parametros_expediente)
+    expediente.validar_que_no_falte_ningun_dato_para_la_numeracion!(parametros_expediente) if expediente.ha_sido_numerado?
+    begin
+      expediente.update!(parametros_expediente)
+    rescue ActiveRecord::RecordInvalid
+      raise ArgumentError, self.mensaje_de_error_para_expediente_invalido
+    end
     expediente
   end
 
@@ -127,6 +155,10 @@ class AdHocAplicacion
 
   def mensaje_de_error_para_expediente_inexistente
     'Expediente inexistente'
+  end
+
+  def validar_que_no_haya_sido_numerado(expediente)
+    raise RuntimeError, expediente.mensaje_de_error_para_expediente_numerado if expediente.ha_sido_numerado?
   end
 
   private
