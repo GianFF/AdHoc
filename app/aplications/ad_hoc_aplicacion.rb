@@ -42,13 +42,21 @@ class AdHocAplicacion
   def crear_expediente_nuevo!(parametros_expediente, cliente_id, abogado)
     expediente = Expediente.new(parametros_expediente)
     expediente.cliente = buscar_cliente_por_id!(cliente_id, abogado)
-    expediente.save!
+    begin
+      expediente.save!
+    rescue ActiveRecord::RecordInvalid
+      raise RuntimeError, self.mensaje_de_error_para_expediente_invalido
+    end
     expediente
   end
 
   def buscar_expediente_por_id!(expediente_id, un_abogado)
-    expediente = Expediente.find(expediente_id)
-    raise ActiveRecord::RecordNotFound unless expediente.pertenece_a? un_abogado
+    begin
+      expediente = Expediente.find(expediente_id)
+    rescue ActiveRecord::RecordNotFound
+      raise ActiveRecord::RecordNotFound, self.mensaje_de_error_para_expediente_inexistente
+    end
+    raise ActiveRecord::RecordNotFound, self.mensaje_de_error_para_expediente_inexistente unless expediente.pertenece_a? un_abogado
     expediente
   end
 
@@ -127,6 +135,10 @@ class AdHocAplicacion
 
   def mensaje_de_error_para_expediente_inexistente
     'Expediente inexistente'
+  end
+
+  def validar_que_no_haya_sido_numerado(expediente)
+    raise RuntimeError, expediente.mensaje_de_error_para_expediente_numerado if expediente.ha_sido_numerado?
   end
 
   private
