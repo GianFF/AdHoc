@@ -14,7 +14,7 @@ class Expediente < ApplicationRecord
 
   def numerar!(datos) #TODO: hay un mejor nombre para datos? serian los datos necesarios para numerar el expediente...
     validar_que_el_expediente_no_haya_sido_numerado!
-    validar_que_no_falte_ningun_dato!(datos)
+    validar_que_no_falte_ningun_dato_para_la_numeracion!(datos)
 
     self.ha_sido_numerado = true
 
@@ -39,7 +39,7 @@ class Expediente < ApplicationRecord
         datos[:juzgado].blank? || datos[:numero_de_juzgado].blank? || datos[:departamento].blank? || datos[:ubicacion_del_departamento].blank?
   end
 
-  def validar_que_no_falte_ningun_dato!(datos)
+  def validar_que_no_falte_ningun_dato_para_la_numeracion!(datos)
     raise ArgumentError, self.mensaje_de_error_para_datos_faltantes_en_la_numeracion if self.los_datos_para_numerar_son_invalidos?(datos)
   end
 

@@ -82,6 +82,9 @@ def numerar_expediente
            id: expediente.id,
            cliente_id: @cliente.id,
            expediente: {
+               actor: "#{@cliente.nombre_completo}",
+               demandado: 'Maria Perez',
+               materia: 'Daños y Perjuicios',
                numero: 123,
                juzgado: "Juzgado Civil y Comercial",
                numero_de_juzgado: 7,

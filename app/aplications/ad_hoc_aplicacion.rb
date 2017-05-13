@@ -78,8 +78,12 @@ class AdHocAplicacion
 
   def editar_expediente!(expediente_id, parametros_expediente, abogado)
     expediente = self.buscar_expediente_por_id!(expediente_id, abogado)
-    expediente.validar_que_no_falte_ningun_dato!(parametros_expediente)
-    expediente.update!(parametros_expediente)
+    expediente.validar_que_no_falte_ningun_dato_para_la_numeracion!(parametros_expediente) if expediente.ha_sido_numerado?
+    begin
+      expediente.update!(parametros_expediente)
+    rescue ActiveRecord::RecordInvalid
+      raise ArgumentError, self.mensaje_de_error_para_expediente_invalido
+    end
     expediente
   end
 

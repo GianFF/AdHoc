@@ -57,7 +57,7 @@ class ClientesController < ApplicationController
       render :show
     rescue ArgumentError => excepcion
       @cliente = @ad_hoc.buscar_cliente_por_id!(cliente_id, abogado_actual.id)
-      flash.keep[:error] = excepcion
+      flash.keep[:error] = excepcion.message
       render :edit
     rescue ActiveRecord::RecordNotFound
       flash.keep[:error] = @ad_hoc.mensaje_de_error_para_cliente_inexistente

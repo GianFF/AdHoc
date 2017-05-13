@@ -20,6 +20,7 @@ describe ClientesController do
 
   before(:each) do
     @abogado = login_abogado
+    @ad_hoc = AdHocAplicacion.new
   end
 
 
@@ -260,8 +261,8 @@ describe ClientesController do
 
         expect(cliente.nombre).to eq 'Foo'
         expect(cliente.apellido).to eq 'Bar'
-        expect(flash[:error]).to eq 'El nombre y el apellido no pueden ser vacios'
-        expect(response).to have_http_status(:found)
+        expect(flash[:error]).to eq @ad_hoc.mensaje_de_error_para_nombre_y_apellido_vacios
+        expect(response).to have_http_status(:ok)
       end
     end
   end
