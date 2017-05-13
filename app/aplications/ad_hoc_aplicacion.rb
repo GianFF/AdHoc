@@ -48,6 +48,7 @@ class AdHocAplicacion
 
   def buscar_expediente_por_id!(expediente_id, un_abogado)
     expediente = Expediente.find(expediente_id)
+    # TODO: que pasa si el expediente no pertenece al cliente?
     raise ActiveRecord::RecordNotFound unless expediente.pertenece_a? un_abogado
     expediente
   end

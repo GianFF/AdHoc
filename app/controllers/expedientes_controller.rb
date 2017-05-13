@@ -96,7 +96,8 @@ class ExpedientesController < ApplicationController
   end
 
   def validar_parametros_expediente
-    params.require(:expediente).permit(:actor, :demandado, :materia)
+    params.require(:expediente).permit(:actor, :demandado, :materia, :numero, :juzgado,
+                                       :numero_de_juzgado, :departamento, :ubicacion_del_departamento)
   end
 
   def validar_parametros_cliente
