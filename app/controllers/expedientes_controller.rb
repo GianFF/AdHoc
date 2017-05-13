@@ -48,6 +48,10 @@ class ExpedientesController < ApplicationController
       flash.now[:error] = @ad_hoc.mensaje_de_error_para_expediente_invalido
       buscar_expediente_y_cliente
       render :edit, status: :bad_request
+    rescue ArgumentError => excepcion
+      flash.now[:error] = excepcion.message
+      buscar_expediente_y_cliente
+      render :edit, status: :bad_request
     rescue ActiveRecord::RecordNotFound
       flash.keep[:error] = @ad_hoc.mensaje_de_error_para_expediente_inexistente
       redirect_back(fallback_location: root_path)
