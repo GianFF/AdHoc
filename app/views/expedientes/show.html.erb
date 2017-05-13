@@ -1,29 +1,10 @@
 <%= render 'tabs' do %>
-  <%= form_for :expediente, html: {class: 'form-horizontal'} do |f| %>
+  <h1 class="expediente__caratula">
+    <%= @expediente.caratula %>
+  </h1>
 
-    <div class="field form-group">
-      <%= f.label :actor, class: 'col-sm-2 control-label' %>
-      <div class="col-sm-8">
-        <%= f.text_field :actor, class: 'form-control', readonly: true %>
-      </div>
-    </div>
-
-    <div class="field form-group">
-      <%= f.label :demandado, class: 'col-sm-2 control-label' %>
-      <div class="col-sm-8">
-        <%= f.text_field :demandado, class: 'form-control', readonly: true %>
-      </div>
-    </div>
-
-    <div class="field form-group">
-      <%= f.label :materia, class: 'col-sm-2 control-label' %>
-      <div class="col-sm-8">
-        <%= f.text_field :materia, class: 'form-control', readonly: true %>
-      </div>
-    </div>
-
-  <% end %>
-
+  <%= button_to 'Numerar', cliente_expediente_numerar_path(@cliente.id, @expediente.id), :method => :get,
+                disabled: @expediente.ha_sido_numerado?, class: 'btn btn-warning expediente__numerar'%>
   <div class="form-group cliente__show-botones" role="group">
     <%= button_to 'Editar', edit_cliente_expediente_path(@cliente.id, @expediente.id), :method => :get, class: 'btn btn-success cliente__show-boton-editar' %>
     <%= button_to 'Borrar', [@cliente, @expediente], method: :delete, class: 'btn btn-danger',

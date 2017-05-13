@@ -64,6 +64,32 @@ class ExpedientesController < ApplicationController
     redirect_to cliente_url(validar_parametros_cliente)
   end
 
+  def numerar
+    begin
+      buscar_expediente_y_cliente
+      if @expediente.ha_sido_numerado?
+        flash.keep[:error] = @expediente.mensaje_de_error_para_expediente_numerado
+        redirect_back(fallback_location: root_path) and return
+      end
+    rescue ActiveRecord::RecordNotFound
+      flash.keep[:error] = @ad_hoc.mensaje_de_error_para_expediente_inexistente
+      redirect_back(fallback_location: root_path)
+    end
+  end
+
+  def realizar_numeraracion
+    begin
+      @expediente = @ad_hoc.numerar_expediente!(validar_parametros_para_numerar_expediente, params[:id], abogado_actual)
+      @cliente = @expediente.cliente
+      flash.now[:success] = @ad_hoc.mensaje_de_confirmacion_para_la_correcta_numeracion_de_un_expediente
+      render :show
+    rescue Exception => excepcion # TODO: usar esta forma en el resto de los metodos del controller y de los demas controllers.
+      flash.now[:error] = excepcion.message
+      buscar_expediente_y_cliente
+      render :numerar
+    end
+  end
+
   private
 
   def buscar_expediente_y_cliente
@@ -72,10 +98,16 @@ class ExpedientesController < ApplicationController
   end
 
   def validar_parametros_expediente
-    params.require(:expediente).permit(:actor, :demandado, :materia)
+    params.require(:expediente).permit(:actor, :demandado, :materia, :numero, :juzgado,
+                                       :numero_de_juzgado, :departamento, :ubicacion_del_departamento)
   end
 
   def validar_parametros_cliente
     params.require(:cliente_id)
+  end
+
+  def validar_parametros_para_numerar_expediente
+    params.require(:expediente).permit(:id, :numero, :juzgado, :numero_de_juzgado, :departamento,
+                                       :ubicacion_del_departamento, :cliente_id)
   end
 end

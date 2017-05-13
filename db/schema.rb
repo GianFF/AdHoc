@@ -69,9 +69,16 @@ ActiveRecord::Schema.define(version: 20170507230307) do
     t.text     "actor"
     t.text     "demandado"
     t.text     "materia"
+    t.integer  "numero"
+    t.integer  "anio"
+    t.text     "juzgado"
+    t.integer  "numero_de_juzgado"
+    t.text     "departamento"
+    t.text     "ubicacion_del_departamento"
+    t.boolean  "ha_sido_numerado"
     t.integer  "cliente_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at",                 null: false
+    t.datetime "updated_at",                 null: false
   end
 
   create_table "hijos", force: :cascade do |t|

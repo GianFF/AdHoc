@@ -48,6 +48,7 @@ class AdHocAplicacion
 
   def buscar_expediente_por_id!(expediente_id, un_abogado)
     expediente = Expediente.find(expediente_id)
+    # TODO: que pasa si el expediente no pertenece al cliente?
     raise ActiveRecord::RecordNotFound unless expediente.pertenece_a? un_abogado
     expediente
   end
@@ -63,6 +64,12 @@ class AdHocAplicacion
     expediente.destroy
   end
 
+  def numerar_expediente!(datos_para_numerar_expediente, expediente_id, abogado)
+    expediente = self.buscar_expediente_por_id!(expediente_id, abogado)
+    expediente.numerar!(datos_para_numerar_expediente)
+    expediente.update!(datos_para_numerar_expediente)
+    expediente
+  end
 
   # Mensajes de error:
 
@@ -76,6 +83,22 @@ class AdHocAplicacion
 
   def mensaje_de_confirmacion_para_la_correcta_edicion_de_un_cliente
     'Cliente editado satisfactoriamente'
+  end
+
+  def mensaje_de_confirmacion_para_la_correcta_numeracion_de_un_expediente
+    'Expediente numerado correctamente'
+  end
+
+  def mensaje_de_confirmacion_para_la_correcta_creacion_de_un_expediente
+    'Expediente creado satisfactoriamente'
+  end
+
+  def mensaje_de_confirmacion_para_la_correcta_edicion_de_un_expediente
+    'Expediente editado satisfactoriamente'
+  end
+
+  def mensaje_de_confirmacion_para_la_correcta_eliminacion_de_un_expediente
+    'Expediente eliminado satisfactoriamente'
   end
 
   def mensaje_de_error_para_cliente_inexistente
@@ -98,24 +121,12 @@ class AdHocAplicacion
     'Debes completar tu contraseña actual para poder editar tu perfil'
   end
 
-  def mensaje_de_confirmacion_para_la_correcta_creacion_de_un_expediente
-    'Expediente creado satisfactoriamente'
-  end
-
   def mensaje_de_error_para_expediente_invalido
     'El Actor, Demandado, y Materia no pueden ser vacios'
   end
 
   def mensaje_de_error_para_expediente_inexistente
     'Expediente inexistente'
-  end
-
-  def mensaje_de_confirmacion_para_la_correcta_edicion_de_un_expediente
-    'Expediente editado satisfactoriamente'
-  end
-
-  def mensaje_de_confirmacion_para_la_correcta_eliminacion_de_un_expediente
-    'Expediente eliminado satisfactoriamente'
   end
 
   private
