@@ -1,49 +1,58 @@
 require_relative '../rails_helper'
+require_relative '../fabrica_de_objetos'
 
-# TODO: llevar a un helper
-def login_abogado
-  abogado = Abogado.create!(email: 'ejemplo@mail.com', password: 'password',
-                            nombre: 'Foo', apellido: 'Bar', sexo: 'Masculino')
-  #abogado.confirm
+def login_abogado(mail, contrasenia, nombre, apellido, sexo)
+  abogado = crear_cuenta_para_abogado(mail, contrasenia, nombre, apellido, sexo)
   sign_in abogado
   abogado
 end
 
-def crear_cuenta_para_abogado
-  abogado = Abogado.create!(email: 'otro_ejemplo@mail.com', password: 'password',
-                            nombre: 'Bar', apellido: 'Zaz', sexo: 'Femenino')
+def crear_cuenta_para_abogado(mail, contrasenia, nombre, apellido, sexo)
+  abogado = fabrica_de_objetos.un_abogado(mail, contrasenia, nombre, apellido, sexo)
   #abogado.confirm
   abogado
+end
+
+def asertar_que_los_datos_del_cliente_son_correctos(cliente)
+  expect(cliente.nombre).to eq fabrica_de_objetos.un_nombre_para_un_cliente
+  expect(cliente.apellido).to eq fabrica_de_objetos.un_apellido_para_un_cliente
+end
+
+def asertar_que_la_response_y_el_mensaje_mostrado_son_correctos
+  expect(response).to have_http_status(:ok)
+  expect(flash[:success]).to eq @ad_hoc.mensaje_de_confirmacion_para_la_correcta_creacion_de_un_cliente
 end
 
 describe ClientesController do
 
   before(:each) do
-    @abogado = login_abogado
+    @abogado = login_abogado(fabrica_de_objetos.un_mail_para_un_abogado, fabrica_de_objetos.una_contrasenia,
+                             fabrica_de_objetos.un_nombre_para_un_abogado,
+                             fabrica_de_objetos.un_apellido_para_un_abogado, Sexo::MASCULINO)
     @ad_hoc = AdHocAplicacion.new
   end
 
+  let(:fabrica_de_objetos){ FrabricaDeObjetos.new }
 
   context 'Creacion de clientes' do
     subject { post :create, params: parametros }
 
     context 'En la correcta creacion de un cliente' do
-      let(:parametros) { {cliente: {nombre: 'Foo', apellido: 'Bar', abogado_id: @abogado.id}} }
+      let(:parametros) { {cliente: {nombre: fabrica_de_objetos.un_nombre_para_un_cliente,
+                                    apellido: fabrica_de_objetos.un_apellido_para_un_cliente,
+                                    abogado_id: @abogado.id}} }
 
       it 'con un nombre y un  apellido el cliente se crea satisfactoriamente' do
         subject
 
         cliente = Cliente.all.first
 
-        expect(cliente.nombre).to eq 'Foo'
-        expect(cliente.apellido).to eq 'Bar'
-
-        expect(response).to have_http_status(:ok)
-        expect(flash[:success]).to eq 'Cliente creado satisfactoriamente'
+        asertar_que_los_datos_del_cliente_son_correctos(cliente)
+        asertar_que_la_response_y_el_mensaje_mostrado_son_correctos
       end
 
       it 'pertenece a un abogado' do
-        otro_abogado = crear_cuenta_para_abogado
+        otro_abogado = crear_cuenta_para_abogado('otro_ejemplo@mail.com', 'password', 'Bar', 'Zaz', Sexo::FEMENINO)
         subject
 
         cliente = Cliente.all.first

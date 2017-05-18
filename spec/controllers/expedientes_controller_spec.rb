@@ -1,20 +1,18 @@
 require_relative '../rails_helper'
+require_relative '../helpers/asertar'
+require_relative '../fabrica_de_objetos'
 
-def login_abogado
-  abogado = Abogado.create!(email: 'ejemplo@mail.com', password: 'password',
-                            nombre: 'Foo', apellido: 'Bar', sexo: 'Masculino')
-  #abogado.confirm
+def login_abogado(email, contrasenia, nombre, apellido, sexo)
+  abogado = crear_cuenta_para_abogado(email, contrasenia, nombre, apellido, sexo)
   sign_in abogado
   abogado
 end
 
-def crear_cuenta_para_abogado
-  abogado = Abogado.create!(email: 'otro_ejemplo@mail.com', password: 'password',
-                            nombre: 'Bar', apellido: 'Zaz', sexo: 'Femenino')
+def crear_cuenta_para_abogado(email, contrasenia, nombre, apellido, sexo)
+  abogado = Abogado.create!(email: email, password: contrasenia, nombre: nombre, apellido: apellido, sexo: sexo)
   #abogado.confirm
   abogado
 end
-
 
 def asertar_que_la_respuesta_tiene_estado(un_estado)
   expect(response).to have_http_status(un_estado)
@@ -32,8 +30,8 @@ def asertar_que_el_expediente_fue_correctamente_creado
   un_expediente = Expediente.first
 
   expect(un_expediente.actor).to eq "#{@cliente.nombre} #{@cliente.apellido}"
-  expect(un_expediente.demandado).to eq 'Maria Perez'
-  expect(un_expediente.materia).to eq 'Daños y Perjuicios'
+  expect(un_expediente.demandado).to eq fabrica_de_objetos.un_demandado
+  expect(un_expediente.materia).to eq fabrica_de_objetos.una_materia
 end
 
 def asertar_que_el_expediente_no_fue_creado
@@ -83,32 +81,31 @@ def numerar_expediente
            cliente_id: @cliente.id,
            expediente: {
                actor: "#{@cliente.nombre_completo}",
-               demandado: 'Maria Perez',
-               materia: 'Daños y Perjuicios',
+               demandado: un_demandado,
+               materia: una_materia,
                numero: 123,
-               juzgado: "Juzgado Civil y Comercial",
+               juzgado: 'Juzgado Civil y Comercial',
                numero_de_juzgado: 7,
-               departamento: "Departamento Judicial de Quilmes",
-               ubicacion_del_departamento: "Alvear 465 piso N°1 de Quilmes"
+               departamento: 'Departamento Judicial de Quilmes',
+               ubicacion_del_departamento: 'Alvear 465 piso N°1 de Quilmes'
            }
        }
 end
 
 describe ExpedientesController do
-
-  before(:each) do
-    @abogado = login_abogado
-    @cliente = Cliente.create!(nombre: 'Foo', apellido: 'Bar', abogado_id: @abogado.id)
-    @ad_hoc = AdHocAplicacion.new
-  end
+  let(:fabrica_de_objetos){ FrabricaDeObjetos.new }
+  let(:abogado){ login_abogado('ejemplo@mail.com', 'password', 'Foo', 'Bar', Sexo::MASCULINO) }
+  let(:cliente){ fabrica_de_objetos.crear_cliente(abogado.id) }
+  let(:ad_hoc){ AdHocAplicacion.new }
+  let(:asertar){ Asertar.new(fabrica_de_objetos) }
 
   subject { post :create, params: {
       expediente: {
-          actor: "#{@cliente.nombre_completo}",
-          demandado: 'Maria Perez',
-          materia: 'Daños y Perjuicios'
+          actor: "#{cliente.nombre_completo}",
+          demandado: fabrica_de_objetos.un_demandado,
+          materia: fabrica_de_objetos.una_materia
       },
-      cliente_id: @cliente.id
+      cliente_id: cliente.id
     }
   }
 
@@ -117,15 +114,15 @@ describe ExpedientesController do
 
     un_expediente = Expediente.first
 
-    expect(un_expediente.actor).to eq "#{@cliente.nombre} #{@cliente.apellido}"
+    expect(un_expediente.actor).to eq "#{cliente.nombre_completo}"
   end
 
   it 'un abogado no puede ver los expedientes de otro abogado' do
-    otro_abogado = crear_cuenta_para_abogado
+    otro_abogado = crear_cuenta_para_abogado('otro_ejemplo@mail.com', 'password', 'Bar', 'Zaz', Sexo::FEMENINO)
 
     subject
 
-    asertar_que_un_expediente_no_pertenece_a(otro_abogado)
+    asertar.que_un_expediente_no_pertenece_a(abogado, otro_abogado)
   end
 
   context 'Numeracion de Expedientes' do
@@ -134,8 +131,8 @@ describe ExpedientesController do
     }
 
     let(:expediente) {Expediente.create!(actor: "#{@cliente.nombre_completo}",
-                                         demandado: 'Maria Perez',
-                                         materia: 'Daños y Perjuicios',
+                                         demandado: fabrica_de_objetos.un_demandado,
+                                         materia: fabrica_de_objetos.una_materia,
                                          cliente_id: @cliente.id)}
 
     context 'En la correcta numeracion de un Expediente' do
@@ -205,8 +202,8 @@ describe ExpedientesController do
       subject { post :create, params: {
           expediente: {
               actor: "#{@cliente.nombre_completo}",
-              demandado: 'Maria Perez',
-              materia: 'Daños y Perjuicios'
+              demandado: fabrica_de_objetos.un_demandado,
+              materia: fabrica_de_objetos.una_materia
           },
           cliente_id: @cliente.id
         }
@@ -227,8 +224,8 @@ describe ExpedientesController do
 
       let(:parametros) {{
           expediente: {
-              demandado: 'Maria Perez',
-              materia: 'Daños y Perjuicios'
+              demandado: fabrica_de_objetos.un_demandado,
+              materia: fabrica_de_objetos.una_materia
           },
           cliente_id: @cliente.id
       }}
@@ -245,7 +242,7 @@ describe ExpedientesController do
       let(:parametros) {{
           expediente: {
               actor: "#{@cliente.nombre} #{@cliente.apellido}",
-              materia: 'Daños y Perjuicios'
+              materia: fabrica_de_objetos.una_materia
           },
           cliente_id: @cliente.id
       }}
@@ -281,7 +278,7 @@ describe ExpedientesController do
   context 'Edicion de Expedientes' do
     let(:expediente) {Expediente.create!(actor: "#{@cliente.nombre_completo}",
                                          demandado: 'Maria Perez',
-                                         materia: 'Daños y Perjuicios',
+                                         materia: fabrica_de_objetos.una_materia,
                                          cliente_id: @cliente.id)}
 
     context 'En la correcta edicion de un Expediente' do
@@ -330,7 +327,7 @@ describe ExpedientesController do
 
         expediente.reload
 
-        asertar_que_el_expediente_no_cambio("#{@cliente.nombre_completo}", 'Maria Perez', 'Daños y Perjuicios')
+        asertar_que_el_expediente_no_cambio("#{@cliente.nombre_completo}", 'Maria Perez', fabrica_de_objetos.una_materia)
         asertar_que_se_muestra_un_mensaje_de_error(@ad_hoc.mensaje_de_error_para_expediente_invalido)
         asertar_que_la_respuesta_tiene_estado(:bad_request)
       end
@@ -353,7 +350,7 @@ describe ExpedientesController do
 
         expediente.reload
 
-        asertar_que_el_expediente_no_cambio("#{@cliente.nombre_completo}", 'Maria Perez', 'Daños y Perjuicios')
+        asertar_que_el_expediente_no_cambio("#{@cliente.nombre_completo}", 'Maria Perez', fabrica_de_objetos.una_materia)
         asertar_que_se_muestra_un_mensaje_de_error(@ad_hoc.mensaje_de_error_para_expediente_invalido)
         asertar_que_la_respuesta_tiene_estado(:bad_request)
       end
@@ -376,7 +373,7 @@ describe ExpedientesController do
 
         expediente.reload
 
-        asertar_que_el_expediente_no_cambio("#{@cliente.nombre_completo}", 'Maria Perez', 'Daños y Perjuicios')
+        asertar_que_el_expediente_no_cambio("#{@cliente.nombre_completo}", 'Maria Perez', fabrica_de_objetos.una_materia)
         asertar_que_se_muestra_un_mensaje_de_error(@ad_hoc.mensaje_de_error_para_expediente_invalido)
         asertar_que_la_respuesta_tiene_estado(:bad_request)
       end
@@ -387,7 +384,7 @@ describe ExpedientesController do
   context 'Borrado de Expedientes' do
     let(:expediente) {Expediente.create!(actor: "#{@cliente.nombre_completo}",
                                          demandado: 'Maria Perez',
-                                         materia: 'Daños y Perjuicios',
+                                         materia: fabrica_de_objetos.una_materia,
                                          cliente_id: @cliente.id)}
 
     subject { delete :destroy, params: {
