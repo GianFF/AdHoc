@@ -57,4 +57,34 @@ class FrabricaDeObjetos
   def un_apellido_para_un_cliente
     'Bar'
   end
+
+  # Expedientes
+
+  def una_caratula_numerada(expediente, numero, anio, juzgado, numero_de_juzgado, departamento, ubicacion_del_departamento)
+    "#{expediente.titulo} s/ #{expediente.materia} (#{numero}/#{anio}) en tramite ante el #{juzgado} N°#{numero_de_juzgado} del #{departamento} sito en #{ubicacion_del_departamento}"
+  end
+
+  def una_ubicacion_de_un_departamento
+    'Alvear 465 piso N°1 de Quilmes'
+  end
+
+  def un_departamento
+    'Departamento Judicial de Quilmes'
+  end
+
+  def un_numero_de_juzgado
+    7
+  end
+
+  def un_juzgado
+    'Juzgado Civil y Comercial'
+  end
+
+  def un_anio
+    DateTime.now.year % 100
+  end
+
+  def un_numero_de_expediente
+    123
+  end
 end
