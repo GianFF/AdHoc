@@ -1,7 +1,7 @@
 require_relative '../rails_helper'
 
 describe AbogadosController do
-  include ::Helper
+  include ::ControllersHelper
 
   before :each do
     @request.env['devise.mapping'] = Devise.mappings[:abogado]

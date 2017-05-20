@@ -1,7 +1,7 @@
 require_relative '../rails_helper'
 
 describe ExpedientesController do
-  include ::Helper
+  include ::ControllersHelper
   include ::ExpedientesHelper
 
   let(:fabrica_de_objetos){ FabricaDeObjetos.new }
