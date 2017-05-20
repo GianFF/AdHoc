@@ -1,28 +1,17 @@
 require_relative '../rails_helper'
-require_relative '../fabrica_de_objetos'
-
-def login_abogado(sexo, apellido, nombre, contrasenia, mail)
-  abogado = crear_cuenta_para_abogado(mail, contrasenia, nombre, apellido, sexo)
-  sign_in abogado
-  abogado
-end
-
-def crear_cuenta_para_abogado(mail, contrasenia, nombre, apellido, sexo)
-  abogado = fabrica_de_objetos.un_abogado(mail, contrasenia, nombre, apellido, sexo)
-  #abogado.confirm
-  abogado
-end
 
 describe AbogadosController do
+  include ::Helper
 
   before :each do
     @request.env['devise.mapping'] = Devise.mappings[:abogado]
   end
 
-  let(:fabrica_de_objetos){ FrabricaDeObjetos.new }
-  let(:un_abogado){ login_abogado(Sexo::MASCULINO, fabrica_de_objetos.un_apellido_para_un_abogado,
-                                  fabrica_de_objetos.un_nombre_para_un_abogado, fabrica_de_objetos.una_contrasenia,
-                                  fabrica_de_objetos.un_mail_para_un_abogado) }
+  let(:fabrica_de_objetos){ FabricaDeObjetos.new }
+
+  let(:un_abogado){ login_abogado(fabrica_de_objetos.un_mail_para_un_abogado, fabrica_de_objetos.una_contrasenia,
+                                  fabrica_de_objetos.un_nombre_para_un_abogado, fabrica_de_objetos.un_apellido_para_un_abogado,
+                                  Sexo::MASCULINO) }
 
   subject { put :update, id: un_abogado.id, abogado: parametros }
 
@@ -39,7 +28,7 @@ describe AbogadosController do
 
       expect(abogado.nombre).to eq fabrica_de_objetos.otro_nombre_para_un_abogado
       expect(abogado.apellido).to eq fabrica_de_objetos.otro_apellido_para_un_abogado
-      expect(response).to have_http_status(:found)
+      asertar_que_la_respuesta_tiene_estado(response, :found)
     end
 
     context 'Se puede modificar el email' do
@@ -68,9 +57,10 @@ describe AbogadosController do
       it 'se muestra un mensaje de error y se redirije a la pagina de inicio' do
         subject
 
-        expect(flash[:error]).to eq @controller.ad_hoc.mensaje_de_error_para_contrasenia_no_proveida
-        expect(response).to have_http_status(:found)
-        assert_redirected_to root_path
+
+        asertar_que_se_muestra_un_mensaje_de_error(@controller.ad_hoc.mensaje_de_error_para_contrasenia_no_proveida)
+        asertar_que_la_respuesta_tiene_estado(response, :found)
+        asertar_que_se_redirecciono_a(root_path)
       end
     end
 
@@ -84,9 +74,9 @@ describe AbogadosController do
       it 'se muestra un mensaje de error y se redirije a la pagina de inicio' do
         subject
 
-        expect(flash[:error]).to eq @controller.ad_hoc.mensaje_de_error_para_contrasenia_invalida
-        expect(response).to have_http_status(:found)
-        assert_redirected_to root_path
+        asertar_que_se_muestra_un_mensaje_de_error(@controller.ad_hoc.mensaje_de_error_para_contrasenia_invalida)
+        asertar_que_la_respuesta_tiene_estado(response, :found)
+        asertar_que_se_redirecciono_a(root_path)
       end
     end
   end

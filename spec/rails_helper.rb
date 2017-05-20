@@ -7,6 +7,9 @@ require_relative 'spec_helper'
 require 'rspec/rails'
 # Add additional requires below this line. Rails is not loaded until this point!
 require_relative 'support/devise'
+require_relative 'helpers/expedientes_helper'
+require_relative 'helpers/helper'
+require_relative 'fabrica_de_objetos'
 
 # Requires supporting ruby files with custom matchers and macros, etc, in
 # spec/support/ and its subdirectories. Files matching `spec/**/*_spec.rb` are

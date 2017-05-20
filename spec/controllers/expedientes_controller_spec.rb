@@ -1,107 +1,18 @@
 require_relative '../rails_helper'
-require_relative '../helpers/asertar'
-require_relative '../fabrica_de_objetos'
-
-def login_abogado(email, contrasenia, nombre, apellido, sexo)
-  abogado = crear_cuenta_para_abogado(email, contrasenia, nombre, apellido, sexo)
-  sign_in abogado
-  abogado
-end
-
-def crear_cuenta_para_abogado(email, contrasenia, nombre, apellido, sexo)
-  abogado = Abogado.create!(email: email, password: contrasenia, nombre: nombre, apellido: apellido, sexo: sexo)
-  #abogado.confirm
-  abogado
-end
-
-def asertar_que_la_respuesta_tiene_estado(un_estado)
-  expect(response).to have_http_status(un_estado)
-end
-
-def asertar_que_se_muestra_un_mensaje_de_confirmacion(un_mensaje)
-  expect(flash[:success]).to eq un_mensaje
-end
-
-def asertar_que_se_muestra_un_mensaje_de_error(un_mensaje)
-  expect(flash[:error]).to eq un_mensaje
-end
-
-def asertar_que_el_expediente_fue_correctamente_creado
-  un_expediente = Expediente.first
-
-  expect(un_expediente.actor).to eq "#{cliente.nombre} #{cliente.apellido}"
-  expect(un_expediente.demandado).to eq fabrica_de_objetos.un_demandado
-  expect(un_expediente.materia).to eq fabrica_de_objetos.una_materia
-end
-
-def asertar_que_el_expediente_no_fue_creado
-  un_expediente = Expediente.first
-
-  expect(un_expediente).to be nil
-end
-
-def asertar_que_el_expediente_no_fue_numerado
-  expect(expediente.ha_sido_numerado?).to be nil
-end
-
-def asertar_que_el_expediente_fue_numerado
-  expect(expediente.ha_sido_numerado?).to be true
-end
-
-def asertar_que_un_expediente_no_pertenece_a(otro_abogado)
-  un_expediente = Expediente.first
-  expect(un_expediente.pertenece_a? @abogado).to be true
-  expect(un_expediente.pertenece_a? otro_abogado).to be false
-end
-
-def asertar_que_el_expediente_cambio(un_actor, un_demandado, una_materia)
-  expect(expediente.actor).to eq un_actor
-  expect(expediente.demandado).to eq un_demandado
-  expect(expediente.materia).to eq una_materia
-end
-
-def asertar_que_el_expediente_no_cambio(un_actor, un_demandado, una_materia)
-  expect(expediente.actor).to eq un_actor
-  expect(expediente.demandado).to eq un_demandado
-  expect(expediente.materia).to eq una_materia
-end
-
-def asertar_que_se_redirecciono_a(url)
-  assert_redirected_to url
-end
-
-def asertar_que_se_elimino_el_expediente
-  expect(Expediente.all.count).to eq 0
-end
-
-def numerar_expediente
-  post :realizar_numeraracion,
-       params: {
-           id: expediente.id,
-           cliente_id: cliente.id,
-           expediente: {
-               actor: "#{cliente.nombre_completo}",
-               demandado: fabrica_de_objetos.un_demandado,
-               materia: fabrica_de_objetos.una_materia,
-               numero: fabrica_de_objetos.un_numero_de_expediente,
-               juzgado: fabrica_de_objetos.un_juzgado,
-               numero_de_juzgado: fabrica_de_objetos.un_numero_de_juzgado,
-               departamento: fabrica_de_objetos.un_departamento,
-               ubicacion_del_departamento: fabrica_de_objetos.una_ubicacion_de_un_departamento
-           }
-       }
-end
-
-def asertar_que_el_template_es(template)
-  assert_template template
-end
 
 describe ExpedientesController do
-  let(:fabrica_de_objetos){ FrabricaDeObjetos.new }
-  let(:abogado){ login_abogado('ejemplo@mail.com', 'password', 'Foo', 'Bar', Sexo::MASCULINO) }
+  include ::Helper
+  include ::ExpedientesHelper
+
+  let(:fabrica_de_objetos){ FabricaDeObjetos.new }
+
+  let(:abogado){ login_abogado(fabrica_de_objetos.un_mail_para_un_abogado, fabrica_de_objetos.una_contrasenia,
+                               fabrica_de_objetos.un_nombre_para_un_abogado, fabrica_de_objetos.un_apellido_para_un_abogado,
+                               Sexo::MASCULINO) }
+
   let(:cliente){ fabrica_de_objetos.crear_cliente(abogado.id) }
+
   let(:ad_hoc){ AdHocAplicacion.new }
-  let(:asertar){ Asertar.new(fabrica_de_objetos) }
 
   subject { post :create, params: {
       expediente: {
@@ -122,17 +33,17 @@ describe ExpedientesController do
   end
 
   it 'un abogado no puede ver los expedientes de otro abogado' do
-    otro_abogado = crear_cuenta_para_abogado('otro_ejemplo@mail.com', 'password', 'Bar', 'Zaz', Sexo::FEMENINO)
+    otro_abogado = crear_cuenta_para_abogado(fabrica_de_objetos.otro_mail_para_un_abogado, fabrica_de_objetos.una_contrasenia,
+                                             fabrica_de_objetos.otro_nombre_para_un_abogado, fabrica_de_objetos.otro_apellido_para_un_abogado,
+                                             Sexo::MASCULINO)
 
     subject
 
-    asertar.que_un_expediente_no_pertenece_a(abogado, otro_abogado)
+    asertar_que_un_expediente_no_pertenece_a(otro_abogado)
   end
 
   context 'Numeracion de Expedientes' do
-    subject {
-      numerar_expediente
-    }
+    subject { numerar_expediente }
 
     let(:expediente) {Expediente.create!(actor: "#{cliente.nombre_completo}",
                                          demandado: fabrica_de_objetos.un_demandado,
@@ -162,9 +73,7 @@ describe ExpedientesController do
         subject
         expediente.reload
 
-
-        asertar.que_la_respuesta_tiene_estado(response, :ok)
-        asertar_que_la_respuesta_tiene_estado(:ok)
+        asertar_que_la_respuesta_tiene_estado(response, :ok)
         asertar_que_el_template_es(:show)
         asertar_que_se_muestra_un_mensaje_de_confirmacion(ad_hoc.mensaje_de_confirmacion_para_la_correcta_numeracion_de_un_expediente)
         expect(expediente.caratula).to eq caratula_del_expediente_numerado
@@ -175,8 +84,8 @@ describe ExpedientesController do
         expediente.reload
         numerar_expediente
 
-        asertar_que_la_respuesta_tiene_estado(:ok)
-        assert_template :numerar
+        asertar_que_la_respuesta_tiene_estado(response, :ok)
+        asertar_que_el_template_es(:numerar)
         asertar_que_se_muestra_un_mensaje_de_error(expediente.mensaje_de_error_para_expediente_numerado)
         asertar_que_el_expediente_fue_numerado
       end
@@ -200,7 +109,7 @@ describe ExpedientesController do
       it 'todos los campos son requeridos a la hora de numerar' do
         subject
         
-        asertar_que_la_respuesta_tiene_estado(:ok)
+        asertar_que_la_respuesta_tiene_estado(response, :ok)
         assert_template :numerar
         asertar_que_se_muestra_un_mensaje_de_error(expediente.mensaje_de_error_para_datos_faltantes_en_la_numeracion)
         asertar_que_el_expediente_no_fue_numerado
@@ -224,9 +133,9 @@ describe ExpedientesController do
       it 'se compone de actor, demandado y materia' do
         subject
 
-        asertar_que_la_respuesta_tiene_estado(:ok)
+        asertar_que_la_respuesta_tiene_estado(response, :ok)
         asertar_que_el_template_es(:show)
-        asertar_que_se_muestra_un_mensaje_de_confirmacion('Expediente creado satisfactoriamente')
+        asertar_que_se_muestra_un_mensaje_de_confirmacion(ad_hoc.mensaje_de_confirmacion_para_la_correcta_creacion_de_un_expediente)
         asertar_que_el_expediente_fue_correctamente_creado
       end
     end
@@ -245,9 +154,9 @@ describe ExpedientesController do
       it 'un expediente no se puede crear sin actor' do
         subject
 
-        asertar_que_la_respuesta_tiene_estado(:ok)
+        asertar_que_la_respuesta_tiene_estado(response, :ok)
         assert_template :new
-        asertar_que_se_muestra_un_mensaje_de_error('El Actor, Demandado, y Materia no pueden ser vacios')
+        asertar_que_se_muestra_un_mensaje_de_error(ad_hoc.mensaje_de_error_para_expediente_invalido)
         asertar_que_el_expediente_no_fue_creado
       end
 
@@ -262,16 +171,16 @@ describe ExpedientesController do
       it 'un expediente no se puede crear sin demandado' do
         subject
 
-        asertar_que_la_respuesta_tiene_estado(:ok)
+        asertar_que_la_respuesta_tiene_estado(response, :ok)
         assert_template :new
-        asertar_que_se_muestra_un_mensaje_de_error('El Actor, Demandado, y Materia no pueden ser vacios')
+        asertar_que_se_muestra_un_mensaje_de_error(ad_hoc.mensaje_de_error_para_expediente_invalido)
         asertar_que_el_expediente_no_fue_creado
       end
 
       let(:parametros) {{
           expediente: {
               actor: "#{cliente.nombre} #{cliente.apellido}",
-              demandado: 'Maria Perez'
+              demandado: fabrica_de_objetos.un_demandado
           },
           cliente_id: cliente.id
       }}
@@ -279,9 +188,9 @@ describe ExpedientesController do
       it 'un expediente no se puede crear sin materia' do
         subject
 
-        asertar_que_la_respuesta_tiene_estado(:ok)
+        asertar_que_la_respuesta_tiene_estado(response, :ok)
         assert_template :new
-        asertar_que_se_muestra_un_mensaje_de_error('El Actor, Demandado, y Materia no pueden ser vacios')
+        asertar_que_se_muestra_un_mensaje_de_error(ad_hoc.mensaje_de_error_para_expediente_invalido)
         asertar_que_el_expediente_no_fue_creado
       end
     end
@@ -289,7 +198,7 @@ describe ExpedientesController do
 
   context 'Edicion de Expedientes' do
     let(:expediente) {Expediente.create!(actor: "#{cliente.nombre_completo}",
-                                         demandado: 'Maria Perez',
+                                         demandado: fabrica_de_objetos.un_demandado,
                                          materia: fabrica_de_objetos.una_materia,
                                          cliente_id: cliente.id)}
 
@@ -300,9 +209,9 @@ describe ExpedientesController do
             params: {
                 id: expediente.id,
                 expediente: {
-                    actor: "Otro Actor",
-                    demandado: 'Otro Demandado',
-                    materia: 'Otra Materia'
+                    actor: fabrica_de_objetos.otro_actor,
+                    demandado: fabrica_de_objetos.otro_demandado,
+                    materia: fabrica_de_objetos.otra_materia
                 },
                 cliente_id: cliente.id,
             }
@@ -313,9 +222,9 @@ describe ExpedientesController do
 
         expediente.reload
 
-        asertar_que_el_expediente_cambio('Otro Actor', 'Otro Demandado', 'Otra Materia')
-        asertar_que_se_muestra_un_mensaje_de_confirmacion(@ad_hoc.mensaje_de_confirmacion_para_la_correcta_edicion_de_un_expediente)
-        asertar_que_la_respuesta_tiene_estado(:ok)
+        asertar_que_la_respuesta_tiene_estado(response, :ok)
+        asertar_que_se_muestra_un_mensaje_de_confirmacion(ad_hoc.mensaje_de_confirmacion_para_la_correcta_edicion_de_un_expediente)
+        asertar_que_el_expediente_cambio(fabrica_de_objetos.otro_actor, fabrica_de_objetos.otro_demandado, fabrica_de_objetos.otra_materia)
       end
     end
 
@@ -327,8 +236,8 @@ describe ExpedientesController do
                 id: expediente.id,
                 expediente: {
                     actor: "",
-                    demandado: 'Otro Demandado',
-                    materia: 'Otra Materia'
+                    demandado: fabrica_de_objetos.otro_demandado,
+                    materia: fabrica_de_objetos.otra_materia
                 },
                 cliente_id: cliente.id,
             }
@@ -339,9 +248,9 @@ describe ExpedientesController do
 
         expediente.reload
 
-        asertar_que_el_expediente_no_cambio("#{cliente.nombre_completo}", 'Maria Perez', fabrica_de_objetos.una_materia)
-        asertar_que_se_muestra_un_mensaje_de_error(@ad_hoc.mensaje_de_error_para_expediente_invalido)
-        asertar_que_la_respuesta_tiene_estado(:bad_request)
+        asertar_que_la_respuesta_tiene_estado(response, :bad_request)
+        asertar_que_se_muestra_un_mensaje_de_error(ad_hoc.mensaje_de_error_para_expediente_invalido)
+        asertar_que_el_expediente_no_cambio("#{cliente.nombre_completo}", fabrica_de_objetos.un_demandado, fabrica_de_objetos.una_materia)
       end
 
       subject {
@@ -362,9 +271,9 @@ describe ExpedientesController do
 
         expediente.reload
 
-        asertar_que_el_expediente_no_cambio("#{cliente.nombre_completo}", 'Maria Perez', fabrica_de_objetos.una_materia)
-        asertar_que_se_muestra_un_mensaje_de_error(@ad_hoc.mensaje_de_error_para_expediente_invalido)
-        asertar_que_la_respuesta_tiene_estado(:bad_request)
+        asertar_que_la_respuesta_tiene_estado(response, :bad_request)
+        asertar_que_se_muestra_un_mensaje_de_error(ad_hoc.mensaje_de_error_para_expediente_invalido)
+        asertar_que_el_expediente_no_cambio("#{cliente.nombre_completo}", fabrica_de_objetos.un_demandado, fabrica_de_objetos.una_materia)
       end
 
       subject {
@@ -373,7 +282,7 @@ describe ExpedientesController do
                 id: expediente.id,
                 expediente: {
                     actor: "#{cliente.nombre_completo}",
-                    demandado: 'Otro Demandado',
+                    demandado: fabrica_de_objetos.otro_demandado,
                     materia: ''
                 },
                 cliente_id: cliente.id,
@@ -385,9 +294,9 @@ describe ExpedientesController do
 
         expediente.reload
 
-        asertar_que_el_expediente_no_cambio("#{cliente.nombre_completo}", 'Maria Perez', fabrica_de_objetos.una_materia)
-        asertar_que_se_muestra_un_mensaje_de_error(@ad_hoc.mensaje_de_error_para_expediente_invalido)
-        asertar_que_la_respuesta_tiene_estado(:bad_request)
+        asertar_que_la_respuesta_tiene_estado(response, :bad_request)
+        asertar_que_se_muestra_un_mensaje_de_error(ad_hoc.mensaje_de_error_para_expediente_invalido)
+        asertar_que_el_expediente_no_cambio("#{cliente.nombre_completo}", fabrica_de_objetos.un_demandado, fabrica_de_objetos.una_materia)
       end
     end
 
@@ -395,7 +304,7 @@ describe ExpedientesController do
 
   context 'Borrado de Expedientes' do
     let(:expediente) {Expediente.create!(actor: "#{cliente.nombre_completo}",
-                                         demandado: 'Maria Perez',
+                                         demandado: fabrica_de_objetos.un_demandado,
                                          materia: fabrica_de_objetos.una_materia,
                                          cliente_id: cliente.id)}
 
@@ -407,10 +316,10 @@ describe ExpedientesController do
     it 'se puede eliminar un expediente' do
       subject
 
-      asertar_que_se_muestra_un_mensaje_de_confirmacion(@ad_hoc.mensaje_de_confirmacion_para_la_correcta_eliminacion_de_un_expediente)
-      asertar_que_se_elimino_el_expediente
-      asertar_que_la_respuesta_tiene_estado(:found)
+      asertar_que_se_muestra_un_mensaje_de_confirmacion(ad_hoc.mensaje_de_confirmacion_para_la_correcta_eliminacion_de_un_expediente)
       asertar_que_se_redirecciono_a(cliente_url(cliente.id))
+      asertar_que_la_respuesta_tiene_estado(response, :found)
+      asertar_que_se_elimino_el_expediente
     end
   end
 end
