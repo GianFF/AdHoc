@@ -72,7 +72,7 @@ class AdHocAplicacion
     rescue ActiveRecord::RecordNotFound
       raise ActiveRecord::RecordNotFound, self.mensaje_de_error_para_expediente_inexistente
     end
-    raise ActiveRecord::RecordNotFound, self.mensaje_de_error_para_expediente_inexistente unless expediente.pertenece_a? un_abogado
+    validar_que_el_expediente_pertenece_al_abogado(expediente, un_abogado)
     expediente
   end
 
@@ -97,6 +97,15 @@ class AdHocAplicacion
     expediente.numerar!(datos_para_numerar_expediente)
     expediente.update!(datos_para_numerar_expediente)
     expediente
+  end
+
+  # Escritos
+
+  def crear_escrito_nuevo!(parametros_de_un_escrito, un_id_de_un_expediente, un_abogado)
+    escrito = Escrito.new(parametros_de_un_escrito)
+    escrito.expediente = buscar_expediente_por_id!(un_id_de_un_expediente, un_abogado)
+    escrito.save!
+    escrito
   end
 
   # Mensajes de error:
@@ -127,6 +136,10 @@ class AdHocAplicacion
 
   def mensaje_de_confirmacion_para_la_correcta_eliminacion_de_un_expediente
     'Expediente eliminado satisfactoriamente'
+  end
+
+  def mensaje_de_confirmacion_para_la_correcta_creacion_de_un_escrito
+    'Escrito creado satisfactoriamente'
   end
 
   def mensaje_de_error_para_cliente_inexistente
@@ -181,5 +194,9 @@ class AdHocAplicacion
     if la_contrasenia_es_blanca?(contrasenia_del_abogado)
       block.call(mensaje_de_error_para_contrasenia_no_proveida)
     end
+  end
+
+  def validar_que_el_expediente_pertenece_al_abogado(expediente, un_abogado)
+    raise ActiveRecord::RecordNotFound, self.mensaje_de_error_para_expediente_inexistente unless expediente.pertenece_a? un_abogado
   end
 end

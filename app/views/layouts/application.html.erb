@@ -6,6 +6,19 @@
 
     <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track': 'reload' %>
     <%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>
+
+    <!-- TinyMCE -->
+    <script src="https://cloud.tinymce.com/stable/tinymce.min.js?apiKey=dj1lnmrq393pmzosuh4k3yts0zbzige6zs3hjl7789fksu4d"></script>
+    <script>
+      tinymce.init(
+          {
+            selector:'#area_de_trabajo',
+            menubar: false,
+            plugins: "save",
+            toolbar: "save",
+          }
+      );
+    </script>
   </head>
 
   <body class="container-fluid body__body-adhoc">

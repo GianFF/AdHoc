@@ -1,5 +1,6 @@
 class Expediente < ApplicationRecord
   belongs_to :cliente
+  has_many :escritos
 
   validates :actor, :demandado, :materia, :cliente_id, presence: true
 
