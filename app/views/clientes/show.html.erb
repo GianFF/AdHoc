@@ -4,12 +4,20 @@
   <% end %>
   <div class="form-group cliente__show-botones" role="group">
     <%= button_to 'Editar', edit_cliente_path(current_abogado, @cliente),
-                  :method => :get,
+                  method: :get,
                   class: 'btn btn-success cliente__show-boton-editar' %>
-    <%= button_to 'Borrar', @cliente,
-                  method: :delete,
-                  class: 'btn btn-danger',
-                  data: { confirm: "¿Seguro que quiere eliminar un cliente?" } %>
+    <%= link_to 'Borrar', @cliente,
+                method: :delete,
+                class: 'btn btn-danger',
+                data: {
+                    confirm: '¿Seguro que quiere eliminar este cliente?',
+                    'confirm-button-text': 'Seguro',
+                    'confirm-button-color': '#5cb85c',
+                    'cancel-button-text': 'Cancelar',
+                    'cancel-button-color': '#ec971f',
+                    'sweet-alert-type': 'warning',
+                    text: 'Los expeditens de este cliente no se eliminaran.'
+                }%>
   </div>
 <% end %>
 <%= render 'tabs_expedientes' %>

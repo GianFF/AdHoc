@@ -47,9 +47,16 @@
 <div class="row">
   <div class="col-xs-12">
     <h3>Cancelar mi cuenta</h3>
-    <p>Envianos un mail para contarnos por qué cancelas tu cuenta a: adhoc@edymberg.com
-      <%= button_to "Cancelar mi cuenta", registration_path(resource_name),
-                    data: { confirm: "Are you sure?" }, method: :delete, class: 'btn btn-danger'%>
-    </p>
+      <%= link_to "Cancelar mi cuenta", registration_path(resource_name),
+                    method: :delete, class: 'btn btn-danger',
+                    data: {
+                        confirm: '¿Seguro que quiere eliminar su cuenta?',
+                        'confirm-button-text': 'Seguro',
+                        'confirm-button-color': '#5cb85c',
+                        'cancel-button-text': 'Cancelar',
+                        'cancel-button-color': '#ec971f',
+                        'sweet-alert-type': 'warning',
+                        text: 'Envianos un mail para contarnos por qué cancelas tu cuenta a: adhoc@edymberg.com .'
+                    }%>
   </div>
 </div>

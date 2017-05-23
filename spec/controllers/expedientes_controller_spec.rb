@@ -42,81 +42,6 @@ describe ExpedientesController do
     asertar_que_un_expediente_no_pertenece_a(otro_abogado)
   end
 
-  context 'Numeracion de Expedientes' do
-    subject { numerar_expediente }
-
-    let(:expediente) {Expediente.create!(actor: "#{cliente.nombre_completo}",
-                                         demandado: fabrica_de_objetos.un_demandado,
-                                         materia: fabrica_de_objetos.una_materia,
-                                         cliente_id: cliente.id)}
-
-    context 'En la correcta numeracion de un Expediente' do
-
-      let(:caratula_del_expediente_numerado){
-        fabrica_de_objetos.una_caratula_numerada(expediente, numero, anio, juzgado, numero_de_juzgado,
-                                                 departamento, ubicacion_del_departamento)
-      }
-
-      let(:ubicacion_del_departamento){ fabrica_de_objetos.una_ubicacion_de_un_departamento }
-
-      let(:departamento){ fabrica_de_objetos.un_departamento } #TODO: este dato podria ir capturandolo para guardar en una base de datos retroalimentable.
-
-      let(:numero_de_juzgado){ fabrica_de_objetos.un_numero_de_juzgado }
-
-      let(:juzgado){ fabrica_de_objetos.un_juzgado } #TODO: extraer a un ENUM, para ello averiguar que entidad engloba a un Juzgado o un Tribunal
-
-      let(:anio){ fabrica_de_objetos.un_anio }
-
-      let(:numero){ fabrica_de_objetos.un_numero_de_expediente }
-
-      it 'puede ser numerado' do
-        subject
-        expediente.reload
-
-        asertar_que_la_respuesta_tiene_estado(response, :ok)
-        asertar_que_el_template_es(:show)
-        asertar_que_se_muestra_un_mensaje_de_confirmacion(ad_hoc.mensaje_de_confirmacion_para_la_correcta_numeracion_de_un_expediente)
-        expect(expediente.caratula).to eq caratula_del_expediente_numerado
-      end
-
-      it 'no puede ser numerado dos veces' do
-        subject
-        expediente.reload
-        numerar_expediente
-
-        asertar_que_la_respuesta_tiene_estado(response, :ok)
-        asertar_que_el_template_es(:numerar)
-        asertar_que_se_muestra_un_mensaje_de_error(expediente.mensaje_de_error_para_expediente_numerado)
-        asertar_que_el_expediente_fue_numerado
-      end
-    end
-
-    context 'En la incorrecta numeracion de un Expediente' do
-      subject{
-        post :realizar_numeraracion,
-             params: {
-                 id: expediente.id,
-                 cliente_id: cliente.id,
-                 expediente: {
-                     numero: nil,
-                     juzgado: nil,
-                     numero_de_juzgado: nil,
-                     departamento: nil,
-                     ubicacion_del_departamento: nil
-                 }
-             }
-      }
-      it 'todos los campos son requeridos a la hora de numerar' do
-        subject
-        
-        asertar_que_la_respuesta_tiene_estado(response, :ok)
-        assert_template :numerar
-        asertar_que_se_muestra_un_mensaje_de_error(expediente.mensaje_de_error_para_datos_faltantes_en_la_numeracion)
-        asertar_que_el_expediente_no_fue_numerado
-      end
-    end
-  end
-
   context 'Creacion de Expedientes' do
 
     context 'En la correcta creacion de un Expediente' do
@@ -320,6 +245,81 @@ describe ExpedientesController do
       asertar_que_se_redirecciono_a(cliente_url(cliente.id))
       asertar_que_la_respuesta_tiene_estado(response, :found)
       asertar_que_se_elimino_el_expediente
+    end
+  end
+
+  context 'Numeracion de Expedientes' do
+    subject { numerar_expediente }
+
+    let(:expediente) {Expediente.create!(actor: "#{cliente.nombre_completo}",
+                                         demandado: fabrica_de_objetos.un_demandado,
+                                         materia: fabrica_de_objetos.una_materia,
+                                         cliente_id: cliente.id)}
+
+    context 'En la correcta numeracion de un Expediente' do
+
+      let(:caratula_del_expediente_numerado){
+        fabrica_de_objetos.una_caratula_numerada(expediente, numero, anio, juzgado, numero_de_juzgado,
+                                                 departamento, ubicacion_del_departamento)
+      }
+
+      let(:ubicacion_del_departamento){ fabrica_de_objetos.una_ubicacion_de_un_departamento }
+
+      let(:departamento){ fabrica_de_objetos.un_departamento } #TODO: este dato podria ir capturandolo para guardar en una base de datos retroalimentable.
+
+      let(:numero_de_juzgado){ fabrica_de_objetos.un_numero_de_juzgado }
+
+      let(:juzgado){ fabrica_de_objetos.un_juzgado } #TODO: extraer a un ENUM, para ello averiguar que entidad engloba a un Juzgado o un Tribunal
+
+      let(:anio){ fabrica_de_objetos.un_anio }
+
+      let(:numero){ fabrica_de_objetos.un_numero_de_expediente }
+
+      it 'puede ser numerado' do
+        subject
+        expediente.reload
+
+        asertar_que_la_respuesta_tiene_estado(response, :ok)
+        asertar_que_el_template_es(:show)
+        asertar_que_se_muestra_un_mensaje_de_confirmacion(ad_hoc.mensaje_de_confirmacion_para_la_correcta_numeracion_de_un_expediente)
+        expect(expediente.caratula).to eq caratula_del_expediente_numerado
+      end
+
+      it 'no puede ser numerado dos veces' do
+        subject
+        expediente.reload
+        numerar_expediente
+
+        asertar_que_la_respuesta_tiene_estado(response, :ok)
+        asertar_que_el_template_es(:numerar)
+        asertar_que_se_muestra_un_mensaje_de_error(expediente.mensaje_de_error_para_expediente_numerado)
+        asertar_que_el_expediente_fue_numerado
+      end
+    end
+
+    context 'En la incorrecta numeracion de un Expediente' do
+      subject{
+        post :realizar_numeraracion,
+             params: {
+                 id: expediente.id,
+                 cliente_id: cliente.id,
+                 expediente: {
+                     numero: nil,
+                     juzgado: nil,
+                     numero_de_juzgado: nil,
+                     departamento: nil,
+                     ubicacion_del_departamento: nil
+                 }
+             }
+      }
+      it 'todos los campos son requeridos a la hora de numerar' do
+        subject
+
+        asertar_que_la_respuesta_tiene_estado(response, :ok)
+        assert_template :numerar
+        asertar_que_se_muestra_un_mensaje_de_error(expediente.mensaje_de_error_para_datos_faltantes_en_la_numeracion)
+        asertar_que_el_expediente_no_fue_numerado
+      end
     end
   end
 end

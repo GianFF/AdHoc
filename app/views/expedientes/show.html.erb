@@ -7,8 +7,17 @@
                 disabled: @expediente.ha_sido_numerado?, class: 'btn btn-warning expediente__numerar'%>
   <div class="form-group cliente__show-botones" role="group">
     <%= button_to 'Editar', edit_cliente_expediente_path(@cliente.id, @expediente.id), :method => :get, class: 'btn btn-success cliente__show-boton-editar' %>
-    <%= button_to 'Borrar', [@cliente, @expediente], method: :delete, class: 'btn btn-danger',
-                  data: { confirm: "¿Seguro que quiere eliminar éste expediente?" } %>
+    <%= link_to 'Borrar', [@cliente, @expediente], method: :delete, class: 'btn btn-danger',
+                data: {
+                    confirm: '¿Seguro que quiere eliminar éste expediente?',
+                    'confirm-button-text': 'Seguro',
+                    'confirm-button-color': '#5cb85c',
+                    'cancel-button-text': 'Cancelar',
+                    'cancel-button-color': '#ec971f',
+                    'sweet-alert-type': 'warning',
+                    text: 'Esta accion no se podra revertir.'
+                } %>
   </div>
 <% end %>
-<%= render 'tab_cliente' %>
+<%= render 'tab_escritos' %>
+<%= render '/shared/tab_cliente' %>
