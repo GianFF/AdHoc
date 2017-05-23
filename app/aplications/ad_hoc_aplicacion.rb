@@ -101,6 +101,10 @@ class AdHocAplicacion
 
   # Escritos
 
+  def buscar_escrito_por_id!(escrito_id)
+    escrito = Escrito.find(escrito_id)
+  end
+
   def crear_escrito_nuevo!(parametros_de_un_escrito, un_id_de_un_expediente, un_abogado)
     escrito = Escrito.new(parametros_de_un_escrito)
     escrito.expediente = buscar_expediente_por_id!(un_id_de_un_expediente, un_abogado)

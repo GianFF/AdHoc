@@ -8,12 +8,15 @@ class EscritosController < ApplicationController
   end
 
   def show
-
+    @escrito = @ad_hoc.buscar_escrito_por_id!(params[:id])
+    @expediente = @escrito.expediente
+    @cliente = @expediente.cliente
   end
 
   def create
     @escrito = @ad_hoc.crear_escrito_nuevo!(validar_parametros_escrito, validar_parametros_expediente, abogado_actual)
     @expediente = @escrito.expediente
+    @cliente = @expediente.cliente
     flash.now[:success] = @ad_hoc.mensaje_de_confirmacion_para_la_correcta_creacion_de_un_escrito
     render :show
   end
