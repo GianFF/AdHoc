@@ -89,8 +89,16 @@ class FabricaDeObjetos
 
   # Expedientes
 
+  def crear_expediente(cliente_id)
+    Expediente.create!(actor: self.un_actor, demandado: self.un_demandado, materia: self.una_materia, cliente_id: cliente_id)
+  end
+
   def una_caratula_numerada(expediente, numero, anio, juzgado, numero_de_juzgado, departamento, ubicacion_del_departamento)
     "#{expediente.titulo} s/ #{expediente.materia} (#{numero}/#{anio}) en tramite ante el #{juzgado} N°#{numero_de_juzgado} del #{departamento} sito en #{ubicacion_del_departamento}"
+  end
+
+  def un_actor
+    'Juan Perez'
   end
 
   def un_demandado

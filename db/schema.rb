@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170507230307) do
+ActiveRecord::Schema.define(version: 20170520204121) do
 
   create_table "abogados", force: :cascade do |t|
     t.string   "email",                  default: "", null: false
@@ -35,8 +35,8 @@ ActiveRecord::Schema.define(version: 20170507230307) do
   end
 
   create_table "clientes", force: :cascade do |t|
-    t.string   "nombre"
-    t.string   "apellido"
+    t.string   "nombre",             null: false
+    t.string   "apellido",           null: false
     t.string   "correo_electronico"
     t.integer  "telefono"
     t.string   "estado_civil"
@@ -45,30 +45,41 @@ ActiveRecord::Schema.define(version: 20170507230307) do
     t.integer  "abogado_id"
     t.datetime "created_at",         null: false
     t.datetime "updated_at",         null: false
+    t.index ["abogado_id"], name: "index_clientes_on_abogado_id"
   end
 
   create_table "conyuges", force: :cascade do |t|
-    t.string   "nombre"
-    t.string   "apellido"
+    t.string   "nombre",     null: false
+    t.string   "apellido",   null: false
     t.integer  "cliente_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["cliente_id"], name: "index_conyuges_on_cliente_id"
   end
 
   create_table "direccions", force: :cascade do |t|
-    t.string   "calle"
-    t.string   "localidad"
-    t.string   "provincia"
-    t.string   "pais"
+    t.string   "calle",      null: false
+    t.string   "localidad",  null: false
+    t.string   "provincia",  null: false
+    t.string   "pais",       null: false
     t.integer  "cliente_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["cliente_id"], name: "index_direccions_on_cliente_id"
+  end
+
+  create_table "escritos", force: :cascade do |t|
+    t.text     "cuerpo"
+    t.integer  "expediente_id"
+    t.datetime "created_at",    null: false
+    t.datetime "updated_at",    null: false
+    t.index ["expediente_id"], name: "index_escritos_on_expediente_id"
   end
 
   create_table "expedientes", force: :cascade do |t|
-    t.text     "actor"
-    t.text     "demandado"
-    t.text     "materia"
+    t.text     "actor",                      null: false
+    t.text     "demandado",                  null: false
+    t.text     "materia",                    null: false
     t.integer  "numero"
     t.integer  "anio"
     t.text     "juzgado"
@@ -79,15 +90,17 @@ ActiveRecord::Schema.define(version: 20170507230307) do
     t.integer  "cliente_id"
     t.datetime "created_at",                 null: false
     t.datetime "updated_at",                 null: false
+    t.index ["cliente_id"], name: "index_expedientes_on_cliente_id"
   end
 
   create_table "hijos", force: :cascade do |t|
-    t.string   "nombre"
-    t.string   "apellido"
-    t.integer  "edad"
+    t.string   "nombre",     null: false
+    t.string   "apellido",   null: false
+    t.integer  "edad",       null: false
     t.integer  "cliente_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["cliente_id"], name: "index_hijos_on_cliente_id"
   end
 
 end
