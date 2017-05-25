@@ -3,7 +3,7 @@ class ExpedientesController < ApplicationController
 
   def show
     begin
-      buscar_expediente_y_cliente
+      buscar_expediente_escritos_y_cliente
     rescue Exception => excepcion
       flash.keep[:error] = excepcion.message
       redirect_back(fallback_location: root_path)
@@ -18,7 +18,7 @@ class ExpedientesController < ApplicationController
 
   def edit
     begin
-      buscar_expediente_y_cliente
+      buscar_expediente_escritos_y_cliente
     rescue Exception => excepcion
       flash.keep[:error] = excepcion.message
       redirect_back(fallback_location: root_path)
@@ -28,7 +28,7 @@ class ExpedientesController < ApplicationController
   def create
     begin
       @expediente = @ad_hoc.crear_expediente_nuevo!(validar_parametros_expediente, validar_parametros_cliente, abogado_actual)
-      @cliente = @expediente.cliente
+      buscar_escritos_y_cliente
       flash.now[:success] = @ad_hoc.mensaje_de_confirmacion_para_la_correcta_creacion_de_un_expediente
       render :show
     rescue Exception => excepcion
@@ -47,7 +47,7 @@ class ExpedientesController < ApplicationController
       render :show
     rescue ArgumentError => excepcion
       flash.now[:error] = excepcion.message
-      buscar_expediente_y_cliente
+      buscar_expediente_escritos_y_cliente
       render :edit, status: :bad_request
     rescue ActiveRecord::RecordNotFound
       flash.keep[:error] = @ad_hoc.mensaje_de_error_para_expediente_inexistente
@@ -67,7 +67,7 @@ class ExpedientesController < ApplicationController
 
   def numerar
     begin
-      buscar_expediente_y_cliente
+      buscar_expediente_escritos_y_cliente
       @ad_hoc.validar_que_no_haya_sido_numerado(@expediente)
     rescue Exception => excepcion
       flash.keep[:error] = excepcion.message
@@ -83,15 +83,20 @@ class ExpedientesController < ApplicationController
       render :show
     rescue Exception => excepcion
       flash.now[:error] = excepcion.message
-      buscar_expediente_y_cliente
+      buscar_expediente_escritos_y_cliente
       render :numerar
     end
   end
 
   private
 
-  def buscar_expediente_y_cliente
+  def buscar_expediente_escritos_y_cliente
     @expediente = @ad_hoc.buscar_expediente_por_id!(params[:id], abogado_actual)
+    buscar_escritos_y_cliente
+  end
+
+  def buscar_escritos_y_cliente
+    @escritos = @expediente.escritos || []
     @cliente = @expediente.cliente
   end
 
