@@ -102,7 +102,7 @@ class AdHocAplicacion
   # Escritos
 
   def buscar_escrito_por_id!(escrito_id)
-    escrito = Escrito.find(escrito_id)
+    Escrito.find(escrito_id)
   end
 
   def crear_escrito_nuevo!(parametros_de_un_escrito, un_id_de_un_expediente, un_abogado)
@@ -110,6 +110,17 @@ class AdHocAplicacion
     escrito.expediente = buscar_expediente_por_id!(un_id_de_un_expediente, un_abogado)
     escrito.save!
     escrito
+  end
+
+  def editar_escrito!(escrito_id, parametros_escrito, abogado)
+    escrito = self.buscar_escrito_por_id!(escrito_id)
+    escrito.update!(parametros_escrito)
+    escrito
+  end
+
+  def eliminar_escrito!(escrito_id, abogado)
+    escrito = self.buscar_escrito_por_id!(escrito_id)
+    escrito.destroy
   end
 
   # Mensajes de error:
@@ -144,6 +155,14 @@ class AdHocAplicacion
 
   def mensaje_de_confirmacion_para_la_correcta_creacion_de_un_escrito
     'Escrito creado satisfactoriamente'
+  end
+
+  def mensaje_de_confirmacion_para_la_correcta_edicion_de_un_escrito
+    'Escrito editado satisfactoriamente'
+  end
+
+  def mensaje_de_confirmacion_para_la_correcta_eliminacion_de_un_escrito
+    'Escrito eliminado satisfactoriamente'
   end
 
   def mensaje_de_error_para_cliente_inexistente

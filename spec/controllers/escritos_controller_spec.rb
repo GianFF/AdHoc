@@ -46,4 +46,52 @@ describe EscritosController, type: :controller do
     asertar_que_el_template_es(:show)
     asertar_que_la_respuesta_tiene_estado(response, :ok)
   end
+
+  context 'En la edicion de un escrito' do
+    let(:escrito){fabrica_de_objetos.crear_escrito(expediente.id)}
+
+    subject {
+      put :update,
+          params: {
+              id: escrito.id,
+              escrito: {
+                  titulo: fabrica_de_objetos.otro_titulo_de_una_demanda,
+                  cuerpo: fabrica_de_objetos.otro_cuerpo_de_una_demanda
+              },
+              expediente_id: expediente.id,
+          }
+    }
+
+    it 'se puede editar un escrito' do
+      subject
+      escrito.reload
+
+      expect(escrito.titulo).to eq fabrica_de_objetos.otro_titulo_de_una_demanda
+      expect(escrito.cuerpo).to eq fabrica_de_objetos.otro_cuerpo_de_una_demanda
+      asertar_que_el_template_es(:show)
+      asertar_que_la_respuesta_tiene_estado(response, :ok)
+      asertar_que_se_muestra_un_mensaje_de_confirmacion(ad_hoc.mensaje_de_confirmacion_para_la_correcta_edicion_de_un_escrito)
+    end
+  end
+
+  context 'En la eliminacion de un escrito' do
+    let(:escrito){fabrica_de_objetos.crear_escrito(expediente.id)}
+
+    subject {
+      delete :destroy,
+             params: {
+                 id: escrito.id,
+                 expediente_id: expediente.id,
+             }
+    }
+
+    it 'se puede eliminar un escrito' do
+      subject
+
+      asertar_que_se_muestra_un_mensaje_de_confirmacion(ad_hoc.mensaje_de_confirmacion_para_la_correcta_eliminacion_de_un_escrito)
+      asertar_que_se_redirecciono_a(expediente_url(expediente.id))
+      asertar_que_la_respuesta_tiene_estado(response, :found)
+      expect(Escrito.all.count).to eq 0
+    end
+  end
 end

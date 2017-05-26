@@ -122,10 +122,7 @@ describe ExpedientesController do
   end
 
   context 'Edicion de Expedientes' do
-    let(:expediente) {Expediente.create!(actor: "#{cliente.nombre_completo}",
-                                         demandado: fabrica_de_objetos.un_demandado,
-                                         materia: fabrica_de_objetos.una_materia,
-                                         cliente_id: cliente.id)}
+    let(:expediente) {fabrica_de_objetos.crear_expediente(cliente.id)}
 
     context 'En la correcta edicion de un Expediente' do
 
@@ -160,7 +157,7 @@ describe ExpedientesController do
             params: {
                 id: expediente.id,
                 expediente: {
-                    actor: "",
+                    actor: '',
                     demandado: fabrica_de_objetos.otro_demandado,
                     materia: fabrica_de_objetos.otra_materia
                 },
@@ -175,7 +172,7 @@ describe ExpedientesController do
 
         asertar_que_la_respuesta_tiene_estado(response, :bad_request)
         asertar_que_se_muestra_un_mensaje_de_error(ad_hoc.mensaje_de_error_para_expediente_invalido)
-        asertar_que_el_expediente_no_cambio("#{cliente.nombre_completo}", fabrica_de_objetos.un_demandado, fabrica_de_objetos.una_materia)
+        asertar_que_el_expediente_no_cambio(fabrica_de_objetos.un_actor, fabrica_de_objetos.un_demandado, fabrica_de_objetos.una_materia)
       end
 
       subject {
@@ -198,7 +195,7 @@ describe ExpedientesController do
 
         asertar_que_la_respuesta_tiene_estado(response, :bad_request)
         asertar_que_se_muestra_un_mensaje_de_error(ad_hoc.mensaje_de_error_para_expediente_invalido)
-        asertar_que_el_expediente_no_cambio("#{cliente.nombre_completo}", fabrica_de_objetos.un_demandado, fabrica_de_objetos.una_materia)
+        asertar_que_el_expediente_no_cambio(fabrica_de_objetos.un_actor, fabrica_de_objetos.un_demandado, fabrica_de_objetos.una_materia)
       end
 
       subject {
@@ -221,7 +218,7 @@ describe ExpedientesController do
 
         asertar_que_la_respuesta_tiene_estado(response, :bad_request)
         asertar_que_se_muestra_un_mensaje_de_error(ad_hoc.mensaje_de_error_para_expediente_invalido)
-        asertar_que_el_expediente_no_cambio("#{cliente.nombre_completo}", fabrica_de_objetos.un_demandado, fabrica_de_objetos.una_materia)
+        asertar_que_el_expediente_no_cambio(fabrica_de_objetos.un_actor, fabrica_de_objetos.un_demandado, fabrica_de_objetos.una_materia)
       end
     end
 

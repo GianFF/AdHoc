@@ -21,10 +21,24 @@ class EscritosController < ApplicationController
     render :show
   end
 
+  def update
+    @escrito = @ad_hoc.editar_escrito!(params[:id], validar_parametros_escrito, abogado_actual)
+    @expediente = @escrito.expediente
+    @cliente = @expediente.cliente
+    flash.now[:success] = @ad_hoc.mensaje_de_confirmacion_para_la_correcta_edicion_de_un_escrito
+    render :show
+  end
+
+  def destroy
+    @ad_hoc.eliminar_escrito!(params[:id], abogado_actual)
+    flash.now[:success] = @ad_hoc.mensaje_de_confirmacion_para_la_correcta_eliminacion_de_un_escrito
+    redirect_to expediente_url(validar_parametros_expediente)
+  end
+
   private
 
   def validar_parametros_escrito
-    params.require(:escrito).permit(:cuerpo)
+    params.require(:escrito).permit(:cuerpo, :titulo)
   end
 
   def validar_parametros_expediente

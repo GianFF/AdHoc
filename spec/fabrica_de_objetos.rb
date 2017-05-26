@@ -1,6 +1,6 @@
 class FabricaDeObjetos
-  # Abogados:
-  def un_abogado(mail, contrasenia, nombre, apellido, sexo)
+  #Abogados:
+  def crear_un_abogado(mail, contrasenia, nombre, apellido, sexo)
     Abogado.create!(email: mail, password: contrasenia, nombre: nombre, apellido: apellido, sexo: sexo)
   end
 
@@ -36,7 +36,7 @@ class FabricaDeObjetos
     'password1'
   end
 
-  # Clientes:
+  #Clientes:
 
   def crear_cliente(abogado_id)
     Cliente.create!(nombre: 'Foo', apellido: 'Bar', abogado_id: abogado_id)
@@ -87,7 +87,7 @@ class FabricaDeObjetos
     Cliente.create!(parametros_para_cliente(abogado_id, un_nombre, un_apellido))
   end
 
-  # Expedientes
+  #Expedientes
 
   def crear_expediente(cliente_id)
     Expediente.create!(actor: self.un_actor, demandado: self.un_demandado, materia: self.una_materia, cliente_id: cliente_id)
@@ -143,5 +143,27 @@ class FabricaDeObjetos
 
   def un_numero_de_expediente
     123
+  end
+
+  #Escritos
+
+  def crear_escrito(expediente_id)
+    Escrito.create!(titulo: un_titulo_de_una_demanda, cuerpo: un_cuerpo_de_una_demanda, expediente_id: expediente_id)
+  end
+
+  def un_titulo_de_una_demanda
+    'un titulo'
+  end
+
+  def un_cuerpo_de_una_demanda
+    'un cuerpo'
+  end
+
+  def otro_titulo_de_una_demanda
+    'otro titulo'
+  end
+
+  def otro_cuerpo_de_una_demanda
+    'otro cuerpo'
   end
 end

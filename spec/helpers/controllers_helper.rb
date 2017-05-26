@@ -8,7 +8,7 @@ module ControllersHelper
   end
 
   def crear_cuenta_para_abogado(mail, contrasenia, nombre, apellido, sexo)
-    abogado = fabrica_de_objetos.un_abogado(mail, contrasenia, nombre, apellido, sexo)
+    abogado = fabrica_de_objetos.crear_un_abogado(mail, contrasenia, nombre, apellido, sexo)
     #abogado.confirm
     abogado
   end
