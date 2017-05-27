@@ -9,9 +9,20 @@ describe AbogadosController do
 
   let(:fabrica_de_objetos){ FabricaDeObjetos.new }
 
-  let(:un_abogado){ login_abogado(fabrica_de_objetos.un_mail_para_un_abogado, fabrica_de_objetos.una_contrasenia,
-                                        fabrica_de_objetos.un_nombre_para_un_abogado, fabrica_de_objetos.un_apellido_para_un_abogado,
-                                        Sexo::MASCULINO) }
+  let(:parametros_del_abogado) {
+    fabrica_de_objetos.parametros_para_un_abogado(fabrica_de_objetos.un_mail_para_un_abogado,
+                                                  fabrica_de_objetos.una_contrasenia,
+                                                  fabrica_de_objetos.un_nombre_para_un_abogado,
+                                                  fabrica_de_objetos.un_apellido_para_un_abogado,
+                                                  Sexo::MASCULINO,
+                                                  fabrica_de_objetos.una_matricula,
+                                                  fabrica_de_objetos.un_colegio,
+                                                  fabrica_de_objetos.un_cuit,
+                                                  fabrica_de_objetos.un_domicilio_procesal,
+                                                  fabrica_de_objetos.un_domicilio_electronico)
+  }
+
+  let(:un_abogado){ login_abogado(parametros_del_abogado) }
 
   subject { put :update, id: un_abogado.id, abogado: parametros }
 

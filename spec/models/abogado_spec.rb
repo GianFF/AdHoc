@@ -2,19 +2,82 @@ require 'rails_helper'
 
 describe Abogado, type: :model do
 
+  let(:fabrica_de_objetos){ FabricaDeObjetos.new }
+
   context 'En la correcta registracion de un abogado' do
+
+    # mail, contrasenia, nombre, apellido, sexo, una_matricula, un_colegio, un_cuit, un_domicilio_procesal, un_domicilio_electronico
+
     let(:parametros) {
-      { nombre: 'Foo', apellido: 'Bar', sexo: 'Masculino', email: 'ejemplo@mail.com', password: 'password'}
+      fabrica_de_objetos.parametros_para_un_abogado(fabrica_de_objetos.un_mail_para_un_abogado,
+                                                    fabrica_de_objetos.una_contrasenia,
+                                                    fabrica_de_objetos.un_nombre_para_un_abogado,
+                                                    fabrica_de_objetos.un_apellido_para_un_abogado,
+                                                    Sexo::MASCULINO,
+                                                    fabrica_de_objetos.una_matricula,
+                                                    fabrica_de_objetos.un_colegio,
+                                                    fabrica_de_objetos.un_cuit,
+                                                    fabrica_de_objetos.un_domicilio_procesal,
+                                                    fabrica_de_objetos.un_domicilio_electronico)
     }
 
     subject { Abogado.create!(parametros) }
 
-    it 'un abogado tiene nombre, apellido, email, y sexo' do
-      abogado = subject
+    context 'Se compone de' do
 
-      expect(abogado.nombre).to eq 'Foo'
-      expect(abogado.apellido).to eq 'Bar'
-      expect(abogado.email).to eq 'ejemplo@mail.com'
+      it 'nombre' do
+        abogado = subject
+
+        expect(abogado.nombre).to eq fabrica_de_objetos.un_nombre_para_un_abogado
+      end
+
+      it 'apellido' do
+        abogado = subject
+
+        expect(abogado.apellido).to eq fabrica_de_objetos.un_apellido_para_un_abogado
+      end
+
+      it 'email' do
+        abogado = subject
+
+        expect(abogado.email).to eq fabrica_de_objetos.un_mail_para_un_abogado
+      end
+
+      it 'sexo' do
+        abogado = subject
+
+        expect(abogado.sexo).to eq Sexo::MASCULINO
+      end
+
+      it 'matricula' do
+        abogado = subject
+
+        expect(abogado.matricula).to eq fabrica_de_objetos.una_matricula
+      end
+
+      it 'nombre del colegio de abogados' do
+        abogado = subject
+
+        expect(abogado.nombre_del_colegio_de_abogados).to eq fabrica_de_objetos.un_colegio
+      end
+
+      it 'cuit' do
+        abogado = subject
+
+        expect(abogado.cuit).to eq fabrica_de_objetos.un_cuit
+      end
+
+      it 'domicilio procesal' do
+        abogado = subject
+
+        expect(abogado.domicilio_procesal).to eq fabrica_de_objetos.un_domicilio_procesal
+      end
+
+      it 'domicilio electronico' do
+        abogado = subject
+
+        expect(abogado.domicilio_electronico).to eq fabrica_de_objetos.un_domicilio_electronico
+      end
     end
 
     it 'dos abogados no pueden tener el mismo email' do

@@ -1,9 +1,46 @@
 class FabricaDeObjetos
   #Abogados:
-  def crear_un_abogado(mail, contrasenia, nombre, apellido, sexo)
-    Abogado.create!(email: mail, password: contrasenia, nombre: nombre, apellido: apellido, sexo: sexo,
-                    matricula: 'T° X F° 25', nombre_del_colegio_de_abogados: 'C.A.Q', cuit: '27-37597072-5',
-                    domicilio_procesal: 'Mitre N° 262', domicilio_electronico: '27341524097@notificaciones.scba.gov.ar')
+  def parametros_para_un_abogado(mail, contrasenia, nombre, apellido, sexo, una_matricula, un_colegio, un_cuit,
+                                 un_domicilio_procesal, un_domicilio_electronico)
+    {email: mail, password: contrasenia, nombre: nombre, apellido: apellido, sexo: sexo,
+     matricula: una_matricula, nombre_del_colegio_de_abogados: un_colegio, cuit: un_cuit,
+     domicilio_procesal: un_domicilio_procesal, domicilio_electronico: un_domicilio_electronico}
+  end
+
+  def crear_un_abogado(parametros_para_un_abogado)
+    Abogado.create!(parametros_para_un_abogado)
+  end
+
+  def un_domicilio_electronico
+    '27375970725@notificaciones.scba.gov.ar'
+  end
+
+  def otro_domicilio_electronico
+    '27169652635@notificaciones.scba.gov.ar'
+  end
+
+  def un_domicilio_procesal
+    'Mitre N° 262'
+  end
+
+  def un_cuit
+    '27-37597072-5'
+  end
+
+  def otro_cuit
+    '27-16965263-5'
+  end
+
+  def un_colegio
+    'C.A.Q'
+  end
+
+  def una_matricula
+    'T° X F° 25'
+  end
+
+  def otra_matricula
+    'T° X F° 26'
   end
 
   def un_nombre_para_un_abogado
@@ -72,7 +109,8 @@ class FabricaDeObjetos
     'Foo'
   end
 
-  def parametros_para_cliente(un_id_de_un_abogado, un_nombre, un_apellido, un_telefono=nil, un_mail=nil, un_estado_civil=nil, una_empresa=nil, trabaja_en_blanco=nil)
+  def parametros_para_cliente(un_id_de_un_abogado, un_nombre, un_apellido, un_telefono=nil, un_mail=nil,
+                              un_estado_civil=nil, una_empresa=nil, trabaja_en_blanco=nil)
     {
         abogado_id: un_id_de_un_abogado,
         nombre: un_nombre,
