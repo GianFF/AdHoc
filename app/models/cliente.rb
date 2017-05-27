@@ -19,7 +19,7 @@ class Cliente < ApplicationRecord
   validates :abogado_id, presence: { message: 'Abogado inexistente'}
 
   def nombre_completo
-    "#{self.nombre} #{self.apellido}"
+    "#{self.apellido} #{self.nombre}"
   end
 
   def calle

@@ -9,13 +9,18 @@ class Expediente < ApplicationRecord
   end
 
   def caratula
-    return "#{self.titulo} s/ #{self.materia}" unless self.ha_sido_numerado
-    "#{self.titulo} s/ #{self.materia} (#{self.numero}/#{self.anio}) en tramite ante el #{self.juzgado} N°#{self.numero_de_juzgado} del #{self.departamento} sito en #{self.ubicacion_del_departamento}"
+    return self.caratula_sin_numerar unless self.ha_sido_numerado
+    self.caratula_numerada
+  end
+
+  def caratula_para_el_encabezado_automatico
+    return caratula_sin_numerar unless self.ha_sido_numerado
+    "#{self.caratula_sin_numerar} #{self.numero_para_caratula}"
   end
 
   def numerar!(datos) #TODO: hay un mejor nombre para datos? serian los datos necesarios para numerar el expediente...
-    validar_que_el_expediente_no_haya_sido_numerado!
-    validar_que_no_falte_ningun_dato_para_la_numeracion!(datos)
+    self.validar_que_el_expediente_no_haya_sido_numerado!
+    self.validar_que_no_falte_ningun_dato_para_la_numeracion!(datos)
 
     self.ha_sido_numerado = true
 
@@ -54,5 +59,19 @@ class Expediente < ApplicationRecord
 
   def mensaje_de_error_para_datos_faltantes_en_la_numeracion
     'Todos los datos son requeridos a la hora de numerar un expediente'
+  end
+
+  private
+
+  def numero_para_caratula
+    "(#{self.numero}/#{self.anio})"
+  end
+
+  def caratula_sin_numerar
+    "#{self.titulo} s/ #{self.materia}"
+  end
+
+  def caratula_numerada
+    "#{self.caratula_sin_numerar} #{numero_para_caratula} en tramite ante el #{self.juzgado} N°#{self.numero_de_juzgado} del #{self.departamento} sito en #{self.ubicacion_del_departamento}"
   end
 end

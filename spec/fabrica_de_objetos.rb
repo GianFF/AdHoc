@@ -1,7 +1,9 @@
 class FabricaDeObjetos
   #Abogados:
   def crear_un_abogado(mail, contrasenia, nombre, apellido, sexo)
-    Abogado.create!(email: mail, password: contrasenia, nombre: nombre, apellido: apellido, sexo: sexo)
+    Abogado.create!(email: mail, password: contrasenia, nombre: nombre, apellido: apellido, sexo: sexo,
+                    matricula: 'T° X F° 25', nombre_del_colegio_de_abogados: 'C.A.Q', cuit: '27-37597072-5',
+                    domicilio_procesal: 'Mitre N° 262', domicilio_electronico: '27341524097@notificaciones.scba.gov.ar')
   end
 
   def un_nombre_para_un_abogado

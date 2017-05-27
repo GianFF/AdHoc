@@ -34,7 +34,7 @@ describe Abogado, type: :model do
       abogado = Abogado.create(parametros)
 
       expect{Abogado.create!(parametros)}.to raise_error ActiveRecord::RecordInvalid
-      expect(abogado.errors.full_messages).to include("Nombre #{Abogado.mensaje_de_error_para_nombre_en_blanco}")
+      expect(abogado.errors.full_messages).to include("Nombre #{Abogado.mensaje_de_error_para_campo_vacio}")
     end
 
     it 'un abogado no puede registrarse sin apellido' do
@@ -42,7 +42,7 @@ describe Abogado, type: :model do
       abogado = Abogado.create(parametros)
 
       expect{Abogado.create!(parametros)}.to raise_error ActiveRecord::RecordInvalid
-      expect(abogado.errors.full_messages).to include("Apellido #{Abogado.mensaje_de_error_para_apellido_en_blanco}")
+      expect(abogado.errors.full_messages).to include("Apellido #{Abogado.mensaje_de_error_para_campo_vacio}")
     end
 
     it 'un abogado no puede registrarse sin email' do
@@ -50,7 +50,7 @@ describe Abogado, type: :model do
       abogado = Abogado.create(parametros)
 
       expect{Abogado.create!(parametros)}.to raise_error ActiveRecord::RecordInvalid
-      expect(abogado.errors.full_messages).to include("Email #{Abogado.mensaje_de_error_para_email_en_blanco}")
+      expect(abogado.errors.full_messages).to include("Email #{Abogado.mensaje_de_error_para_campo_vacio}")
     end
 
     it 'un abogado no puede registrarse sin sexo' do
@@ -58,7 +58,7 @@ describe Abogado, type: :model do
       abogado = Abogado.create(parametros)
 
       expect{Abogado.create!(parametros)}.to raise_error ActiveRecord::RecordInvalid
-      expect(abogado.errors.full_messages).to include("Sexo #{Abogado.mensaje_de_error_para_sexo_en_blanco}")
+      expect(abogado.errors.full_messages).to include("Sexo #{Abogado.mensaje_de_error_para_campo_vacio}")
     end
 
     it 'un abogado no puede registrase si su contraseña es menor a 6 digitos' do
