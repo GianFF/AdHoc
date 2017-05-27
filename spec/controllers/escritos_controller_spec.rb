@@ -29,7 +29,7 @@ describe EscritosController, type: :controller do
     end
   end
 
-  subject { post :create, params: { escrito:{ cuerpo: '' }, expediente_id: expediente.id } }
+  subject { post :create, params: { escrito: { titulo: '', cuerpo: '' }, expediente_id: expediente.id } }
 
   it 'Un escrito pertenece a un abogado' do
     otro_abogado = crear_cuenta_para_abogado(fabrica_de_objetos.otro_mail_para_un_abogado,

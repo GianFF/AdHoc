@@ -43,6 +43,7 @@ class ExpedientesController < ApplicationController
     begin
       @expediente = @ad_hoc.editar_expediente!(params[:id], validar_parametros_expediente, abogado_actual)
       @cliente = @ad_hoc.buscar_cliente_por_id!(validar_parametros_cliente, abogado_actual)
+      @escritos = @expediente.escritos || []
       flash.now[:success] = @ad_hoc.mensaje_de_confirmacion_para_la_correcta_edicion_de_un_expediente
       render :show
     rescue ArgumentError => excepcion

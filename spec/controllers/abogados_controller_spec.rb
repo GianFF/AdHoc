@@ -9,7 +9,7 @@ describe AbogadosController do
 
   let(:fabrica_de_objetos){ FabricaDeObjetos.new }
 
-  let(:crear_un_abogado){ login_abogado(fabrica_de_objetos.un_mail_para_un_abogado, fabrica_de_objetos.una_contrasenia,
+  let(:un_abogado){ login_abogado(fabrica_de_objetos.un_mail_para_un_abogado, fabrica_de_objetos.una_contrasenia,
                                         fabrica_de_objetos.un_nombre_para_un_abogado, fabrica_de_objetos.un_apellido_para_un_abogado,
                                         Sexo::MASCULINO) }
 
