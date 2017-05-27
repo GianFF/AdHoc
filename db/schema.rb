@@ -83,19 +83,19 @@ ActiveRecord::Schema.define(version: 20170520204121) do
   end
 
   create_table "expedientes", force: :cascade do |t|
-    t.text     "actor",                      null: false
-    t.text     "demandado",                  null: false
-    t.text     "materia",                    null: false
+    t.text     "actor",                                      null: false
+    t.text     "demandado",                                  null: false
+    t.text     "materia",                                    null: false
     t.integer  "numero"
     t.integer  "anio"
     t.text     "juzgado"
     t.integer  "numero_de_juzgado"
     t.text     "departamento"
     t.text     "ubicacion_del_departamento"
-    t.boolean  "ha_sido_numerado"
+    t.boolean  "ha_sido_numerado",           default: false
     t.integer  "cliente_id"
-    t.datetime "created_at",                 null: false
-    t.datetime "updated_at",                 null: false
+    t.datetime "created_at",                                 null: false
+    t.datetime "updated_at",                                 null: false
     t.index ["cliente_id"], name: "index_expedientes_on_cliente_id"
   end
 

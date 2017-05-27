@@ -3,7 +3,7 @@ function iniciarEditor() {
     traducir_editor_al_castellano();
 }
 
-function iniciarEditorConTitulosParaDemanda(){
+function iniciarEditorConEncabezadoPatrocinanteYTitulosParaDemanda(){
     var editor = new tinymce.Editor('editor', {
         selector: '#editor',
         branding: false,
@@ -15,14 +15,13 @@ function iniciarEditorConTitulosParaDemanda(){
         toolbar: 'save | insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | ' +
         'bullist numlist outdent indent | print preview fullpage | forecolor backcolor emoticons',
         removed_menuitems: 'undo, redo, newdocument, formats',
-        setup: function(editor){
-            editor.on("init", function(){tinymce.activeEditor.setContent(titulosParaDemanda());});
+        setup: function (editor){
+            editor.on("init", function(){EncabezadoYTitulos();});
         }
     }, tinymce.EditorManager);
     traducir_editor_al_castellano();
     editor.render();
 }
-
 
 // private
 
@@ -56,4 +55,12 @@ function titulosParaDemanda() {
         '<p>&nbsp;</p>'+
         '<h1 style="text-align: center;">V.- PETITORIO</h1>'+
         '<p>&nbsp;</p>';
+}
+
+function encabezado() {
+    return $('#encabezado').text();
+}
+
+function EncabezadoYTitulos() {
+    tinymce.activeEditor.setContent(encabezado().concat(titulosParaDemanda()))
 }

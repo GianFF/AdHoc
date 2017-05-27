@@ -23,6 +23,10 @@ class FabricaDeObjetos
     'Mitre N° 262'
   end
 
+  def otro_domicilio_procesal
+    'Alvear N° 262'
+  end
+
   def un_cuit
     '27-37597072-5'
   end
@@ -33,6 +37,10 @@ class FabricaDeObjetos
 
   def un_colegio
     'C.A.Q'
+  end
+
+  def otro_colegio
+    'C.A.A'
   end
 
   def una_matricula
@@ -205,5 +213,11 @@ class FabricaDeObjetos
 
   def otro_cuerpo_de_una_demanda
     'otro cuerpo'
+  end
+
+  #Encabezados
+
+  def crear_encabezado(abogado, expediente, cliente)
+    Encabezado.new(abogado, expediente, cliente)
   end
 end

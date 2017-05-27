@@ -1,5 +1,20 @@
 require 'rails_helper'
 
+def parametros_para_numerar_expediente
+  {actor: "#{cliente.nombre_completo}",
+   demandado: fabrica_de_objetos.un_demandado,
+   materia: fabrica_de_objetos.una_materia,
+   numero: fabrica_de_objetos.un_numero_de_expediente,
+   juzgado: fabrica_de_objetos.un_juzgado,
+   numero_de_juzgado: fabrica_de_objetos.un_numero_de_juzgado,
+   departamento: fabrica_de_objetos.un_departamento,
+   ubicacion_del_departamento: fabrica_de_objetos.una_ubicacion_de_un_departamento}
+end
+
+def numerar_expediente
+  expediente.numerar!(parametros_para_numerar_expediente)
+end
+
 describe Encabezado do
   let(:fabrica_de_objetos){ FabricaDeObjetos.new }
 
@@ -7,7 +22,7 @@ describe Encabezado do
                                                                   fabrica_de_objetos.una_contrasenia,
                                                                   fabrica_de_objetos.un_nombre_para_un_abogado,
                                                                   fabrica_de_objetos.un_apellido_para_un_abogado,
-                                                                  Sexo::MASCULINO,
+                                                                  Sexo::FEMENINO,
                                                                   fabrica_de_objetos.una_matricula,
                                                                   fabrica_de_objetos.un_colegio,
                                                                   fabrica_de_objetos.un_cuit,
@@ -20,12 +35,12 @@ describe Encabezado do
 
   let(:expediente){ fabrica_de_objetos.crear_expediente(cliente.id) }
 
-  let(:encabezado){ Encabezado.new(abogado, expediente, cliente) } # TODO: mover al factory
+  let(:encabezado){ fabrica_de_objetos.crear_encabezado(abogado, expediente, cliente) } # TODO: mover al factory
 
   context 'Se compone de' do
 
     it 'un nombre del abogado' do
-      expect(encabezado.nombre_del_abogado).to eq abogado.nombre_completo
+      expect(encabezado.presentacion_del_abogado).to eq "Dra. #{abogado.nombre_completo}"
     end
 
     it 'un numero de matricula' do
@@ -52,12 +67,34 @@ describe Encabezado do
       expect(encabezado.caratula_del_expediente).to eq expediente.caratula_para_el_encabezado_automatico
     end
 
-    it 'juzgado o tribunal que actua en ese expediente' do
-      expect(encabezado.organo_que_actua_en_ese_expediente).to eq expediente.juzgado
+    context 'organo que actua en ese expediente ' do
+
+      it 'cuando el expediente no fue numerado' do
+        expect(encabezado.organo_que_actua_en_ese_expediente).to eq '[JUZGADO O TRIBUNAL NO HA SIDO DEFINIDO]'
+      end
+
+      it 'cuando el expediente fue numerado' do
+        numerar_expediente
+
+        expect(encabezado.organo_que_actua_en_ese_expediente).to eq expediente.juzgado
+      end
     end
 
     it 'nombre del cliente' do
       expect(encabezado.nombre_del_cliente).to eq cliente.nombre_completo
+    end
+  end
+
+  context 'Un encabezado puede ser para patrocinante' do
+
+    it 'cuando el expediente no fue numerado tiene un cuerpo' do
+      expect(encabezado.cuerpo).to eq "#{cliente.nombre_completo} por mi propio derecho, en compañia de mi letrada patrocinante, la #{abogado.presentacion}, abogada inscripta al #{abogado.matricula} del #{abogado.nombre_del_colegio_de_abogados} cuit e IIBB #{abogado.cuit} con domicilio procesal en calle #{abogado.domicilio_procesal} y electronico en #{abogado.domicilio_electronico}, en el marco del expediente caratulado #{expediente.caratula_para_el_encabezado_automatico} en tramite ante [JUZGADO O TRIBUNAL NO HA SIDO DEFINIDO] ante S.S. me presento y respetuosamente expongo:"
+    end
+
+    it 'cuando el expediente fue numerado tiene otro cuerpo' do
+      numerar_expediente
+
+      expect(encabezado.cuerpo).to eq "#{cliente.nombre_completo} por mi propio derecho, en compañia de mi letrada patrocinante, la #{abogado.presentacion}, abogada inscripta al #{abogado.matricula} del #{abogado.nombre_del_colegio_de_abogados} cuit e IIBB #{abogado.cuit} con domicilio procesal en calle #{abogado.domicilio_procesal} y electronico en #{abogado.domicilio_electronico}, en el marco del expediente caratulado #{expediente.caratula_para_el_encabezado_automatico} en tramite ante #{expediente.juzgado} ante S.S. me presento y respetuosamente expongo:"
     end
   end
 end

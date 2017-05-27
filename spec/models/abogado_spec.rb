@@ -85,7 +85,7 @@ describe Abogado, type: :model do
       abogado = Abogado.create(parametros)
 
       expect{Abogado.create!(parametros)}.to raise_error ActiveRecord::RecordInvalid
-      expect(abogado.errors.full_messages).to include("Email #{Abogado.mensaje_de_error_para_email_tomado}")
+      expect(abogado.errors.full_messages).to include("Email #{Abogado.mensaje_de_error_para_campo_tomado}")
       expect(Abogado.count).to be 1
     end
   end

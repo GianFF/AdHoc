@@ -1,4 +1,5 @@
 <%= render partial: 'form', locals: {mostrar_boton_cancelar: true} %>
+<div id="encabezado" hidden><%= Encabezado.new(current_abogado, @expediente, @cliente).cuerpo %></div>
 <script>
-  $( iniciarEditorConTitulosParaDemanda );
+  $( iniciarEditorConEncabezadoPatrocinanteYTitulosParaDemanda );
 </script>
