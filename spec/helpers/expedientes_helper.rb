@@ -16,7 +16,7 @@ module ExpedientesHelper
   end
 
   def asertar_que_el_expediente_no_fue_numerado
-    expect(expediente.ha_sido_numerado?).to be nil
+    expect(expediente.ha_sido_numerado?).to be false
   end
 
   def asertar_que_el_expediente_fue_numerado
