@@ -13,11 +13,16 @@
 ActiveRecord::Schema.define(version: 20170520204121) do
 
   create_table "abogados", force: :cascade do |t|
-    t.string   "email",                  default: "", null: false
-    t.string   "encrypted_password",     default: "", null: false
+    t.string   "email",                          default: "", null: false
+    t.string   "encrypted_password",             default: "", null: false
     t.string   "nombre"
     t.string   "apellido"
     t.string   "sexo"
+    t.string   "matricula"
+    t.string   "nombre_del_colegio_de_abogados"
+    t.string   "cuit"
+    t.string   "domicilio_procesal"
+    t.string   "domicilio_electronico"
     t.string   "reset_password_token"
     t.datetime "reset_password_sent_at"
     t.datetime "remember_created_at"
@@ -25,11 +30,11 @@ ActiveRecord::Schema.define(version: 20170520204121) do
     t.datetime "confirmed_at"
     t.datetime "confirmation_sent_at"
     t.string   "unconfirmed_email"
-    t.integer  "failed_attempts",        default: 0,  null: false
+    t.integer  "failed_attempts",                default: 0,  null: false
     t.string   "unlock_token"
     t.datetime "locked_at"
-    t.datetime "created_at",                          null: false
-    t.datetime "updated_at",                          null: false
+    t.datetime "created_at",                                  null: false
+    t.datetime "updated_at",                                  null: false
     t.index ["email"], name: "index_abogados_on_email", unique: true
     t.index ["reset_password_token"], name: "index_abogados_on_reset_password_token", unique: true
   end
@@ -69,7 +74,8 @@ ActiveRecord::Schema.define(version: 20170520204121) do
   end
 
   create_table "escritos", force: :cascade do |t|
-    t.text     "cuerpo"
+    t.text     "titulo",        null: false
+    t.text     "cuerpo",        null: false
     t.integer  "expediente_id"
     t.datetime "created_at",    null: false
     t.datetime "updated_at",    null: false
@@ -77,19 +83,19 @@ ActiveRecord::Schema.define(version: 20170520204121) do
   end
 
   create_table "expedientes", force: :cascade do |t|
-    t.text     "actor",                      null: false
-    t.text     "demandado",                  null: false
-    t.text     "materia",                    null: false
+    t.text     "actor",                                      null: false
+    t.text     "demandado",                                  null: false
+    t.text     "materia",                                    null: false
     t.integer  "numero"
     t.integer  "anio"
     t.text     "juzgado"
     t.integer  "numero_de_juzgado"
     t.text     "departamento"
     t.text     "ubicacion_del_departamento"
-    t.boolean  "ha_sido_numerado"
+    t.boolean  "ha_sido_numerado",           default: false
     t.integer  "cliente_id"
-    t.datetime "created_at",                 null: false
-    t.datetime "updated_at",                 null: false
+    t.datetime "created_at",                                 null: false
+    t.datetime "updated_at",                                 null: false
     t.index ["cliente_id"], name: "index_expedientes_on_cliente_id"
   end
 

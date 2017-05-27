@@ -1,9 +1,33 @@
 <%= render 'tabs' do %>
-    <div class="tinyMC_toolbar">
+  <%= form_for [@expediente, @escrito], html: {class: 'form-horizontal'} do |f| %>
+    <div class="field form-group">
+      <%= f.label :titulo, class: 'col-sm-2 control-label' %>*
+      <div class="col-sm-8">
+        <%= f.text_field :titulo, class: 'form-control', autofocus: true %>
+      </div>
     </div>
-
-    <%= form_for [@expediente, @escrito], html: {class: 'form-horizontal'} do |f| %>
-        <%= f.text_area :cuerpo, id: 'area_de_trabajo' %>
+    <%= f.text_area :cuerpo, id: 'editor' %>
+  <% end %>
+    <% if mostrar_boton_cancelar %>
+      <%= link_to 'Cancelar',
+                  cliente_expediente_path(@cliente.id, @expediente.id),
+                  method: :get,
+                  class: 'btn btn-warning escrito__boton-cancelar'
+      %>
+    <% else %>
+        <%= link_to 'Borrar',
+                    [@expediente, @escrito],
+                    method: :delete,
+                    class: 'btn btn-danger escrito__boton-cancelar',
+                    data: {
+                        confirm: '¿Seguro que quiere eliminar éste escrito?',
+                        'confirm-button-text': 'Seguro',
+                        'confirm-button-color': '#5cb85c',
+                        'cancel-button-text': 'Cancelar',
+                        'cancel-button-color': '#ec971f',
+                        'sweet-alert-type': 'warning',
+                        text: 'Esta accion no se podra revertir.'
+                    } %>
     <% end %>
 <% end %>
 <%= render 'tab_expediente' %>

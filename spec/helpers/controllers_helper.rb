@@ -1,14 +1,14 @@
 module ControllersHelper
   include ::RSpec::Matchers
 
-  def login_abogado(mail, contrasenia, nombre, apellido, sexo)
-    abogado = crear_cuenta_para_abogado(mail, contrasenia, nombre, apellido, sexo)
+  def login_abogado(parametros)
+    abogado = crear_cuenta_para_abogado(parametros)
     sign_in abogado
     abogado
   end
 
-  def crear_cuenta_para_abogado(mail, contrasenia, nombre, apellido, sexo)
-    abogado = fabrica_de_objetos.un_abogado(mail, contrasenia, nombre, apellido, sexo)
+  def crear_cuenta_para_abogado(parametros)
+    abogado = fabrica_de_objetos.crear_un_abogado(parametros)
     #abogado.confirm
     abogado
   end

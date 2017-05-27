@@ -4,9 +4,14 @@ class DeviseCreateAbogados < ActiveRecord::Migration[5.0]
       ## Database authenticatable
       t.string :email,              null: false, default: ''
       t.string :encrypted_password, null: false, default: ''
-      t.string  :nombre
-      t.string  :apellido
-      t.string  :sexo
+      t.string :nombre
+      t.string :apellido
+      t.string :sexo
+      t.string :matricula
+      t.string :nombre_del_colegio_de_abogados
+      t.string :cuit
+      t.string :domicilio_procesal
+      t.string :domicilio_electronico
 
       ## Recoverable
       t.string   :reset_password_token

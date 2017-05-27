@@ -4,7 +4,7 @@ module ExpedientesHelper
   def asertar_que_el_expediente_fue_correctamente_creado
     un_expediente = Expediente.first
 
-    expect(un_expediente.actor).to eq "#{cliente.nombre} #{cliente.apellido}"
+    expect(un_expediente.actor).to eq "#{cliente.nombre_completo}"
     expect(un_expediente.demandado).to eq fabrica_de_objetos.un_demandado
     expect(un_expediente.materia).to eq fabrica_de_objetos.una_materia
   end
@@ -16,7 +16,7 @@ module ExpedientesHelper
   end
 
   def asertar_que_el_expediente_no_fue_numerado
-    expect(expediente.ha_sido_numerado?).to be nil
+    expect(expediente.ha_sido_numerado?).to be false
   end
 
   def asertar_que_el_expediente_fue_numerado

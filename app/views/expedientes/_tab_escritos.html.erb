@@ -3,6 +3,11 @@
   <ul class="nav nav-tabs">
     <li role="presentation" class="active">
       <%= render 'boton_elegir_escrito' %>
+      <% @escritos.each do |escrito| %>
+        <li role="presentation" >
+          <%= link_to escrito.titulo, expediente_escrito_path(@expediente.id, escrito.id) %>
+        </li>
+      <% end %>
     </li>
   </ul>
 <% end %>

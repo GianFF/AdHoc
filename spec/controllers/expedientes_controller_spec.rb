@@ -6,9 +6,18 @@ describe ExpedientesController do
 
   let(:fabrica_de_objetos){ FabricaDeObjetos.new }
 
-  let(:abogado){ login_abogado(fabrica_de_objetos.un_mail_para_un_abogado, fabrica_de_objetos.una_contrasenia,
-                               fabrica_de_objetos.un_nombre_para_un_abogado, fabrica_de_objetos.un_apellido_para_un_abogado,
-                               Sexo::MASCULINO) }
+  let(:parametros_del_abogado) { fabrica_de_objetos.parametros_para_un_abogado(fabrica_de_objetos.un_mail_para_un_abogado,
+                                                                   fabrica_de_objetos.una_contrasenia,
+                                                                   fabrica_de_objetos.un_nombre_para_un_abogado,
+                                                                   fabrica_de_objetos.un_apellido_para_un_abogado,
+                                                                   Sexo::MASCULINO,
+                                                                   fabrica_de_objetos.una_matricula,
+                                                                   fabrica_de_objetos.un_colegio,
+                                                                   fabrica_de_objetos.un_cuit,
+                                                                   fabrica_de_objetos.un_domicilio_procesal,
+                                                                   fabrica_de_objetos.un_domicilio_electronico) }
+
+  let(:abogado){ login_abogado(parametros_del_abogado) }
 
   let(:cliente){ fabrica_de_objetos.crear_cliente(abogado.id) }
 
@@ -33,9 +42,17 @@ describe ExpedientesController do
   end
 
   it 'un abogado no puede ver los expedientes de otro abogado' do
-    otro_abogado = crear_cuenta_para_abogado(fabrica_de_objetos.otro_mail_para_un_abogado, fabrica_de_objetos.una_contrasenia,
-                                             fabrica_de_objetos.otro_nombre_para_un_abogado, fabrica_de_objetos.otro_apellido_para_un_abogado,
-                                             Sexo::MASCULINO)
+    otros_parametros = fabrica_de_objetos.parametros_para_un_abogado(fabrica_de_objetos.otro_mail_para_un_abogado,
+                                                                     fabrica_de_objetos.una_contrasenia,
+                                                                     fabrica_de_objetos.otro_nombre_para_un_abogado,
+                                                                     fabrica_de_objetos.otro_apellido_para_un_abogado,
+                                                                     Sexo::MASCULINO,
+                                                                     fabrica_de_objetos.otra_matricula,
+                                                                     fabrica_de_objetos.un_colegio,
+                                                                     fabrica_de_objetos.otro_cuit,
+                                                                     fabrica_de_objetos.un_domicilio_procesal,
+                                                                     fabrica_de_objetos.otro_domicilio_electronico)
+    otro_abogado = crear_cuenta_para_abogado(otros_parametros)
 
     subject
 
@@ -122,10 +139,7 @@ describe ExpedientesController do
   end
 
   context 'Edicion de Expedientes' do
-    let(:expediente) {Expediente.create!(actor: "#{cliente.nombre_completo}",
-                                         demandado: fabrica_de_objetos.un_demandado,
-                                         materia: fabrica_de_objetos.una_materia,
-                                         cliente_id: cliente.id)}
+    let(:expediente) {fabrica_de_objetos.crear_expediente(cliente.id)}
 
     context 'En la correcta edicion de un Expediente' do
 
@@ -160,7 +174,7 @@ describe ExpedientesController do
             params: {
                 id: expediente.id,
                 expediente: {
-                    actor: "",
+                    actor: '',
                     demandado: fabrica_de_objetos.otro_demandado,
                     materia: fabrica_de_objetos.otra_materia
                 },
@@ -175,7 +189,7 @@ describe ExpedientesController do
 
         asertar_que_la_respuesta_tiene_estado(response, :bad_request)
         asertar_que_se_muestra_un_mensaje_de_error(ad_hoc.mensaje_de_error_para_expediente_invalido)
-        asertar_que_el_expediente_no_cambio("#{cliente.nombre_completo}", fabrica_de_objetos.un_demandado, fabrica_de_objetos.una_materia)
+        asertar_que_el_expediente_no_cambio(fabrica_de_objetos.un_actor, fabrica_de_objetos.un_demandado, fabrica_de_objetos.una_materia)
       end
 
       subject {
@@ -198,7 +212,7 @@ describe ExpedientesController do
 
         asertar_que_la_respuesta_tiene_estado(response, :bad_request)
         asertar_que_se_muestra_un_mensaje_de_error(ad_hoc.mensaje_de_error_para_expediente_invalido)
-        asertar_que_el_expediente_no_cambio("#{cliente.nombre_completo}", fabrica_de_objetos.un_demandado, fabrica_de_objetos.una_materia)
+        asertar_que_el_expediente_no_cambio(fabrica_de_objetos.un_actor, fabrica_de_objetos.un_demandado, fabrica_de_objetos.una_materia)
       end
 
       subject {
@@ -221,7 +235,7 @@ describe ExpedientesController do
 
         asertar_que_la_respuesta_tiene_estado(response, :bad_request)
         asertar_que_se_muestra_un_mensaje_de_error(ad_hoc.mensaje_de_error_para_expediente_invalido)
-        asertar_que_el_expediente_no_cambio("#{cliente.nombre_completo}", fabrica_de_objetos.un_demandado, fabrica_de_objetos.una_materia)
+        asertar_que_el_expediente_no_cambio(fabrica_de_objetos.un_actor, fabrica_de_objetos.un_demandado, fabrica_de_objetos.una_materia)
       end
     end
 
