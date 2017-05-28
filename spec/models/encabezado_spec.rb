@@ -88,7 +88,7 @@ describe Encabezado do
   context 'Un encabezado puede ser para patrocinante' do
 
     it 'cuando el expediente no fue numerado tiene un cuerpo' do
-      expect(encabezado.cuerpo).to eq "#{cliente.nombre_completo} por mi propio derecho, en compañia de mi letrada patrocinante, la #{abogado.presentacion}, abogada inscripta al #{abogado.matricula} del #{abogado.nombre_del_colegio_de_abogados} cuit e IIBB #{abogado.cuit} con domicilio procesal en calle #{abogado.domicilio_procesal} y electronico en #{abogado.domicilio_electronico}, en el marco del expediente caratulado #{expediente.caratula_para_el_encabezado_automatico} en tramite ante [JUZGADO O TRIBUNAL NO HA SIDO DEFINIDO] ante S.S. me presento y respetuosamente expongo:"
+      expect(encabezado.cuerpo).to eq "#{cliente.nombre_completo} por mi propio derecho, en compañia de mi letrada patrocinante, la #{abogado.presentacion}, abogada inscripta al #{abogado.matricula} del #{abogado.nombre_del_colegio_de_abogados} cuit e IIBB #{abogado.cuit} con domicilio procesal en calle #{abogado.domicilio_procesal} y electronico en #{abogado.domicilio_electronico}, en el marco del expediente caratulado #{expediente.caratula_para_el_encabezado_automatico} en tramite ante <strong><span style='color: #ff0000;'>[JUZGADO O TRIBUNAL NO HA SIDO DEFINIDO]</span></strong> ante S.S. me presento y respetuosamente expongo:"
     end
 
     it 'cuando el expediente fue numerado tiene otro cuerpo' do

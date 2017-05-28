@@ -36,6 +36,7 @@ group :development, :test do
   gem 'rspec-rails', '~> 3.5'
   gem 'rake'
   gem 'rails-controller-testing'
+  gem 'simplecov', :require => false
 end
 
 
