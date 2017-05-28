@@ -102,7 +102,12 @@ class AdHocAplicacion
   # Escritos
 
   def buscar_escrito_por_id!(escrito_id, un_abogado)
-    escrito = Escrito.find(escrito_id)
+    begin
+      escrito = Escrito.find(escrito_id)
+    rescue ActiveRecord::RecordNotFound => error
+      adhoc_error = AdHocError.new([error.message])
+      raise AdHocUIError.new(adhoc_error)
+    end
     validar_que_el_escrito_pertenece_al_abogado(escrito, un_abogado)
     escrito
   end

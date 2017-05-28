@@ -1,4 +1,5 @@
 class EscritosController < ApplicationController
+  before_action :authenticate_abogado!
   attr_reader :escrito
 
   def new
