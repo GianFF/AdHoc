@@ -55,6 +55,16 @@ class AdHocAplicacion
 
   # Expedientes:
 
+  def buscar_expediente_por_id!(expediente_id, un_abogado)
+    begin
+      expediente = Expediente.find(expediente_id)
+    rescue ActiveRecord::RecordNotFound
+      raise ActiveRecord::RecordNotFound, self.mensaje_de_error_para_expediente_inexistente
+    end
+    validar_que_el_expediente_pertenece_al_abogado(expediente, un_abogado)
+    expediente
+  end
+
   def crear_expediente_nuevo!(parametros_expediente, cliente_id, abogado)
     expediente = Expediente.new(parametros_expediente)
     expediente.cliente = buscar_cliente_por_id!(cliente_id, abogado)
@@ -63,16 +73,6 @@ class AdHocAplicacion
     rescue ActiveRecord::RecordInvalid
       raise RuntimeError, self.mensaje_de_error_para_expediente_invalido
     end
-    expediente
-  end
-
-  def buscar_expediente_por_id!(expediente_id, un_abogado)
-    begin
-      expediente = Expediente.find(expediente_id)
-    rescue ActiveRecord::RecordNotFound
-      raise ActiveRecord::RecordNotFound, self.mensaje_de_error_para_expediente_inexistente
-    end
-    validar_que_el_expediente_pertenece_al_abogado(expediente, un_abogado)
     expediente
   end
 
@@ -101,26 +101,43 @@ class AdHocAplicacion
 
   # Escritos
 
-  def buscar_escrito_por_id!(escrito_id)
-    Escrito.find(escrito_id)
+  def buscar_escrito_por_id!(escrito_id, un_abogado)
+    escrito = Escrito.find(escrito_id)
+    validar_que_el_escrito_pertenece_al_abogado(escrito, un_abogado)
+    escrito
   end
 
   def crear_escrito_nuevo!(parametros_de_un_escrito, un_id_de_un_expediente, un_abogado)
     escrito = Escrito.new(parametros_de_un_escrito)
     escrito.expediente = buscar_expediente_por_id!(un_id_de_un_expediente, un_abogado)
-    escrito.save!
+    begin
+      escrito.save!
+    rescue ActiveRecord::RecordInvalid => error
+      adhoc_error = AdHocError.new(error.record.errors.full_messages)
+      raise AdHocUIError.new(adhoc_error)
+    end
     escrito
   end
 
-  def editar_escrito!(escrito_id, parametros_escrito, abogado)
-    escrito = self.buscar_escrito_por_id!(escrito_id)
-    escrito.update!(parametros_escrito)
+  def editar_escrito!(escrito_id, parametros_escrito, un_abogado)
+    escrito = self.buscar_escrito_por_id!(escrito_id, un_abogado)
+    begin
+      escrito.update!(parametros_escrito)
+    rescue ActiveRecord::RecordInvalid => error
+      adhoc_error = AdHocError.new(error.record.errors.full_messages)
+      raise AdHocUIError.new(adhoc_error)
+    end
     escrito
   end
 
-  def eliminar_escrito!(escrito_id, abogado)
-    escrito = self.buscar_escrito_por_id!(escrito_id)
+  def eliminar_escrito!(escrito_id, un_abogado)
+    escrito = self.buscar_escrito_por_id!(escrito_id, un_abogado)
     escrito.destroy
+  end
+
+  def validar_que_el_escrito_pertenece_al_abogado(un_escrito, un_abogado)
+    adhoc_error = AdHocError.new([mensaje_de_error_para_escrito_invalido])
+    raise AdHocUIError.new(adhoc_error) unless un_escrito.pertenece_a? un_abogado
   end
 
   # Mensajes de error:
@@ -165,6 +182,7 @@ class AdHocAplicacion
     'Escrito eliminado satisfactoriamente'
   end
 
+
   def mensaje_de_error_para_cliente_inexistente
     'Cliente inexistente'
   end
@@ -191,6 +209,10 @@ class AdHocAplicacion
 
   def mensaje_de_error_para_expediente_inexistente
     'Expediente inexistente'
+  end
+
+  def mensaje_de_error_para_escrito_invalido
+    'Escrito inexistente'
   end
 
   def validar_que_no_haya_sido_numerado(expediente)
