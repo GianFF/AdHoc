@@ -70,7 +70,7 @@ describe Encabezado do
     context 'organo que actua en ese expediente ' do
 
       it 'cuando el expediente no fue numerado' do
-        expect(encabezado.organo_que_actua_en_ese_expediente).to eq '[JUZGADO O TRIBUNAL NO HA SIDO DEFINIDO]'
+        expect(encabezado.organo_que_actua_en_ese_expediente).to eq "<strong><span style='color: #ff0000;'>[JUZGADO O TRIBUNAL NO HA SIDO DEFINIDO]</span></strong>"
       end
 
       it 'cuando el expediente fue numerado' do
