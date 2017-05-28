@@ -1,5 +1,5 @@
 function iniciarEditor() {
-    tinymce.init(configuracion_del_editor());
+    recargar_editor();
     traducir_editor_al_castellano();
 }
 
@@ -10,9 +10,9 @@ function iniciarEditorConEncabezadoPatrocinanteYTitulosParaDemanda(){
         plugins: [
             'advlist autolink lists charmap print preview hr anchor pagebreak',
             'searchreplace wordcount visualblocks visualchars fullscreen insertdatetime nonbreaking',
-            'save table contextmenu directionality paste textcolor'
+            'table contextmenu directionality paste textcolor'
         ],
-        toolbar: 'save | insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | ' +
+        toolbar: 'insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | ' +
         'bullist numlist outdent indent | print preview fullpage | forecolor backcolor emoticons',
         removed_menuitems: 'undo, redo, newdocument, formats',
         setup: function (editor){
@@ -25,6 +25,16 @@ function iniciarEditorConEncabezadoPatrocinanteYTitulosParaDemanda(){
 
 // private
 
+function recargar_editor() {
+    tinymce.remove(); // TODO: eliminar este hack
+    /*
+    * Este hack lo hago porque el navegador cachea la info de que tiny ya fue cargado
+    * y no me lo vuelve a cargar, entonces para evitar que se muestre el editor in-line
+    * decidí eliminar la instancia de tiny y volverla a cargar a mano.
+    */
+    tinymce.init(configuracion_del_editor());
+}
+
 function configuracion_del_editor() {
     return {
         selector: '#editor',
@@ -32,9 +42,9 @@ function configuracion_del_editor() {
         plugins: [
             'code advlist autolink lists charmap print preview hr anchor pagebreak',
             'searchreplace wordcount visualblocks visualchars fullscreen insertdatetime nonbreaking',
-            'save table contextmenu directionality paste textcolor'
+            'table contextmenu directionality paste textcolor'
         ],
-        toolbar: 'code | save | insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | ' +
+        toolbar: 'code | insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | ' +
         'bullist numlist outdent indent | print preview fullpage | forecolor backcolor emoticons',
         removed_menuitems: 'undo, redo, newdocument, formats'
     };

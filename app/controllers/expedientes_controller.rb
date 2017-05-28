@@ -79,7 +79,7 @@ class ExpedientesController < ApplicationController
   def realizar_numeraracion
     begin
       @expediente = @ad_hoc.numerar_expediente!(validar_parametros_para_numerar_expediente, params[:id], abogado_actual)
-      @cliente = @expediente.cliente
+      buscar_escritos_y_cliente
       flash.now[:success] = @ad_hoc.mensaje_de_confirmacion_para_la_correcta_numeracion_de_un_expediente
       render :show
     rescue Exception => excepcion
