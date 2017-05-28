@@ -8,6 +8,11 @@
       <% end %>
     </a>
   </li>
+  <% escritos_que_no_son(@escrito, @expediente.escritos).each do |escrito| %>
+      <li role="presentation" >
+        <%= link_to escrito.titulo, expediente_escrito_path(@expediente.id, escrito.id) %>
+      </li>
+  <% end %>
 </ul>
 <%= render 'shared/tabs_contenedor' do %>
     <%= yield %>

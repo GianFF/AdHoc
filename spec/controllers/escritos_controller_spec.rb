@@ -25,39 +25,77 @@ describe EscritosController, type: :controller do
   let(:ad_hoc){ AdHocAplicacion.new }
 
   context 'En la creacion de un escrito' do
+    let(:otros_parametros) {
+      fabrica_de_objetos.parametros_para_un_abogado(fabrica_de_objetos.otro_mail_para_un_abogado,
+                                                    fabrica_de_objetos.una_contrasenia,
+                                                    fabrica_de_objetos.otro_nombre_para_un_abogado,
+                                                    fabrica_de_objetos.otro_apellido_para_un_abogado,
+                                                    Sexo::MASCULINO,
+                                                    fabrica_de_objetos.otra_matricula,
+                                                    fabrica_de_objetos.un_colegio,
+                                                    fabrica_de_objetos.otro_cuit,
+                                                    fabrica_de_objetos.un_domicilio_procesal,
+                                                    fabrica_de_objetos.otro_domicilio_electronico)
+    }
 
-    subject { get :new, params: { expediente_id: expediente.id } }
+    let(:otro_abogado) { crear_cuenta_para_abogado(otros_parametros) }
 
-    it 'se obtiene un escrito vacio' do
+    subject { post :create, params: {escrito: {cuerpo: 'un cuerpo', titulo: 'un titulo'}, expediente_id: expediente.id} }
+
+    it 'Un escrito pertenece a un abogado' do
       subject
 
-      expect(@controller.escrito).to_not be nil
-      expect(@controller.escrito.cuerpo).to be nil
+      un_escrito = Escrito.first
+
+      expect(un_escrito.pertenece_a? abogado).to be true
+      expect(un_escrito.pertenece_a? otro_abogado).to be false
+      asertar_que_el_template_es(:show)
+      asertar_que_la_respuesta_tiene_estado(response, :ok)
     end
-  end
 
-  subject { post :create, params: { escrito: { titulo: '', cuerpo: '' }, expediente_id: expediente.id } }
+    it 'otro abogado no puede ver los escritos de un abogado' do
+      subject
+      un_escrito = Escrito.first
 
-  it 'Un escrito pertenece a un abogado' do
-    otros_parametros = fabrica_de_objetos.parametros_para_un_abogado(fabrica_de_objetos.otro_mail_para_un_abogado,
-                                                                     fabrica_de_objetos.una_contrasenia,
-                                                                     fabrica_de_objetos.otro_nombre_para_un_abogado,
-                                                                     fabrica_de_objetos.otro_apellido_para_un_abogado,
-                                                                     Sexo::MASCULINO,
-                                                                     fabrica_de_objetos.otra_matricula,
-                                                                     fabrica_de_objetos.un_colegio,
-                                                                     fabrica_de_objetos.otro_cuit,
-                                                                     fabrica_de_objetos.un_domicilio_procesal,
-                                                                     fabrica_de_objetos.otro_domicilio_electronico)
-    otro_abogado = crear_cuenta_para_abogado(otros_parametros)
-    subject
+      sign_out abogado
+      login_abogado(otros_parametros)
+      get :show, params: {id: un_escrito.id, expediente_id: expediente.id}
 
-    un_escrito = Escrito.first
+      asertar_que_se_redirecciono_a(root_path)
+      asertar_que_la_respuesta_tiene_estado(response, :found)
+      asertar_que_se_muestra_un_mensaje_de_error2(@controller.ad_hoc.mensaje_de_error_para_escrito_invalido)
+    end
 
-    expect(un_escrito.pertenece_a? abogado).to be true
-    expect(un_escrito.pertenece_a? otro_abogado).to be false
-    asertar_que_el_template_es(:show)
-    asertar_que_la_respuesta_tiene_estado(response, :ok)
+    context 'Cuando es correcta' do
+      subject { get :new, params: {expediente_id: expediente.id} }
+
+      it 'se obtiene un escrito vacio' do
+        subject
+
+        expect(@controller.escrito).to_not be nil
+        expect(@controller.escrito.cuerpo).to be nil
+      end
+    end
+
+    context 'Cuando es incorrecta' do
+      subject { post :create, params: {escrito: {cuerpo: '', titulo: ''}, expediente_id: expediente.id} }
+
+      it 'el titulo no puede ser vacio' do
+        subject
+
+        asertar_que_se_muestra_un_mensaje_de_error2("Titulo #{Escrito.mensaje_de_error_para_campo_vacio}")
+        asertar_que_la_respuesta_tiene_estado(response, :ok)
+        asertar_que_el_template_es(:new)
+      end
+
+      it 'el cuerpo no puede ser vacio' do
+        subject
+
+        asertar_que_se_muestra_un_mensaje_de_error2("Cuerpo #{Escrito.mensaje_de_error_para_campo_vacio}")
+        asertar_que_la_respuesta_tiene_estado(response, :ok)
+        asertar_que_el_template_es(:new)
+      end
+    end
   end
 
   context 'En la edicion de un escrito' do
@@ -75,15 +113,44 @@ describe EscritosController, type: :controller do
           }
     }
 
-    it 'se puede editar un escrito' do
-      subject
-      escrito.reload
+    context 'cuando es correcta' do
 
-      expect(escrito.titulo).to eq fabrica_de_objetos.otro_titulo_de_una_demanda
-      expect(escrito.cuerpo).to eq fabrica_de_objetos.otro_cuerpo_de_una_demanda
-      asertar_que_el_template_es(:show)
-      asertar_que_la_respuesta_tiene_estado(response, :ok)
-      asertar_que_se_muestra_un_mensaje_de_confirmacion(ad_hoc.mensaje_de_confirmacion_para_la_correcta_edicion_de_un_escrito)
+      it 'se puede editar un escrito' do
+        subject
+        escrito.reload
+
+        expect(escrito.titulo).to eq fabrica_de_objetos.otro_titulo_de_una_demanda
+        expect(escrito.cuerpo).to eq fabrica_de_objetos.otro_cuerpo_de_una_demanda
+        asertar_que_el_template_es(:show)
+        asertar_que_la_respuesta_tiene_estado(response, :ok)
+        asertar_que_se_muestra_un_mensaje_de_confirmacion(ad_hoc.mensaje_de_confirmacion_para_la_correcta_edicion_de_un_escrito)
+      end
+    end
+
+    context 'Cuando es incorrecta' do
+      subject { put :update, params: { id: escrito.id, escrito: { cuerpo: '', titulo: ''}, expediente_id: expediente.id}}
+
+      it 'el titulo no puede ser vacio' do
+        subject
+        escrito.reload
+
+        expect(escrito.titulo).to eq fabrica_de_objetos.un_titulo_de_una_demanda
+        expect(escrito.cuerpo).to eq fabrica_de_objetos.un_cuerpo_de_una_demanda
+        asertar_que_se_muestra_un_mensaje_de_error2("Titulo #{Escrito.mensaje_de_error_para_campo_vacio}")
+        asertar_que_la_respuesta_tiene_estado(response, :ok)
+        asertar_que_el_template_es(:show)
+      end
+
+      it 'el cuerpo no puede ser vacio' do
+        subject
+        escrito.reload
+
+        expect(escrito.titulo).to eq fabrica_de_objetos.un_titulo_de_una_demanda
+        expect(escrito.cuerpo).to eq fabrica_de_objetos.un_cuerpo_de_una_demanda
+        asertar_que_se_muestra_un_mensaje_de_error2("Cuerpo #{Escrito.mensaje_de_error_para_campo_vacio}")
+        asertar_que_la_respuesta_tiene_estado(response, :ok)
+        asertar_que_el_template_es(:show)
+      end
     end
   end
 

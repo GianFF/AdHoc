@@ -37,7 +37,7 @@ class Encabezado
 
   def organo_que_actua_en_ese_expediente
     return @expediente.juzgado if @expediente.ha_sido_numerado?
-    '[JUZGADO O TRIBUNAL NO HA SIDO DEFINIDO]' #TODO: cambiar por organo cuando llegue el momento del refactor!
+    "<strong><span style='color: #ff0000;'>[JUZGADO O TRIBUNAL NO HA SIDO DEFINIDO]</span></strong>" #TODO: cambiar por organo cuando llegue el momento del refactor!
   end
 
   def nombre_del_cliente

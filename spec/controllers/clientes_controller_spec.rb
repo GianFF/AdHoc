@@ -224,7 +224,7 @@ describe ClientesController do
 
     context 'Cuando el cliente buscado no existe' do
 
-      subject { get :index, query: fabrica_de_objetos.otro_nombre_para_un_cliente }
+      subject { get :index, params: { query: fabrica_de_objetos.otro_nombre_para_un_cliente }}
 
       it 'devuelve un mensaje de error' do
         subject
@@ -243,8 +243,12 @@ describe ClientesController do
 
     context 'En la correcta edicion de un cliente' do
 
-      subject { put :update, id: cliente.id, cliente: {nombre: fabrica_de_objetos.otro_nombre_para_un_cliente,
-                                                       apellido: fabrica_de_objetos.otro_apellido_para_un_cliente}}
+      subject { put :update, params: { id: cliente.id,
+                                       cliente: {
+                                           nombre: fabrica_de_objetos.otro_nombre_para_un_cliente,
+                                           apellido: fabrica_de_objetos.otro_apellido_para_un_cliente
+                                       }
+      }}
 
       it 'se le puede cambiar el nombre y el apellido' do
         subject
@@ -259,7 +263,7 @@ describe ClientesController do
     end
 
     context 'En la incorrecta edicion del cliente' do
-      subject { put :update, id: cliente.id, cliente: {nombre: nil, apellido: nil}}
+      subject { put :update, params: { id: cliente.id, cliente: {nombre: nil, apellido: nil }}}
 
       it 'no se puede poner un nombre o apellido vacio' do
         subject
@@ -275,7 +279,7 @@ describe ClientesController do
   end
 
   context 'Borrado de clientes' do
-    subject { delete :destroy, id: cliente.id }
+    subject { delete :destroy, params: { id: cliente.id }}
 
     it 'se puede eliminar un cliente' do
       subject
