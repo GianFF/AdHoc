@@ -12,9 +12,16 @@ class ApplicationController < ActionController::Base
     current_abogado
   end
 
-  def mostrar_errores(adhoc_error)
-    if adhoc_error.errores.count == 1
+  def mostrar_errores(excepcion, with_keep: false)
+    adhoc_error = excepcion.adhoc_error
+
+    if with_keep
       flash.keep[:error] = adhoc_error.errores.first
+      return
+    end
+
+    if adhoc_error.errores.count == 1
+      flash.now[:error] = adhoc_error.errores.first
     else
       flash.now[:error] = adhoc_error.errores.map { |mensaje| "<li>#{mensaje}</li>" }.join.html_safe
     end

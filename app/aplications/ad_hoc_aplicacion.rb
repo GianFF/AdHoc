@@ -15,15 +15,15 @@ class AdHocAplicacion
           where('abogado_id = :abogado_id', {abogado_id: abogado_id}).
           take!
     rescue ActiveRecord::RecordNotFound
-      raise ActiveRecord::RecordNotFound, self.mensaje_de_error_para_busqueda_de_cliente_fallida(query)
+      raise_adhoc_ui_error([mensaje_de_error_para_busqueda_de_cliente_fallida(query)])
     end
   end
 
   def buscar_cliente_por_id!(cliente_id, abogado_id)
     begin
-      Cliente.where(["id = ? and abogado_id = ?", cliente_id, abogado_id]).take!
+      Cliente.where(['id = ? and abogado_id = ?', cliente_id, abogado_id]).take!
     rescue ActiveRecord::RecordNotFound
-      raise ActiveRecord::RecordNotFound, self.mensaje_de_error_para_cliente_inexistente
+      raise_adhoc_hack_error([mensaje_de_error_para_cliente_inexistente])
     end
   end
 
@@ -32,8 +32,8 @@ class AdHocAplicacion
     cliente.abogado = abogado_actual
     begin
       cliente.save!
-    rescue ActiveRecord::RecordInvalid
-      raise RuntimeError, self.mensaje_de_error_para_nombre_y_apellido_vacios
+    rescue ActiveRecord::RecordInvalid => error
+      raise_adhoc_ui_error(error.record.errors.full_messages)
     end
     cliente
   end
@@ -42,8 +42,8 @@ class AdHocAplicacion
     cliente = self.buscar_cliente_por_id!(cliente_id, abogado)
     begin
       cliente.update!(parametros_cliente)
-    rescue ActiveRecord::RecordInvalid
-      raise ArgumentError, self.mensaje_de_error_para_nombre_y_apellido_vacios
+    rescue ActiveRecord::RecordInvalid => error
+      raise_adhoc_ui_error(error.record.errors.full_messages)
     end
     cliente
   end
@@ -59,7 +59,7 @@ class AdHocAplicacion
     begin
       expediente = Expediente.find(expediente_id)
     rescue ActiveRecord::RecordNotFound
-      raise ActiveRecord::RecordNotFound, self.mensaje_de_error_para_expediente_inexistente
+      raise_adhoc_ui_error([mensaje_de_error_para_expediente_inexistente])
     end
     validar_que_el_expediente_pertenece_al_abogado(expediente, un_abogado)
     expediente
@@ -70,19 +70,21 @@ class AdHocAplicacion
     expediente.cliente = buscar_cliente_por_id!(cliente_id, abogado)
     begin
       expediente.save!
-    rescue ActiveRecord::RecordInvalid
-      raise RuntimeError, self.mensaje_de_error_para_expediente_invalido
+    rescue ActiveRecord::RecordInvalid => error
+      raise_adhoc_ui_error(error.record.errors.full_messages)
     end
     expediente
   end
 
   def editar_expediente!(expediente_id, parametros_expediente, abogado)
     expediente = self.buscar_expediente_por_id!(expediente_id, abogado)
-    expediente.validar_que_no_falte_ningun_dato_para_la_numeracion!(parametros_expediente) if expediente.ha_sido_numerado?
     begin
+      expediente.validar_que_no_falte_ningun_dato_para_la_numeracion!(parametros_expediente) if expediente.ha_sido_numerado?
       expediente.update!(parametros_expediente)
-    rescue ActiveRecord::RecordInvalid
-      raise ArgumentError, self.mensaje_de_error_para_expediente_invalido
+    rescue ArgumentError => error # TODO: ¿ smell ?
+      raise_adhoc_ui_error([error.message])
+    rescue ActiveRecord::RecordInvalid => error
+      raise_adhoc_ui_error(error.record.errors.full_messages)
     end
     expediente
   end
@@ -94,7 +96,11 @@ class AdHocAplicacion
 
   def numerar_expediente!(datos_para_numerar_expediente, expediente_id, abogado)
     expediente = self.buscar_expediente_por_id!(expediente_id, abogado)
-    expediente.numerar!(datos_para_numerar_expediente)
+    begin
+      expediente.numerar!(datos_para_numerar_expediente)
+    rescue ArgumentError => error
+      raise_adhoc_ui_error([error.message])
+    end
     expediente.update!(datos_para_numerar_expediente)
     expediente
   end
@@ -104,9 +110,8 @@ class AdHocAplicacion
   def buscar_escrito_por_id!(escrito_id, un_abogado)
     begin
       escrito = Escrito.find(escrito_id)
-    rescue ActiveRecord::RecordNotFound => error
-      adhoc_error = AdHocError.new([error.message])
-      raise AdHocUIError.new(adhoc_error)
+    rescue ActiveRecord::RecordNotFound
+      raise_adhoc_ui_error([mensaje_de_error_para_escrito_invalido])
     end
     validar_que_el_escrito_pertenece_al_abogado(escrito, un_abogado)
     escrito
@@ -118,8 +123,7 @@ class AdHocAplicacion
     begin
       escrito.save!
     rescue ActiveRecord::RecordInvalid => error
-      adhoc_error = AdHocError.new(error.record.errors.full_messages)
-      raise AdHocUIError.new(adhoc_error)
+      raise_adhoc_ui_error(error.record.errors.full_messages)
     end
     escrito
   end
@@ -129,8 +133,7 @@ class AdHocAplicacion
     begin
       escrito.update!(parametros_escrito)
     rescue ActiveRecord::RecordInvalid => error
-      adhoc_error = AdHocError.new(error.record.errors.full_messages)
-      raise AdHocUIError.new(adhoc_error)
+      raise_adhoc_ui_error(error.record.errors.full_messages)
     end
     escrito
   end
@@ -141,8 +144,7 @@ class AdHocAplicacion
   end
 
   def validar_que_el_escrito_pertenece_al_abogado(un_escrito, un_abogado)
-    adhoc_error = AdHocError.new([mensaje_de_error_para_escrito_invalido])
-    raise AdHocUIError.new(adhoc_error) unless un_escrito.pertenece_a? un_abogado
+    raise_adhoc_hack_error([mensaje_de_error_para_escrito_invalido]) unless un_escrito.pertenece_a? un_abogado
   end
 
   # Mensajes de error:
@@ -208,10 +210,6 @@ class AdHocAplicacion
     'Debes completar tu contraseña actual para poder editar tu perfil'
   end
 
-  def mensaje_de_error_para_expediente_invalido
-    'El Actor, Demandado, y Materia no pueden ser vacios'
-  end
-
   def mensaje_de_error_para_expediente_inexistente
     'Expediente inexistente'
   end
@@ -221,7 +219,7 @@ class AdHocAplicacion
   end
 
   def validar_que_no_haya_sido_numerado(expediente)
-    raise RuntimeError, expediente.mensaje_de_error_para_expediente_numerado if expediente.ha_sido_numerado?
+    raise_adhoc_hack_error([expediente.mensaje_de_error_para_expediente_numerado]) if expediente.ha_sido_numerado?
   end
 
   private
@@ -247,6 +245,16 @@ class AdHocAplicacion
   end
 
   def validar_que_el_expediente_pertenece_al_abogado(expediente, un_abogado)
-    raise ActiveRecord::RecordNotFound, self.mensaje_de_error_para_expediente_inexistente unless expediente.pertenece_a? un_abogado
+    raise_adhoc_hack_error([mensaje_de_error_para_expediente_inexistente]) unless expediente.pertenece_a? un_abogado
+  end
+
+  def raise_adhoc_ui_error(errores)
+    adhoc_error = AdHocError.new(errores)
+    raise AdHocUIExcepcion.new(adhoc_error)
+  end
+
+  def raise_adhoc_hack_error(errores)
+    adhoc_error = AdHocError.new(errores)
+    raise AdHocHackExcepcion.new(adhoc_error)
   end
 end

@@ -1,21 +1,16 @@
 class Cliente < ApplicationRecord
   belongs_to :abogado
   has_many :expedientes
-
-  def self.mensaje_de_error_para_nombre_invalido
-    'El nombre no puede estar vacio'
-  end
-
-  def self.mensaje_de_error_para_apellido_invalido
-    'El apellido no puede estar vacio'
-  end
-
   has_one :conyuge
   has_one :direccion
   has_many :hijos
 
-  validates :nombre,   presence: { message: mensaje_de_error_para_nombre_invalido}
-  validates :apellido, presence: { message: mensaje_de_error_para_apellido_invalido}
+
+  def self.mensaje_de_error_para_campo_vacio
+    'no puede estar en blanco'
+  end
+
+  validates :nombre, :apellido, presence: { message: mensaje_de_error_para_campo_vacio }
   validates :abogado_id, presence: { message: 'Abogado inexistente'}
 
   def nombre_completo

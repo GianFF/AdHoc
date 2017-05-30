@@ -2,17 +2,17 @@ class EscritosController < ApplicationController
   before_action :authenticate_abogado!
   attr_reader :escrito
 
-  def new
-    new_escrito_expediente_y_cliente
-  end
-
   def show
     begin
       show_escrito_expediente_y_cliente
-    rescue AdHocUIError => error
-      mostrar_errores(error.adhoc_error)
+    rescue AdHocHackExcepcion => excepcion
+      mostrar_errores(excepcion, with_keep: true)
       redirect_back(fallback_location: root_path)
     end
+  end
+
+  def new
+    new_escrito_expediente_y_cliente
   end
 
   def create
@@ -21,8 +21,8 @@ class EscritosController < ApplicationController
       buscar_expediente_y_cliente_para_escrito
       flash.now[:success] = @ad_hoc.mensaje_de_confirmacion_para_la_correcta_creacion_de_un_escrito
       render :show
-    rescue AdHocUIError => error
-      mostrar_errores(error.adhoc_error)
+    rescue AdHocUIExcepcion => excepcion
+      mostrar_errores(excepcion)
       new_escrito_expediente_y_cliente
       render :new
     end
@@ -33,17 +33,25 @@ class EscritosController < ApplicationController
       @escrito = @ad_hoc.editar_escrito!(params[:id], validar_parametros_escrito, abogado_actual)
       buscar_expediente_y_cliente_para_escrito
       flash.now[:success] = @ad_hoc.mensaje_de_confirmacion_para_la_correcta_edicion_de_un_escrito
-    rescue AdHocUIError => error
-      mostrar_errores(error.adhoc_error)
+    rescue AdHocUIExcepcion => excepcion
+      mostrar_errores(excepcion)
       show_escrito_expediente_y_cliente
+    rescue AdHocHackExcepcion => excepcion
+      mostrar_errores(excepcion, with_keep: true)
+      redirect_back(fallback_location: root_path)
     end
     render :show
   end
 
   def destroy
-    @ad_hoc.eliminar_escrito!(params[:id], abogado_actual)
-    flash.now[:success] = @ad_hoc.mensaje_de_confirmacion_para_la_correcta_eliminacion_de_un_escrito
-    redirect_to expediente_url(validar_parametros_expediente)
+    begin
+      @ad_hoc.eliminar_escrito!(params[:id], abogado_actual)
+      flash.now[:success] = @ad_hoc.mensaje_de_confirmacion_para_la_correcta_eliminacion_de_un_escrito
+      redirect_to expediente_url(validar_parametros_expediente)
+    rescue AdHocHackExcepcion => excepcion
+      mostrar_errores(excepcion, with_keep: true)
+      redirect_back(fallback_location: root_path)
+    end
   end
 
   private
