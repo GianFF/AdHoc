@@ -1,5 +1,11 @@
 require_relative '../rails_helper'
 
+def asertar_mensaje_de_error_respuesta_y_redireccion(mensaje_de_error)
+  asertar_que_se_incluye_un_mensaje_de_error(mensaje_de_error)
+  asertar_que_la_respuesta_tiene_estado(response, :found)
+  asertar_que_se_redirecciono_a(root_path)
+end
+
 describe AbogadosController do
   include ::ControllersHelper
 
@@ -163,6 +169,180 @@ describe AbogadosController do
         asertar_que_se_muestra_un_mensaje_de_error(@controller.ad_hoc.mensaje_de_error_para_contrasenia_invalida)
         asertar_que_la_respuesta_tiene_estado(response, :found)
         asertar_que_se_redirecciono_a(root_path)
+      end
+    end
+
+    context 'Cuando la contraseña es correcta' do
+
+      let(:parametros_de_otro_abogado) {
+        fabrica_de_objetos.parametros_para_un_abogado(fabrica_de_objetos.otro_mail_para_un_abogado,
+                                                      fabrica_de_objetos.una_contrasenia,
+                                                      fabrica_de_objetos.otro_nombre_para_un_abogado,
+                                                      fabrica_de_objetos.otro_apellido_para_un_abogado,
+                                                      Sexo::FEMENINO,
+                                                      fabrica_de_objetos.otra_matricula,
+                                                      fabrica_de_objetos.un_colegio,
+                                                      fabrica_de_objetos.otro_cuit,
+                                                      fabrica_de_objetos.un_domicilio_procesal,
+                                                      fabrica_de_objetos.otro_domicilio_electronico)
+      }
+
+      let(:otro_abogado){ crear_cuenta_para_abogado(parametros_de_otro_abogado) }
+
+      context 'Y no se probee el Nombre' do
+        let(:parametros){ {
+            nombre: '',
+            current_password: fabrica_de_objetos.una_contrasenia
+        }}
+
+        it 'no puede ser editado' do
+          subject
+
+          asertar_mensaje_de_error_respuesta_y_redireccion("Nombre #{Abogado.mensaje_de_error_para_campo_vacio}")
+        end
+      end
+
+      context 'Y no se probee el Apellido' do
+        let(:parametros){ {
+            apellido: '',
+            current_password: fabrica_de_objetos.una_contrasenia
+        }}
+
+        it 'no puede ser editado' do
+          subject
+
+          asertar_mensaje_de_error_respuesta_y_redireccion("Apellido #{Abogado.mensaje_de_error_para_campo_vacio}")
+        end
+      end
+
+      context 'Y no se probee el Email' do
+        let(:parametros){ {
+            email: '',
+            current_password: fabrica_de_objetos.una_contrasenia
+        }}
+
+        it 'no puede ser editado' do
+          subject
+
+          asertar_mensaje_de_error_respuesta_y_redireccion("Email #{Abogado.mensaje_de_error_para_campo_vacio}")
+        end
+      end
+
+      context 'Y el Email ya fue tomado' do
+        let(:parametros){ {
+            email: otro_abogado.email,
+            current_password: fabrica_de_objetos.una_contrasenia
+        }}
+
+        it 'no puede ser editado' do
+          subject
+
+          asertar_mensaje_de_error_respuesta_y_redireccion("Email #{Abogado.mensaje_de_error_para_campo_tomado}")
+        end
+      end
+
+      context 'Y no se probee el Colegio de Abogados' do
+        let(:parametros){ {
+            nombre_del_colegio_de_abogados: '',
+            current_password: fabrica_de_objetos.una_contrasenia
+        }}
+
+        it 'no puede ser editado' do
+          subject
+
+          asertar_mensaje_de_error_respuesta_y_redireccion("Nombre del colegio de abogados #{Abogado.mensaje_de_error_para_campo_vacio}")
+        end
+      end
+
+      context 'Y no se probee la Matricula' do
+        let(:parametros){ {
+            matricula: '',
+            current_password: fabrica_de_objetos.una_contrasenia
+        }}
+
+        it 'no puede ser editado' do
+          subject
+
+          asertar_mensaje_de_error_respuesta_y_redireccion("Matricula #{Abogado.mensaje_de_error_para_campo_vacio}")
+        end
+      end
+
+      context 'Y la Matricula ya fue tomada' do
+        let(:parametros){ {
+            matricula: otro_abogado.matricula,
+            current_password: fabrica_de_objetos.una_contrasenia
+        }}
+
+        it 'no puede ser editado' do
+          subject
+
+          asertar_mensaje_de_error_respuesta_y_redireccion("Matricula #{Abogado.mensaje_de_error_para_campo_tomado}")
+        end
+      end
+
+      context 'Y no se probee el cuit' do
+        let(:parametros){ {
+            cuit: '',
+            current_password: fabrica_de_objetos.una_contrasenia
+        }}
+
+        it 'no puede ser editado' do
+          subject
+
+          asertar_mensaje_de_error_respuesta_y_redireccion("Cuit #{Abogado.mensaje_de_error_para_campo_vacio}")
+        end
+      end
+
+      context 'Y el Cuit ya fue tomado' do
+        let(:parametros){ {
+            cuit: otro_abogado.cuit,
+            current_password: fabrica_de_objetos.una_contrasenia
+        }}
+
+        it 'no puede ser editado' do
+          subject
+
+          asertar_mensaje_de_error_respuesta_y_redireccion("Cuit #{Abogado.mensaje_de_error_para_campo_tomado}")
+        end
+      end
+
+      context 'Y no se probee el Domicilio Procesal' do
+        let(:parametros){ {
+            domicilio_procesal: '',
+            current_password: fabrica_de_objetos.una_contrasenia
+        }}
+
+        it 'no puede ser editado' do
+          subject
+
+          asertar_mensaje_de_error_respuesta_y_redireccion("Domicilio procesal #{Abogado.mensaje_de_error_para_campo_vacio}")
+        end
+      end
+
+      context 'Y no se probee el Domicilio Electronico' do
+        let(:parametros){ {
+            domicilio_electronico: '',
+            current_password: fabrica_de_objetos.una_contrasenia
+        }}
+
+        it 'no puede ser editado' do
+          subject
+
+          asertar_mensaje_de_error_respuesta_y_redireccion("Domicilio electronico #{Abogado.mensaje_de_error_para_campo_vacio}")
+        end
+      end
+
+      context 'Y el Domicilio Electronico ya fue tomado' do
+        let(:parametros){ {
+            domicilio_electronico: otro_abogado.domicilio_electronico,
+            current_password: fabrica_de_objetos.una_contrasenia
+        }}
+
+        it 'no puede ser editado' do
+          subject
+
+          asertar_mensaje_de_error_respuesta_y_redireccion("Domicilio electronico #{Abogado.mensaje_de_error_para_campo_tomado}")
+        end
       end
     end
   end

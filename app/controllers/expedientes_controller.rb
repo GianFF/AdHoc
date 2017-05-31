@@ -4,8 +4,8 @@ class ExpedientesController < ApplicationController
   def show
     begin
       buscar_expediente_escritos_y_cliente
-    rescue Exception => excepcion
-      flash.keep[:error] = excepcion.message
+    rescue AdHocHackExcepcion => excepcion
+      mostrar_errores(excepcion, with_keep: true)
       redirect_back(fallback_location: root_path)
     end
   end
@@ -19,8 +19,8 @@ class ExpedientesController < ApplicationController
   def edit
     begin
       buscar_expediente_escritos_y_cliente
-    rescue Exception => excepcion
-      flash.keep[:error] = excepcion.message
+    rescue AdHocHackExcepcion => excepcion
+      mostrar_errores(excepcion, with_keep: true)
       redirect_back(fallback_location: root_path)
     end
   end
@@ -31,8 +31,8 @@ class ExpedientesController < ApplicationController
       buscar_escritos_y_cliente
       flash.now[:success] = @ad_hoc.mensaje_de_confirmacion_para_la_correcta_creacion_de_un_expediente
       render :show
-    rescue Exception => excepcion
-      flash.now[:error] = excepcion.message
+    rescue AdHocUIExcepcion => excepcion
+      mostrar_errores(excepcion)
       @expediente = Expediente.new
       @cliente = @ad_hoc.buscar_cliente_por_id!(validar_parametros_cliente, abogado_actual)
       render :new
@@ -46,12 +46,12 @@ class ExpedientesController < ApplicationController
       @escritos = @expediente.escritos || []
       flash.now[:success] = @ad_hoc.mensaje_de_confirmacion_para_la_correcta_edicion_de_un_expediente
       render :show
-    rescue ArgumentError => excepcion
-      flash.now[:error] = excepcion.message
+    rescue AdHocUIExcepcion => excepcion
+      mostrar_errores(excepcion)
       buscar_expediente_escritos_y_cliente
       render :edit, status: :bad_request
-    rescue ActiveRecord::RecordNotFound
-      flash.keep[:error] = @ad_hoc.mensaje_de_error_para_expediente_inexistente
+    rescue AdHocHackExcepcion => excepcion
+      mostrar_errores(excepcion, with_keep: true)
       redirect_back(fallback_location: root_path)
     end
   end
@@ -60,18 +60,19 @@ class ExpedientesController < ApplicationController
     begin
       @ad_hoc.eliminar_expediente!(params[:id], abogado_actual)
       flash.now[:success] = @ad_hoc.mensaje_de_confirmacion_para_la_correcta_eliminacion_de_un_expediente
-    rescue Exception => excepcion
-      flash.keep[:error] = excepcion.message
+      redirect_to cliente_url(validar_parametros_cliente)
+    rescue AdHocHackExcepcion => excepcion
+      mostrar_errores(excepcion, with_keep: true)
+      redirect_back(fallback_location: root_path)
     end
-    redirect_to cliente_url(validar_parametros_cliente)
   end
 
   def numerar
     begin
       buscar_expediente_escritos_y_cliente
       @ad_hoc.validar_que_no_haya_sido_numerado(@expediente)
-    rescue Exception => excepcion
-      flash.keep[:error] = excepcion.message
+    rescue AdHocHackExcepcion => excepcion
+      mostrar_errores(excepcion, with_keep: true)
       redirect_back(fallback_location: root_path)
     end
   end
@@ -82,10 +83,13 @@ class ExpedientesController < ApplicationController
       buscar_escritos_y_cliente
       flash.now[:success] = @ad_hoc.mensaje_de_confirmacion_para_la_correcta_numeracion_de_un_expediente
       render :show
-    rescue Exception => excepcion
-      flash.now[:error] = excepcion.message
+    rescue AdHocUIExcepcion => excepcion
+      mostrar_errores(excepcion)
       buscar_expediente_escritos_y_cliente
       render :numerar
+    rescue AdHocHackExcepcion => excepcion
+      mostrar_errores(excepcion, with_keep: true)
+      redirect_back(fallback_location: root_path)
     end
   end
 

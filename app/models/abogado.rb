@@ -20,18 +20,12 @@ class Abogado < ApplicationRecord
   end
 
   validate :sexo_es_valido, on: :create
-  validates :nombre,   presence: { message: mensaje_de_error_para_campo_vacio}
-  validates :apellido, presence: { message: mensaje_de_error_para_campo_vacio}
-  validates :matricula, presence: { message: mensaje_de_error_para_campo_vacio},
-            uniqueness: { message: mensaje_de_error_para_campo_tomado}
-  validates :nombre_del_colegio_de_abogados, presence: { message: mensaje_de_error_para_campo_vacio}
-  validates :cuit, presence: { message: mensaje_de_error_para_campo_vacio},
-            uniqueness: { message: mensaje_de_error_para_campo_tomado}
-  validates :domicilio_procesal, presence: { message: mensaje_de_error_para_campo_vacio}
-  validates :domicilio_electronico, presence: { message: mensaje_de_error_para_campo_vacio},
-            uniqueness: { message: mensaje_de_error_para_campo_tomado}
-  validates :sexo, presence: { message: mensaje_de_error_para_campo_vacio}
-  validates :email, presence: { message: mensaje_de_error_para_campo_vacio},
+
+  validates :nombre, :apellido, :nombre_del_colegio_de_abogados, :domicilio_procesal, :sexo,
+            presence: { message: mensaje_de_error_para_campo_vacio}
+
+  validates :matricula, :cuit, :domicilio_electronico, :email,
+            presence: { message: mensaje_de_error_para_campo_vacio},
             uniqueness: { message: mensaje_de_error_para_campo_tomado}
 
   def nombre_completo

@@ -7,8 +7,8 @@ class ClientesController < ApplicationController
       @cliente = @ad_hoc.buscar_cliente_por_nombre_o_apellido!(validar_parametro_query, abogado_actual.id)
       @expedientes = @cliente.expedientes
       render :show
-    rescue Exception => excepcion
-      flash.now[:error] = excepcion.message
+    rescue AdHocUIExcepcion => excepcion
+      mostrar_errores(excepcion)
       render :new
     end
   end
@@ -17,9 +17,9 @@ class ClientesController < ApplicationController
     begin
       @cliente = @ad_hoc.buscar_cliente_por_id!(params[:id], abogado_actual.id)
       @expedientes = @cliente.expedientes
-    rescue Exception => excepcion
-      flash.now[:error] = excepcion.message
-      render :new
+    rescue AdHocHackExcepcion => excepcion
+      mostrar_errores(excepcion, with_keep: true)
+      redirect_back(fallback_location: root_path)
     end
   end
 
@@ -30,9 +30,9 @@ class ClientesController < ApplicationController
   def edit
     begin
       @cliente = @ad_hoc.buscar_cliente_por_id!(cliente_id, abogado_actual.id)
-    rescue Exception => excepcion
-      flash.now[:error] = excepcion.message
-      render :new
+    rescue AdHocHackExcepcion => excepcion
+      mostrar_errores(excepcion, with_keep: true)
+      redirect_back(fallback_location: root_path)
     end
   end
 
@@ -42,9 +42,9 @@ class ClientesController < ApplicationController
       @expedientes = @cliente.expedientes
       flash.now[:success] = @ad_hoc.mensaje_de_confirmacion_para_la_correcta_creacion_de_un_cliente
       render :show
-    rescue  Exception => excepcion
+    rescue AdHocUIExcepcion => excepcion
+      mostrar_errores(excepcion)
       @cliente = nil
-      flash.now[:error] = excepcion.message
       render :new
     end
   end
@@ -55,12 +55,12 @@ class ClientesController < ApplicationController
       @expedientes = @cliente.expedientes
       flash.now[:success] = @ad_hoc.mensaje_de_confirmacion_para_la_correcta_edicion_de_un_cliente
       render :show
-    rescue ArgumentError => excepcion
+    rescue AdHocUIExcepcion => excepcion
+      mostrar_errores(excepcion)
       @cliente = @ad_hoc.buscar_cliente_por_id!(cliente_id, abogado_actual.id)
-      flash.keep[:error] = excepcion.message
       render :edit
-    rescue ActiveRecord::RecordNotFound
-      flash.keep[:error] = @ad_hoc.mensaje_de_error_para_cliente_inexistente
+    rescue AdHocHackExcepcion => excepcion
+      mostrar_errores(excepcion, with_keep: true)
       redirect_back(fallback_location: root_path)
     end
   end
@@ -70,10 +70,11 @@ class ClientesController < ApplicationController
       @ad_hoc.eliminar_cliente!(params[:id], abogado_actual.id)
       flash.now[:success] = @ad_hoc.mensaje_de_confirmacion_para_correcta_eliminacion_de_un_cliente
       @cliente = nil
-    rescue Exception => excepcion
-      flash.now[:error] = excepcion.message
+      render :new
+    rescue AdHocHackExcepcion => excepcion
+      mostrar_errores(excepcion, with_keep: true)
+      redirect_back(fallback_location: root_path)
     end
-    render :new
   end
 
   private

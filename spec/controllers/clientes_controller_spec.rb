@@ -165,13 +165,14 @@ describe ClientesController do
       end
     end
 
-    context 'En la incorrecta creaasertar_que_el_template_escion de un cliente' do
+    context 'En la incorrecta creacion de un cliente' do
       let (:parametros){ {cliente: fabrica_de_objetos.parametros_para_cliente(abogado.id, nil, nil)} }
 
       it 'sin nombre y apellido no puede ser creado' do
         subject
 
-        asertar_que_se_muestra_un_mensaje_de_error(ad_hoc.mensaje_de_error_para_nombre_y_apellido_vacios)
+        asertar_que_se_incluye_un_mensaje_de_error("Nombre #{Cliente.mensaje_de_error_para_campo_vacio}")
+        asertar_que_se_incluye_un_mensaje_de_error("Apellido #{Cliente.mensaje_de_error_para_campo_vacio}")
         asertar_que_la_respuesta_tiene_estado(response, :ok)
       end
     end
@@ -272,7 +273,8 @@ describe ClientesController do
 
         expect(cliente.nombre).to eq fabrica_de_objetos.un_nombre_para_un_cliente
         expect(cliente.apellido).to eq fabrica_de_objetos.un_apellido_para_un_cliente
-        asertar_que_se_muestra_un_mensaje_de_error(ad_hoc.mensaje_de_error_para_nombre_y_apellido_vacios)
+        asertar_que_se_incluye_un_mensaje_de_error("Nombre #{Cliente.mensaje_de_error_para_campo_vacio}")
+        asertar_que_se_incluye_un_mensaje_de_error("Apellido #{Cliente.mensaje_de_error_para_campo_vacio}")
         asertar_que_la_respuesta_tiene_estado(response, :ok)
       end
     end

@@ -2,7 +2,11 @@ class Expediente < ApplicationRecord
   belongs_to :cliente
   has_many :escritos
 
-  validates :actor, :demandado, :materia, :cliente_id, presence: true
+  def self.mensaje_de_error_para_campo_vacio
+    'no puede estar en blanco'
+  end
+
+  validates :actor, :demandado, :materia, :cliente_id, presence: { message: mensaje_de_error_para_campo_vacio}
 
   def titulo
     "#{self.actor} c/ #{self.demandado}"
