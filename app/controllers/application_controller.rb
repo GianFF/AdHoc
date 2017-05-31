@@ -14,24 +14,39 @@ class ApplicationController < ActionController::Base
 
   def mostrar_errores(excepcion, with_keep: false)
     adhoc_error = excepcion.adhoc_error
-
-    if with_keep
-      if adhoc_error.errores.count == 1
-        flash.keep[:error] = adhoc_error.errores.first
-      else
-        flash.keep[:error] = adhoc_error.errores.map { |mensaje| "<li> #{mensaje} </li>" }.join.html_safe
-      end
-      return
-    end
-
-    if adhoc_error.errores.count == 1
-      flash.now[:error] = adhoc_error.errores.first
-    else
-      flash.now[:error] = adhoc_error.errores.map { |mensaje| "<li>#{mensaje}</li>" }.join.html_safe
-    end
+    mostrar_mensaje_de_error(adhoc_error) and return if with_keep
+    mantener_mensaje_de_error(adhoc_error)
   end
 
   private
+
+  def mantener_mensaje_de_error(adhoc_error)
+    if hay_un_solo_error?(adhoc_error)
+      flash.now[:error] = obtener_error(adhoc_error)
+    else
+      flash.now[:error] = obtener_lista_de_errores(adhoc_error)
+    end
+  end
+
+  def mostrar_mensaje_de_error(adhoc_error)
+    if hay_un_solo_error?(adhoc_error)
+      flash.keep[:error] = obtener_error(adhoc_error)
+    else
+      flash.keep[:error] = obtener_lista_de_errores(adhoc_error)
+    end
+  end
+
+  def hay_un_solo_error?(adhoc_error)
+    adhoc_error.errores.count == 1
+  end
+
+  def obtener_lista_de_errores(adhoc_error)
+    adhoc_error.errores.map { |mensaje| "<li>#{mensaje}</li>" }.join
+  end
+
+  def obtener_error(adhoc_error)
+    adhoc_error.errores.first
+  end
 
   def crear_aplicacion
     @ad_hoc = AdHocAplicacion.new
