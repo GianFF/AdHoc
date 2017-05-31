@@ -98,7 +98,7 @@ class AdHocAplicacion
     expediente = self.buscar_expediente_por_id!(expediente_id, abogado)
     begin
       expediente.numerar!(datos_para_numerar_expediente)
-    rescue ArgumentError => error
+    rescue Exception => error
       raise_adhoc_ui_error([error.message])
     end
     expediente.update!(datos_para_numerar_expediente)
@@ -198,10 +198,6 @@ class AdHocAplicacion
     "No se encontraron clientes con nombre: #{nombre_de_cliente}"
   end
 
-  def mensaje_de_error_para_nombre_y_apellido_vacios
-    'El nombre y el apellido no pueden ser vacios'
-  end
-
   def mensaje_de_error_para_contrasenia_invalida
     'La contraseña es incorrecta'
   end
@@ -219,7 +215,11 @@ class AdHocAplicacion
   end
 
   def validar_que_no_haya_sido_numerado(expediente)
-    raise_adhoc_hack_error([expediente.mensaje_de_error_para_expediente_numerado]) if expediente.ha_sido_numerado?
+    begin
+      expediente.validar_que_el_expediente_no_haya_sido_numerado!
+    rescue StandardError => excepcion
+      raise_adhoc_hack_error([excepcion.message])
+    end
   end
 
   private

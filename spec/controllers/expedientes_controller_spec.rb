@@ -85,55 +85,64 @@ describe ExpedientesController do
     context 'En la incorrecta creacion de un Expediente' do
       subject {post :create, params: parametros}
 
-      let(:parametros) {{
-          expediente: {
-              demandado: fabrica_de_objetos.un_demandado,
-              materia: fabrica_de_objetos.una_materia
-          },
-          cliente_id: cliente.id
-      }}
+      context 'Sin Actor' do
 
-      it 'un expediente no se puede crear sin actor' do
-        subject
+        let(:parametros) {{
+            expediente: {
+                demandado: fabrica_de_objetos.un_demandado,
+                materia: fabrica_de_objetos.una_materia
+            },
+            cliente_id: cliente.id
+        }}
 
-        asertar_que_la_respuesta_tiene_estado(response, :ok)
-        assert_template :new
-        asertar_que_se_muestra_un_mensaje_de_error(ad_hoc.mensaje_de_error_para_expediente_invalido)
-        asertar_que_el_expediente_no_fue_creado
+        it 'no se puede crear' do
+          subject
+
+          asertar_que_la_respuesta_tiene_estado(response, :ok)
+          assert_template :new
+          asertar_que_se_incluye_un_mensaje_de_error("Actor #{Expediente.mensaje_de_error_para_campo_vacio}")
+          asertar_que_el_expediente_no_fue_creado
+        end
       end
 
-      let(:parametros) {{
-          expediente: {
-              actor: "#{cliente.nombre} #{cliente.apellido}",
-              materia: fabrica_de_objetos.una_materia
-          },
-          cliente_id: cliente.id
-      }}
+      context 'Sin Demandado' do
 
-      it 'un expediente no se puede crear sin demandado' do
-        subject
+        let(:parametros) {{
+            expediente: {
+                actor: "#{cliente.nombre} #{cliente.apellido}",
+                materia: fabrica_de_objetos.una_materia
+            },
+            cliente_id: cliente.id
+        }}
 
-        asertar_que_la_respuesta_tiene_estado(response, :ok)
-        assert_template :new
-        asertar_que_se_muestra_un_mensaje_de_error(ad_hoc.mensaje_de_error_para_expediente_invalido)
-        asertar_que_el_expediente_no_fue_creado
+        it 'no se puede crear' do
+          subject
+
+          asertar_que_la_respuesta_tiene_estado(response, :ok)
+          assert_template :new
+          asertar_que_se_incluye_un_mensaje_de_error("Demandado #{Expediente.mensaje_de_error_para_campo_vacio}")
+          asertar_que_el_expediente_no_fue_creado
+        end
       end
 
-      let(:parametros) {{
-          expediente: {
-              actor: "#{cliente.nombre} #{cliente.apellido}",
-              demandado: fabrica_de_objetos.un_demandado
-          },
-          cliente_id: cliente.id
-      }}
+      context 'Sin Materia' do
 
-      it 'un expediente no se puede crear sin materia' do
-        subject
+        let(:parametros) {{
+            expediente: {
+                actor: "#{cliente.nombre} #{cliente.apellido}",
+                demandado: fabrica_de_objetos.un_demandado
+            },
+            cliente_id: cliente.id
+        }}
 
-        asertar_que_la_respuesta_tiene_estado(response, :ok)
-        assert_template :new
-        asertar_que_se_muestra_un_mensaje_de_error(ad_hoc.mensaje_de_error_para_expediente_invalido)
-        asertar_que_el_expediente_no_fue_creado
+        it 'no se puede crear' do
+          subject
+
+          asertar_que_la_respuesta_tiene_estado(response, :ok)
+          assert_template :new
+          asertar_que_se_incluye_un_mensaje_de_error("Materia #{Expediente.mensaje_de_error_para_campo_vacio}")
+          asertar_que_el_expediente_no_fue_creado
+        end
       end
     end
   end
@@ -173,72 +182,66 @@ describe ExpedientesController do
         put :update,
             params: {
                 id: expediente.id,
-                expediente: {
-                    actor: '',
-                    demandado: fabrica_de_objetos.otro_demandado,
-                    materia: fabrica_de_objetos.otra_materia
-                },
+                expediente: parametros_del_expediente,
                 cliente_id: cliente.id,
             }
       }
 
-      it 'el actor no puede estar vacio' do
-        subject
+      context 'Sin Actor' do
+        let(:parametros_del_expediente) { {
+            actor: '',
+            demandado: fabrica_de_objetos.otro_demandado,
+            materia: fabrica_de_objetos.otra_materia
+        } }
 
-        expediente.reload
+        it 'no puede ser editado' do
+          subject
 
-        asertar_que_la_respuesta_tiene_estado(response, :bad_request)
-        asertar_que_se_muestra_un_mensaje_de_error(ad_hoc.mensaje_de_error_para_expediente_invalido)
-        asertar_que_el_expediente_no_cambio(fabrica_de_objetos.un_actor, fabrica_de_objetos.un_demandado, fabrica_de_objetos.una_materia)
+          expediente.reload
+
+          asertar_que_la_respuesta_tiene_estado(response, :bad_request)
+          asertar_que_se_incluye_un_mensaje_de_error("Actor #{Expediente.mensaje_de_error_para_campo_vacio}")
+          asertar_que_el_expediente_no_cambio(fabrica_de_objetos.un_actor, fabrica_de_objetos.un_demandado, fabrica_de_objetos.una_materia)
+        end
       end
 
-      subject {
-        put :update,
-            params: {
-                id: expediente.id,
-                expediente: {
-                    actor: "#{cliente.nombre_completo}",
-                    demandado: '',
-                    materia: 'Otra Materia'
-                },
-                cliente_id: cliente.id,
-            }
-      }
+      context 'Sin Demandado' do
 
-      it 'el demandado no puede estar vacio' do
-        subject
+        let(:parametros_del_expediente) { {
+            actor: "#{cliente.nombre_completo}",
+            demandado: '',
+            materia: 'Otra Materia'
+        } }
 
-        expediente.reload
+        it 'no puede ser editado' do
+          subject
 
-        asertar_que_la_respuesta_tiene_estado(response, :bad_request)
-        asertar_que_se_muestra_un_mensaje_de_error(ad_hoc.mensaje_de_error_para_expediente_invalido)
-        asertar_que_el_expediente_no_cambio(fabrica_de_objetos.un_actor, fabrica_de_objetos.un_demandado, fabrica_de_objetos.una_materia)
+          expediente.reload
+
+          asertar_que_la_respuesta_tiene_estado(response, :bad_request)
+          asertar_que_se_incluye_un_mensaje_de_error("Demandado #{Expediente.mensaje_de_error_para_campo_vacio}")
+          asertar_que_el_expediente_no_cambio(fabrica_de_objetos.un_actor, fabrica_de_objetos.un_demandado, fabrica_de_objetos.una_materia)
+        end
       end
 
-      subject {
-        put :update,
-            params: {
-                id: expediente.id,
-                expediente: {
-                    actor: "#{cliente.nombre_completo}",
-                    demandado: fabrica_de_objetos.otro_demandado,
-                    materia: ''
-                },
-                cliente_id: cliente.id,
-            }
-      }
+      context 'Sin Materia' do
+        let(:parametros_del_expediente) { {
+            actor: "#{cliente.nombre_completo}",
+            demandado: fabrica_de_objetos.otro_demandado,
+            materia: ''
+        } }
 
-      it 'la materia no puede estar vacia' do
-        subject
+        it 'la materia no puede estar vacia' do
+          subject
 
-        expediente.reload
+          expediente.reload
 
-        asertar_que_la_respuesta_tiene_estado(response, :bad_request)
-        asertar_que_se_muestra_un_mensaje_de_error(ad_hoc.mensaje_de_error_para_expediente_invalido)
-        asertar_que_el_expediente_no_cambio(fabrica_de_objetos.un_actor, fabrica_de_objetos.un_demandado, fabrica_de_objetos.una_materia)
+          asertar_que_la_respuesta_tiene_estado(response, :bad_request)
+          asertar_que_se_incluye_un_mensaje_de_error("Materia #{Expediente.mensaje_de_error_para_campo_vacio}")
+          asertar_que_el_expediente_no_cambio(fabrica_de_objetos.un_actor, fabrica_de_objetos.un_demandado, fabrica_de_objetos.una_materia)
+        end
       end
     end
-
   end
 
   context 'Borrado de Expedientes' do

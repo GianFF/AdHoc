@@ -63,7 +63,7 @@ describe EscritosController, type: :controller do
 
       asertar_que_se_redirecciono_a(root_path)
       asertar_que_la_respuesta_tiene_estado(response, :found)
-      asertar_que_se_muestra_un_mensaje_de_error2(@controller.ad_hoc.mensaje_de_error_para_escrito_invalido)
+      asertar_que_se_incluye_un_mensaje_de_error(@controller.ad_hoc.mensaje_de_error_para_escrito_invalido)
     end
 
     context 'Cuando es correcta' do
@@ -83,7 +83,7 @@ describe EscritosController, type: :controller do
       it 'el titulo no puede ser vacio' do
         subject
 
-        asertar_que_se_muestra_un_mensaje_de_error2("Titulo #{Escrito.mensaje_de_error_para_campo_vacio}")
+        asertar_que_se_incluye_un_mensaje_de_error("Titulo #{Escrito.mensaje_de_error_para_campo_vacio}")
         asertar_que_la_respuesta_tiene_estado(response, :ok)
         asertar_que_el_template_es(:new)
       end
@@ -91,7 +91,7 @@ describe EscritosController, type: :controller do
       it 'el cuerpo no puede ser vacio' do
         subject
 
-        asertar_que_se_muestra_un_mensaje_de_error2("Cuerpo #{Escrito.mensaje_de_error_para_campo_vacio}")
+        asertar_que_se_incluye_un_mensaje_de_error("Cuerpo #{Escrito.mensaje_de_error_para_campo_vacio}")
         asertar_que_la_respuesta_tiene_estado(response, :ok)
         asertar_que_el_template_es(:new)
       end
@@ -136,7 +136,7 @@ describe EscritosController, type: :controller do
 
         expect(escrito.titulo).to eq fabrica_de_objetos.un_titulo_de_una_demanda
         expect(escrito.cuerpo).to eq fabrica_de_objetos.un_cuerpo_de_una_demanda
-        asertar_que_se_muestra_un_mensaje_de_error2("Titulo #{Escrito.mensaje_de_error_para_campo_vacio}")
+        asertar_que_se_incluye_un_mensaje_de_error("Titulo #{Escrito.mensaje_de_error_para_campo_vacio}")
         asertar_que_la_respuesta_tiene_estado(response, :ok)
         asertar_que_el_template_es(:show)
       end
@@ -147,7 +147,7 @@ describe EscritosController, type: :controller do
 
         expect(escrito.titulo).to eq fabrica_de_objetos.un_titulo_de_una_demanda
         expect(escrito.cuerpo).to eq fabrica_de_objetos.un_cuerpo_de_una_demanda
-        asertar_que_se_muestra_un_mensaje_de_error2("Cuerpo #{Escrito.mensaje_de_error_para_campo_vacio}")
+        asertar_que_se_incluye_un_mensaje_de_error("Cuerpo #{Escrito.mensaje_de_error_para_campo_vacio}")
         asertar_que_la_respuesta_tiene_estado(response, :ok)
         asertar_que_el_template_es(:show)
       end

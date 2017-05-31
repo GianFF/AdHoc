@@ -22,12 +22,11 @@ module ControllersHelper
     expect(flash[:success]).to eq un_mensaje
   end
 
-  #Deprecado
-  def asertar_que_se_muestra_un_mensaje_de_error(un_mensaje) #TODO: dejar de usar éste y pasar a usar el de abajo
+  def asertar_que_se_muestra_un_mensaje_de_error(un_mensaje)
     expect(flash[:error]).to eq un_mensaje
   end
 
-  def asertar_que_se_muestra_un_mensaje_de_error2(un_mensaje)
+  def asertar_que_se_incluye_un_mensaje_de_error(un_mensaje)
     expect(flash[:error]).to include un_mensaje
   end
 
