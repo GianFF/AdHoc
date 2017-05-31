@@ -9,13 +9,8 @@
 
     <p class="navbar-text cabecera__nombre-abogado">
       <% if abogado_signed_in? %>
-          <% if current_abogado.sexo == Sexo::MASCULINO %>
-              Dr.
-          <% else %>
-              Dra.
-          <% end %>
           <a href="/" class="navbar-link">
-            <%= current_abogado.nombre %> <%= current_abogado.apellido %>
+            <%= current_abogado.presentacion %>
           </a>
       <% else %>
           <a href="" class="navbar-link">AdHoc</a>

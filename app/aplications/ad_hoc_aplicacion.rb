@@ -2,6 +2,14 @@ class AdHocAplicacion
 
   # Abogados
 
+  def editar_abogado!(un_abogado, parametros_abogado)
+    begin
+      un_abogado.update!(parametros_abogado)
+    rescue ActiveRecord::RecordInvalid => error
+      raise_adhoc_ui_error(error.record.errors.full_messages)
+    end
+  end
+
   def validar_contrasenia(contrasenia_del_abogado, abogado, &block)
     validar_que_la_contrasenia_no_sea_blanca(contrasenia_del_abogado, &block)
     validar_que_la_contrasenia_no_sea_invalida(contrasenia_del_abogado, abogado, &block)

@@ -16,7 +16,11 @@ class ApplicationController < ActionController::Base
     adhoc_error = excepcion.adhoc_error
 
     if with_keep
-      flash.keep[:error] = adhoc_error.errores.first
+      if adhoc_error.errores.count == 1
+        flash.keep[:error] = adhoc_error.errores.first
+      else
+        flash.keep[:error] = adhoc_error.errores.map { |mensaje| "<li> #{mensaje} </li>" }.join.html_safe
+      end
       return
     end
 
