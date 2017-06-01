@@ -16,8 +16,8 @@ class AbogadosController < Devise::RegistrationsController
       end
       @abogado = @ad_hoc.editar_abogado!(@abogado, validar_parametros_abogado)
       flash.keep[:success] = 'Perfil editado satisfactoriamente'
-    rescue AdHocUIExcepcion => error
-      mostrar_errores(error, with_keep: true)
+    rescue UIExcepcion => error
+      mostrar_errores(error, mantener_error: true)
     end
     redirect_to root_path
   end

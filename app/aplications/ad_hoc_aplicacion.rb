@@ -6,7 +6,7 @@ class AdHocAplicacion
     begin
       un_abogado.update!(parametros_abogado)
     rescue ActiveRecord::RecordInvalid => error
-      raise_adhoc_ui_error(error.record.errors.full_messages)
+      ErrorManager.raise_ui_error(error.record.errors.full_messages)
     end
   end
 
@@ -23,7 +23,7 @@ class AdHocAplicacion
           where('abogado_id = :abogado_id', {abogado_id: abogado_id}).
           take!
     rescue ActiveRecord::RecordNotFound
-      raise_adhoc_ui_error([mensaje_de_error_para_busqueda_de_cliente_fallida(query)])
+      ErrorManager.raise_ui_error([mensaje_de_error_para_busqueda_de_cliente_fallida(query)])
     end
   end
 
@@ -31,7 +31,7 @@ class AdHocAplicacion
     begin
       Cliente.where(['id = ? and abogado_id = ?', cliente_id, abogado_id]).take!
     rescue ActiveRecord::RecordNotFound
-      raise_adhoc_hack_error([mensaje_de_error_para_cliente_inexistente])
+      ErrorManager.raise_hack_error([mensaje_de_error_para_cliente_inexistente])
     end
   end
 
@@ -41,7 +41,7 @@ class AdHocAplicacion
     begin
       cliente.save!
     rescue ActiveRecord::RecordInvalid => error
-      raise_adhoc_ui_error(error.record.errors.full_messages)
+      ErrorManager.raise_ui_error(error.record.errors.full_messages)
     end
     cliente
   end
@@ -51,7 +51,7 @@ class AdHocAplicacion
     begin
       cliente.update!(parametros_cliente)
     rescue ActiveRecord::RecordInvalid => error
-      raise_adhoc_ui_error(error.record.errors.full_messages)
+      ErrorManager.raise_ui_error(error.record.errors.full_messages)
     end
     cliente
   end
@@ -67,7 +67,7 @@ class AdHocAplicacion
     begin
       expediente = Expediente.find(expediente_id)
     rescue ActiveRecord::RecordNotFound
-      raise_adhoc_ui_error([mensaje_de_error_para_expediente_inexistente])
+      ErrorManager.raise_ui_error([mensaje_de_error_para_expediente_inexistente])
     end
     validar_que_el_expediente_pertenece_al_abogado(expediente, un_abogado)
     expediente
@@ -79,7 +79,7 @@ class AdHocAplicacion
     begin
       expediente.save!
     rescue ActiveRecord::RecordInvalid => error
-      raise_adhoc_ui_error(error.record.errors.full_messages)
+      ErrorManager.raise_ui_error(error.record.errors.full_messages)
     end
     expediente
   end
@@ -90,9 +90,9 @@ class AdHocAplicacion
       expediente.validar_que_no_falte_ningun_dato_para_la_numeracion!(parametros_expediente) if expediente.ha_sido_numerado?
       expediente.update!(parametros_expediente)
     rescue ArgumentError => error # TODO: ¿ smell ?
-      raise_adhoc_ui_error([error.message])
+      ErrorManager.raise_ui_error([error.message])
     rescue ActiveRecord::RecordInvalid => error
-      raise_adhoc_ui_error(error.record.errors.full_messages)
+      ErrorManager.raise_ui_error(error.record.errors.full_messages)
     end
     expediente
   end
@@ -107,7 +107,7 @@ class AdHocAplicacion
     begin
       expediente.numerar!(datos_para_numerar_expediente)
     rescue Exception => error
-      raise_adhoc_ui_error([error.message])
+      ErrorManager.raise_ui_error([error.message])
     end
     expediente.update!(datos_para_numerar_expediente)
     expediente
@@ -119,7 +119,7 @@ class AdHocAplicacion
     begin
       escrito = Escrito.find(escrito_id)
     rescue ActiveRecord::RecordNotFound
-      raise_adhoc_ui_error([mensaje_de_error_para_escrito_invalido])
+      ErrorManager.raise_ui_error([mensaje_de_error_para_escrito_invalido])
     end
     validar_que_el_escrito_pertenece_al_abogado(escrito, un_abogado)
     escrito
@@ -131,7 +131,7 @@ class AdHocAplicacion
     begin
       escrito.save!
     rescue ActiveRecord::RecordInvalid => error
-      raise_adhoc_ui_error(error.record.errors.full_messages)
+      ErrorManager.raise_ui_error(error.record.errors.full_messages)
     end
     escrito
   end
@@ -141,7 +141,7 @@ class AdHocAplicacion
     begin
       escrito.update!(parametros_escrito)
     rescue ActiveRecord::RecordInvalid => error
-      raise_adhoc_ui_error(error.record.errors.full_messages)
+      ErrorManager.raise_ui_error(error.record.errors.full_messages)
     end
     escrito
   end
@@ -152,7 +152,7 @@ class AdHocAplicacion
   end
 
   def validar_que_el_escrito_pertenece_al_abogado(un_escrito, un_abogado)
-    raise_adhoc_hack_error([mensaje_de_error_para_escrito_invalido]) unless un_escrito.pertenece_a? un_abogado
+    ErrorManager.raise_hack_error([mensaje_de_error_para_escrito_invalido]) unless un_escrito.pertenece_a? un_abogado
   end
 
   # Mensajes de error:
@@ -226,7 +226,7 @@ class AdHocAplicacion
     begin
       expediente.validar_que_el_expediente_no_haya_sido_numerado!
     rescue StandardError => excepcion
-      raise_adhoc_hack_error([excepcion.message])
+      ErrorManager.raise_hack_error([excepcion.message])
     end
   end
 
@@ -253,16 +253,6 @@ class AdHocAplicacion
   end
 
   def validar_que_el_expediente_pertenece_al_abogado(expediente, un_abogado)
-    raise_adhoc_hack_error([mensaje_de_error_para_expediente_inexistente]) unless expediente.pertenece_a? un_abogado
-  end
-
-  def raise_adhoc_ui_error(errores)
-    adhoc_error = AdHocError.new(errores)
-    raise AdHocUIExcepcion.new(adhoc_error)
-  end
-
-  def raise_adhoc_hack_error(errores)
-    adhoc_error = AdHocError.new(errores)
-    raise AdHocHackExcepcion.new(adhoc_error)
+    ErrorManager.raise_hack_error([mensaje_de_error_para_expediente_inexistente]) unless expediente.pertenece_a? un_abogado
   end
 end
