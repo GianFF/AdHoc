@@ -10,7 +10,7 @@ class ErrorManager
   end
 
   def self.format_errors(excepcion)
-    error_wrapper = excepcion.error_wrapper
+    error_wrapper = excepcion.error
     return error(error_wrapper) if there_is_only_one_error?(error_wrapper)
     error_list(error_wrapper)
   end
