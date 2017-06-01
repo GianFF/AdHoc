@@ -230,7 +230,7 @@ describe ClientesController do
       it 'devuelve un mensaje de error' do
         subject
 
-        asertar_que_se_muestra_un_mensaje_de_error(ad_hoc.mensaje_de_error_para_busqueda_de_cliente_fallida(fabrica_de_objetos.otro_nombre_para_un_cliente))
+        asertar_que_se_incluye_un_mensaje_de_error(ad_hoc.mensaje_de_error_para_busqueda_de_cliente_fallida(fabrica_de_objetos.otro_nombre_para_un_cliente))
         asertar_que_el_template_es(:new)
         asertar_que_la_respuesta_tiene_estado(response, :ok)
       end

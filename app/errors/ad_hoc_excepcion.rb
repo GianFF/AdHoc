@@ -1,4 +1,4 @@
-class AdHocError
+class AdHocExcepcion < Exception
   attr_reader :errores
 
   def initialize(errores)

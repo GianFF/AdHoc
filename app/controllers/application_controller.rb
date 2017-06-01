@@ -1,52 +1,27 @@
 require_relative '../../app/aplications/ad_hoc_aplicacion'
+require_relative '../../app/errors/ad_hoc_excepcion'
 
 class ApplicationController < ActionController::Base
-  layout 'application'
-  protect_from_forgery with: :exception
-
   attr_reader :ad_hoc
-
+  layout 'application'
   before_action :crear_aplicacion
+  protect_from_forgery with: :exception
 
   def abogado_actual
     current_abogado
   end
 
-  def mostrar_errores(excepcion, with_keep: false)
-    adhoc_error = excepcion.adhoc_error
-    mostrar_mensaje_de_error(adhoc_error) and return if with_keep
-    mantener_mensaje_de_error(adhoc_error)
+  def rescue_hack_exception(excepcion)
+    mostrar_errores(excepcion, mantener_error: true)
+    redirect_back(fallback_location: root_path)
+  end
+
+  def mostrar_errores(excepcion, mantener_error: false)
+    flash.keep[:error] = excepcion.errores and return if mantener_error
+    flash.now[:error] = excepcion.errores
   end
 
   private
-
-  def mantener_mensaje_de_error(adhoc_error)
-    if hay_un_solo_error?(adhoc_error)
-      flash.now[:error] = obtener_error(adhoc_error)
-    else
-      flash.now[:error] = obtener_lista_de_errores(adhoc_error)
-    end
-  end
-
-  def mostrar_mensaje_de_error(adhoc_error)
-    if hay_un_solo_error?(adhoc_error)
-      flash.keep[:error] = obtener_error(adhoc_error)
-    else
-      flash.keep[:error] = obtener_lista_de_errores(adhoc_error)
-    end
-  end
-
-  def hay_un_solo_error?(adhoc_error)
-    adhoc_error.errores.count == 1
-  end
-
-  def obtener_lista_de_errores(adhoc_error)
-    adhoc_error.errores.map { |mensaje| "<li>#{mensaje}</li>" }.join
-  end
-
-  def obtener_error(adhoc_error)
-    adhoc_error.errores.first
-  end
 
   def crear_aplicacion
     @ad_hoc = AdHocAplicacion.new

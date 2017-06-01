@@ -309,7 +309,7 @@ describe ExpedientesController do
 
         asertar_que_la_respuesta_tiene_estado(response, :ok)
         asertar_que_el_template_es(:numerar)
-        asertar_que_se_muestra_un_mensaje_de_error(expediente.mensaje_de_error_para_expediente_numerado)
+        asertar_que_se_incluye_un_mensaje_de_error(expediente.mensaje_de_error_para_expediente_numerado)
         asertar_que_el_expediente_fue_numerado
       end
     end
@@ -334,7 +334,7 @@ describe ExpedientesController do
 
         asertar_que_la_respuesta_tiene_estado(response, :ok)
         assert_template :numerar
-        asertar_que_se_muestra_un_mensaje_de_error(expediente.mensaje_de_error_para_datos_faltantes_en_la_numeracion)
+        asertar_que_se_incluye_un_mensaje_de_error(expediente.mensaje_de_error_para_datos_faltantes_en_la_numeracion)
         asertar_que_el_expediente_no_fue_numerado
       end
     end
