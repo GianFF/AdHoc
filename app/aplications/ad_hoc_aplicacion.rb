@@ -67,7 +67,7 @@ class AdHocAplicacion
     begin
       expediente = Expediente.find(expediente_id)
     rescue ActiveRecord::RecordNotFound
-      ErrorManager.raise_ui_error([mensaje_de_error_para_expediente_inexistente])
+      ErrorManager.raise_hack_error([mensaje_de_error_para_expediente_inexistente])
     end
     validar_que_el_expediente_pertenece_al_abogado(expediente, un_abogado)
     expediente
@@ -119,7 +119,7 @@ class AdHocAplicacion
     begin
       escrito = Escrito.find(escrito_id)
     rescue ActiveRecord::RecordNotFound
-      ErrorManager.raise_ui_error([mensaje_de_error_para_escrito_invalido])
+      ErrorManager.raise_hack_error([mensaje_de_error_para_escrito_invalido])
     end
     validar_que_el_escrito_pertenece_al_abogado(escrito, un_abogado)
     escrito

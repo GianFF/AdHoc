@@ -6,8 +6,7 @@ class EscritosController < ApplicationController
     begin
       show_escrito_expediente_y_cliente
     rescue HackExcepcion => excepcion
-      mostrar_errores(excepcion, mantener_error: true)
-      redirect_back(fallback_location: root_path)
+      rescue_hack_exception(excepcion)
     end
   end
 
@@ -25,6 +24,8 @@ class EscritosController < ApplicationController
       mostrar_errores(excepcion)
       new_escrito_expediente_y_cliente
       render :new
+    rescue HackExcepcion => excepcion
+      rescue_hack_exception(excepcion)
     end
   end
 
@@ -33,14 +34,14 @@ class EscritosController < ApplicationController
       @escrito = @ad_hoc.editar_escrito!(params[:id], validar_parametros_escrito, abogado_actual)
       buscar_expediente_y_cliente_para_escrito
       flash.now[:success] = @ad_hoc.mensaje_de_confirmacion_para_la_correcta_edicion_de_un_escrito
+      render :show
     rescue UIExcepcion => excepcion
       mostrar_errores(excepcion)
       show_escrito_expediente_y_cliente
+      render :show
     rescue HackExcepcion => excepcion
-      mostrar_errores(excepcion, mantener_error: true)
-      redirect_back(fallback_location: root_path)
+      rescue_hack_exception(excepcion)
     end
-    render :show
   end
 
   def destroy
@@ -49,8 +50,7 @@ class EscritosController < ApplicationController
       flash.now[:success] = @ad_hoc.mensaje_de_confirmacion_para_la_correcta_eliminacion_de_un_escrito
       redirect_to expediente_url(validar_parametros_expediente)
     rescue HackExcepcion => excepcion
-      mostrar_errores(excepcion, mantener_error: true)
-      redirect_back(fallback_location: root_path)
+      rescue_hack_exception(excepcion)
     end
   end
 

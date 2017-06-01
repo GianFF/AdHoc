@@ -29,15 +29,3 @@ class ErrorManager
     error_wrapper.errors.first
   end
 end
-
-### Otra implementacion posible seria:
-#
-# class AdHocError
-#
-#   def self.call(errores, ui: false, hack: false)
-#     adhoc_error = AdHocError.new(errores)
-#     raise AdHocUIExcepcion.new(adhoc_error) if ui
-#     raise AdHocHackExcepcion.new(adhoc_error) if hack
-#   end
-# end
-#

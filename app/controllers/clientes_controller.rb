@@ -18,8 +18,7 @@ class ClientesController < ApplicationController
       @cliente = @ad_hoc.buscar_cliente_por_id!(params[:id], abogado_actual.id)
       @expedientes = @cliente.expedientes
     rescue HackExcepcion => excepcion
-      mostrar_errores(excepcion, mantener_error: true)
-      redirect_back(fallback_location: root_path)
+      rescue_hack_exception(excepcion)
     end
   end
 
@@ -31,8 +30,7 @@ class ClientesController < ApplicationController
     begin
       @cliente = @ad_hoc.buscar_cliente_por_id!(cliente_id, abogado_actual.id)
     rescue HackExcepcion => excepcion
-      mostrar_errores(excepcion, mantener_error: true)
-      redirect_back(fallback_location: root_path)
+      rescue_hack_exception(excepcion)
     end
   end
 
@@ -60,8 +58,7 @@ class ClientesController < ApplicationController
       @cliente = @ad_hoc.buscar_cliente_por_id!(cliente_id, abogado_actual.id)
       render :edit
     rescue HackExcepcion => excepcion
-      mostrar_errores(excepcion, mantener_error: true)
-      redirect_back(fallback_location: root_path)
+      rescue_hack_exception(excepcion)
     end
   end
 
@@ -72,8 +69,7 @@ class ClientesController < ApplicationController
       @cliente = nil
       render :new
     rescue HackExcepcion => excepcion
-      mostrar_errores(excepcion, mantener_error: true)
-      redirect_back(fallback_location: root_path)
+      rescue_hack_exception(excepcion)
     end
   end
 

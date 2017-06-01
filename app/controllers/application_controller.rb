@@ -11,6 +11,11 @@ class ApplicationController < ActionController::Base
     current_abogado
   end
 
+  def rescue_hack_exception(excepcion)
+    mostrar_errores(excepcion, mantener_error: true)
+    redirect_back(fallback_location: root_path)
+  end
+
   def mostrar_errores(excepcion, mantener_error: false)
     mensaje_de_error = ErrorManager.format_errors(excepcion)
     flash.keep[:error] = mensaje_de_error and return if mantener_error

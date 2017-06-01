@@ -5,8 +5,7 @@ class ExpedientesController < ApplicationController
     begin
       buscar_expediente_escritos_y_cliente
     rescue HackExcepcion => excepcion
-      mostrar_errores(excepcion, mantener_error: true)
-      redirect_back(fallback_location: root_path)
+      rescue_hack_exception(excepcion)
     end
   end
 
@@ -20,8 +19,7 @@ class ExpedientesController < ApplicationController
     begin
       buscar_expediente_escritos_y_cliente
     rescue HackExcepcion => excepcion
-      mostrar_errores(excepcion, mantener_error: true)
-      redirect_back(fallback_location: root_path)
+      rescue_hack_exception(excepcion)
     end
   end
 
@@ -51,8 +49,7 @@ class ExpedientesController < ApplicationController
       buscar_expediente_escritos_y_cliente
       render :edit, status: :bad_request
     rescue HackExcepcion => excepcion
-      mostrar_errores(excepcion, mantener_error: true)
-      redirect_back(fallback_location: root_path)
+      rescue_hack_exception(excepcion)
     end
   end
 
@@ -62,8 +59,7 @@ class ExpedientesController < ApplicationController
       flash.now[:success] = @ad_hoc.mensaje_de_confirmacion_para_la_correcta_eliminacion_de_un_expediente
       redirect_to cliente_url(validar_parametros_cliente)
     rescue HackExcepcion => excepcion
-      mostrar_errores(excepcion, mantener_error: true)
-      redirect_back(fallback_location: root_path)
+      rescue_hack_exception(excepcion)
     end
   end
 
@@ -72,8 +68,7 @@ class ExpedientesController < ApplicationController
       buscar_expediente_escritos_y_cliente
       @ad_hoc.validar_que_no_haya_sido_numerado(@expediente)
     rescue HackExcepcion => excepcion
-      mostrar_errores(excepcion, mantener_error: true)
-      redirect_back(fallback_location: root_path)
+      rescue_hack_exception(excepcion)
     end
   end
 
@@ -88,8 +83,7 @@ class ExpedientesController < ApplicationController
       buscar_expediente_escritos_y_cliente
       render :numerar
     rescue HackExcepcion => excepcion
-      mostrar_errores(excepcion, mantener_error: true)
-      redirect_back(fallback_location: root_path)
+      rescue_hack_exception(excepcion)
     end
   end
 
