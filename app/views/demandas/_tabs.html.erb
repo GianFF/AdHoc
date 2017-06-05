@@ -1,16 +1,16 @@
 <ul class="nav nav-tabs">
   <li role="presentation" class="active">
     <a href="#" id="tabs__tab-activa">
-      <% if demanda &&  demanda.titulo %>
-        <%= demanda.titulo %>
+      <% if @escrito &&  @escrito.titulo %>
+        <%= @escrito.titulo %>
       <% else %>
         Nuevo Escrito
       <% end %>
     </a>
   </li>
-  <% escritos_que_no_son(demanda, @expediente.escritos).each do |escrito| %>
+  <% escritos_que_no_son(@escrito, @expediente.demandas ).each do |escrito| %>
       <li role="presentation" >
-        <%= link_to escrito.titulo, expediente_escrito_path(@expediente.id, escrito.id) %>
+        <%= link_to escrito.titulo, expediente_demanda_path(@expediente.id, escrito.id) %>
       </li>
   <% end %>
 </ul>

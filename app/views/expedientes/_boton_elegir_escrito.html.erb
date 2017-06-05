@@ -8,11 +8,11 @@
         <h3 class="modal-title" id="exampleModalLabel">¿Que tipo de escrito desea cargar?</h3>
       </div>
       <div class="modal-body">
-        <%= link_to 'Demanda', new_expediente_escrito_path(@expediente.id), method: :get, class: 'btn btn-success btn-group' %>
-        <%= link_to 'Mero tramite', new_expediente_escrito_path(@expediente.id), method: :get, class: 'btn btn-success btn-group', disabled: true %>
-        <%= link_to 'Apelacion', new_expediente_escrito_path(@expediente.id), method: :get, class: 'btn btn-success btn-group', disabled: true %>
-        <%= link_to 'Notificacion', new_expediente_escrito_path(@expediente.id), method: :get, class: 'btn btn-success', disabled: true %>
-        <%= link_to 'Mandamiento', new_expediente_escrito_path(@expediente.id), method: :get, class: 'btn btn-success', disabled: true %>
+        <%= link_to 'Demanda', new_expediente_demanda_path(@expediente.id), method: :get, class: 'btn btn-success btn-group' %>
+        <%= link_to 'Mero tramite', new_expediente_demanda_path(@expediente.id), method: :get, class: 'btn btn-success btn-group', disabled: true %>
+        <%= link_to 'Apelacion', new_expediente_demanda_path(@expediente.id), method: :get, class: 'btn btn-success btn-group', disabled: true %>
+        <%= link_to 'Notificacion', new_expediente_demanda_path(@expediente.id), method: :get, class: 'btn btn-success', disabled: true %>
+        <%= link_to 'Mandamiento', new_expediente_demanda_path(@expediente.id), method: :get, class: 'btn btn-success', disabled: true %>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-warning" data-dismiss="modal">Cancelar</button>

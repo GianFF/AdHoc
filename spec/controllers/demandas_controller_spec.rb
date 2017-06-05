@@ -72,8 +72,8 @@ describe DemandasController, type: :controller do
       it 'se obtiene un escrito vacio' do
         subject
 
-        expect(@controller.demanda).to_not be nil
-        expect(@controller.demanda.cuerpo).to be nil
+        expect(@controller.escrito).to_not be nil
+        expect(@controller.escrito.cuerpo).to be nil
       end
     end
 
