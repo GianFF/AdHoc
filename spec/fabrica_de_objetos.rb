@@ -196,7 +196,7 @@ class FabricaDeObjetos
   #Escritos
 
   def crear_escrito(expediente_id)
-    Escrito.create!(titulo: un_titulo_de_una_demanda, cuerpo: un_cuerpo_de_una_demanda, expediente_id: expediente_id)
+    Demanda.create!(titulo: un_titulo_de_una_demanda, cuerpo: un_cuerpo_de_una_demanda, expediente_id: expediente_id)
   end
 
   def un_titulo_de_una_demanda

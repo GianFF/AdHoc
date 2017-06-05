@@ -1,6 +1,6 @@
-class EscritosController < ApplicationController
+class DemandasController < ApplicationController
   before_action :authenticate_abogado!
-  attr_reader :escrito
+  attr_reader :demanda
 
   def show
     begin
@@ -16,7 +16,7 @@ class EscritosController < ApplicationController
 
   def create
     begin
-      @escrito = @ad_hoc.crear_escrito_nuevo!(validar_parametros_escrito, validar_parametros_expediente, abogado_actual)
+      @demanda = @ad_hoc.crear_nueva_demanda!(validar_parametros_escrito, validar_parametros_expediente, abogado_actual)
       buscar_expediente_y_cliente_para_escrito
       flash.now[:success] = @ad_hoc.mensaje_de_confirmacion_para_la_correcta_creacion_de_un_escrito
       render :show
@@ -31,7 +31,7 @@ class EscritosController < ApplicationController
 
   def update
     begin
-      @escrito = @ad_hoc.editar_escrito!(params[:id], validar_parametros_escrito, abogado_actual)
+      @demanda = @ad_hoc.editar_escrito!(params[:id], validar_parametros_escrito, abogado_actual)
       buscar_expediente_y_cliente_para_escrito
       flash.now[:success] = @ad_hoc.mensaje_de_confirmacion_para_la_correcta_edicion_de_un_escrito
       render :show
@@ -57,23 +57,23 @@ class EscritosController < ApplicationController
   private
 
   def new_escrito_expediente_y_cliente
-    @escrito = Escrito.new
+    @demanda = Demanda.new
     @expediente = @ad_hoc.buscar_expediente_por_id!(validar_parametros_expediente, abogado_actual)
     @cliente = @expediente.cliente
   end
 
   def show_escrito_expediente_y_cliente
-    @escrito = @ad_hoc.buscar_escrito_por_id!(params[:id], abogado_actual)
+    @demanda = @ad_hoc.buscar_escrito_por_id!(params[:id], abogado_actual)
     buscar_expediente_y_cliente_para_escrito
   end
 
   def buscar_expediente_y_cliente_para_escrito
-    @expediente = @escrito.expediente
+    @expediente = @demanda.expediente
     @cliente = @expediente.cliente
   end
 
   def validar_parametros_escrito
-    params.require(:escrito).permit(:cuerpo, :titulo)
+    params.require(:demanda).permit(:cuerpo, :titulo)
   end
 
   def validar_parametros_expediente

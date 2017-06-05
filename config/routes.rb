@@ -8,7 +8,7 @@ Rails.application.routes.draw do
   end
 
   resources :expedientes do
-    resources :escritos
+    resources :demandas
   end
 
   root 'clientes#new'

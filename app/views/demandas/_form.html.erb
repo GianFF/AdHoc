@@ -1,5 +1,5 @@
 <%= render 'tabs' do %>
-  <%= form_for [@expediente, @escrito], html: {class: 'form-horizontal'} do |f| %>
+  <%= form_for [@expediente, demanda], html: {class: 'form-horizontal'} do |f| %>
     <div class="field form-group">
       <%= f.label :titulo, class: 'col-sm-2 control-label' %>*
       <div class="col-sm-8">
@@ -15,7 +15,7 @@
         %>
     <% else %>
         <%= link_to 'Borrar',
-                    [@expediente, @escrito],
+                    [@expediente, demanda],
                     method: :delete,
                     class: 'btn btn-danger escrito__boton-cancelar',
                     data: {

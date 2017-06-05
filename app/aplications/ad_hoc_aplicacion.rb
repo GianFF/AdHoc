@@ -125,8 +125,8 @@ class AdHocAplicacion
     escrito
   end
 
-  def crear_escrito_nuevo!(parametros_de_un_escrito, un_id_de_un_expediente, un_abogado)
-    escrito = Escrito.new(parametros_de_un_escrito)
+  def crear_nueva_demanda!(parametros_de_un_escrito, un_id_de_un_expediente, un_abogado)
+    escrito = Demanda.new(parametros_de_un_escrito)
     escrito.expediente = buscar_expediente_por_id!(un_id_de_un_expediente, un_abogado)
     begin
       escrito.save!

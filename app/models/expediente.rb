@@ -1,6 +1,6 @@
 class Expediente < ApplicationRecord
   belongs_to :cliente
-  has_many :escritos
+  has_many :demandas
 
   def self.mensaje_de_error_para_campo_vacio
     'no puede estar en blanco'

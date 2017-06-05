@@ -41,7 +41,7 @@ class ExpedientesController < ApplicationController
     begin
       @expediente = @ad_hoc.editar_expediente!(params[:id], validar_parametros_expediente, abogado_actual)
       @cliente = @ad_hoc.buscar_cliente_por_id!(validar_parametros_cliente, abogado_actual)
-      @escritos = @expediente.escritos || []
+      buscar_escritos
       flash.now[:success] = @ad_hoc.mensaje_de_confirmacion_para_la_correcta_edicion_de_un_expediente
       render :show
     rescue UIExcepcion => excepcion
@@ -95,8 +95,12 @@ class ExpedientesController < ApplicationController
   end
 
   def buscar_escritos_y_cliente
-    @escritos = @expediente.escritos || []
+    buscar_escritos
     @cliente = @expediente.cliente
+  end
+
+  def buscar_escritos
+    @escritos = @expediente.demandas || []
   end
 
   def validar_parametros_expediente

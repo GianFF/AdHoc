@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170520204121) do
+ActiveRecord::Schema.define(version: 20170605221442) do
 
   create_table "abogados", force: :cascade do |t|
     t.string   "email",                          default: "", null: false
@@ -79,7 +79,9 @@ ActiveRecord::Schema.define(version: 20170520204121) do
     t.integer  "expediente_id"
     t.datetime "created_at",    null: false
     t.datetime "updated_at",    null: false
+    t.string   "type"
     t.index ["expediente_id"], name: "index_escritos_on_expediente_id"
+    t.index ["type"], name: "index_escritos_on_type"
   end
 
   create_table "expedientes", force: :cascade do |t|
