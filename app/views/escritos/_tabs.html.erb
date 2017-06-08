@@ -8,7 +8,7 @@
       <% end %>
     </a>
   </li>
-  <% escritos_que_no_son(@escrito, @expediente.demandas ).each do |escrito| %>
+  <% escritos_que_no_son(@escrito, @expediente.escritos ).each do |escrito| %>
       <li role="presentation" >
         <%= link_to escrito.titulo, expediente_demanda_path(@expediente.id, escrito.id) %>
       </li>

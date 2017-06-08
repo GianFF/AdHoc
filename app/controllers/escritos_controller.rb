@@ -6,7 +6,7 @@ class EscritosController < ApplicationController
     begin
       show_escrito_expediente_y_cliente
     rescue AdHocHackExcepcion => excepcion
-      mostrar_errores(excepcion, with_keep: true)
+      mostrar_errores(excepcion, mantener_error: true)
       redirect_back(fallback_location: root_path)
     end
   end
@@ -37,7 +37,7 @@ class EscritosController < ApplicationController
       mostrar_errores(excepcion)
       show_escrito_expediente_y_cliente
     rescue AdHocHackExcepcion => excepcion
-      mostrar_errores(excepcion, with_keep: true)
+      mostrar_errores(excepcion, mantener_error: true)
       redirect_back(fallback_location: root_path)
     end
     render :show
@@ -49,7 +49,7 @@ class EscritosController < ApplicationController
       flash.now[:success] = @ad_hoc.mensaje_de_confirmacion_para_la_correcta_eliminacion_de_un_escrito
       redirect_to expediente_url(validar_parametros_expediente)
     rescue AdHocHackExcepcion => excepcion
-      mostrar_errores(excepcion, with_keep: true)
+      mostrar_errores(excepcion, mantener_error: true)
       redirect_back(fallback_location: root_path)
     end
   end
@@ -57,9 +57,9 @@ class EscritosController < ApplicationController
   private
 
   def new_escrito_expediente_y_cliente
-    yield
     @expediente = @ad_hoc.buscar_expediente_por_id!(validar_parametros_expediente, abogado_actual)
     @cliente = @expediente.cliente
+    yield
   end
 
   def show_escrito_expediente_y_cliente

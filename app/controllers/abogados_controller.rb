@@ -3,8 +3,8 @@ class AbogadosController < Devise::RegistrationsController
 
   def create
     super do
-      errores = resource.errores.full_messages.map { |msg| "<li>#{msg}</li>" }.join
-      flash.now[:error] = errores.html_safe if errores.length > 0
+      errores = resource.errors.full_messages
+      mostrar_errores(AdHocUIExcepcion.new(errores)) if errores.length > 0
     end
   end
 
@@ -16,7 +16,7 @@ class AbogadosController < Devise::RegistrationsController
       end
       @abogado = @ad_hoc.editar_abogado!(@abogado, validar_parametros_abogado)
       flash.keep[:success] = 'Perfil editado satisfactoriamente'
-    rescue UIExcepcion => error
+    rescue AdHocUIExcepcion => error
       mostrar_errores(error, mantener_error: true)
     end
     redirect_to root_path

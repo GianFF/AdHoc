@@ -17,8 +17,9 @@ class ApplicationController < ActionController::Base
   end
 
   def mostrar_errores(excepcion, mantener_error: false)
-    flash.keep[:error] = excepcion.errores and return if mantener_error
-    flash.now[:error] = excepcion.errores
+    errores = excepcion.errores
+    flash.keep[:error] = errores and return if mantener_error
+    flash.now[:error] = errores
   end
 
   private

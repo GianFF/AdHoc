@@ -10,4 +10,8 @@ class Escrito < ApplicationRecord
   def pertenece_a?(un_abogado)
     self.expediente.pertenece_a? un_abogado
   end
+
+  def encabezado(abogado, expediente, cliente)
+    subclass_responsibility
+  end
 end

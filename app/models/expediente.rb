@@ -1,6 +1,7 @@
 class Expediente < ApplicationRecord
   belongs_to :cliente
   has_many :demandas
+  has_many :contestacion_de_demandas
 
   def self.mensaje_de_error_para_campo_vacio
     'no puede estar en blanco'
@@ -47,6 +48,10 @@ class Expediente < ApplicationRecord
   def los_datos_para_numerar_son_invalidos?(datos)
     datos[:actor].blank? || datos[:demandado].blank? || datos[:materia].blank? || datos[:numero].blank? ||
         datos[:juzgado].blank? || datos[:numero_de_juzgado].blank? || datos[:departamento].blank? || datos[:ubicacion_del_departamento].blank?
+  end
+
+  def escritos
+    self.demandas + self.contestacion_de_demandas || []
   end
 
   def validar_que_no_falte_ningun_dato_para_la_numeracion!(datos)

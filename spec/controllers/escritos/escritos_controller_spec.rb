@@ -80,7 +80,7 @@ describe DemandasController, type: :controller do
   end
 
   context 'En la edicion de un escrito' do
-    let(:demanda){fabrica_de_objetos.crear_escrito(expediente.id)}
+    let(:demanda){fabrica_de_objetos.crear_demanda(expediente.id)}
 
     subject {
       put :update,
@@ -94,7 +94,7 @@ describe DemandasController, type: :controller do
           }
     }
 
-    context 'cuando es correcta' do
+    context 'Cuando es correcta' do
 
       it 'se puede editar un escrito' do
         subject
@@ -136,7 +136,7 @@ describe DemandasController, type: :controller do
   end
 
   context 'En la eliminacion de un escrito' do
-    let(:demanda){fabrica_de_objetos.crear_escrito(expediente.id)}
+    let(:demanda){fabrica_de_objetos.crear_demanda(expediente.id)}
 
     subject {
       delete :destroy,

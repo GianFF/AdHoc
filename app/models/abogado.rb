@@ -21,7 +21,7 @@ class Abogado < ApplicationRecord
 
   validate :sexo_es_valido, on: :create
 
-  validates :nombre, :apellido, :nombre_del_colegio_de_abogados, :domicilio_procesal, :sexo,
+  validates :nombre, :apellido, :nombre_del_colegio_de_abogados, :domicilio_procesal, :sexo, :encrypted_password,
             presence: { message: mensaje_de_error_para_campo_vacio}
 
   validates :matricula, :cuit, :domicilio_electronico, :email,

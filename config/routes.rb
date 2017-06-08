@@ -9,7 +9,7 @@ Rails.application.routes.draw do
 
   resources :expedientes do
     resources :demandas
-    resources :proveidos
+    resources :contestacion_de_demandas
   end
 
   root 'clientes#new'

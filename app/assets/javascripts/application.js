@@ -17,3 +17,23 @@
 //= require sweetalert2
 //= require sweet-alert2-rails
 //= require_tree .
+
+$(document).ready(function(){
+    borrarAlertaDentroDe(7000);
+
+    cerrarAlerta();
+});
+
+
+// private
+
+function borrarAlertaDentroDe(unCiertoTiempo) {
+    setTimeout(function () {
+        $('.alert').remove();
+    }, unCiertoTiempo);
+}
+function cerrarAlerta() {
+    $(".close").click(function () {
+        $('.alert').remove();
+    });
+}

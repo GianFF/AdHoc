@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-describe DemandasController, type: :controller do
+describe ContestacionDeDemandasController, type: :controller do
   include ::ControllersHelper
 
   let(:fabrica_de_objetos){ FabricaDeObjetos.new }
@@ -24,7 +24,7 @@ describe DemandasController, type: :controller do
 
   let(:ad_hoc){ AdHocAplicacion.new }
 
-  context 'En la creacion de una demanda' do
+  context 'En la creacion de una contestacion de demanda' do
     let(:otros_parametros) {
       fabrica_de_objetos.parametros_para_un_abogado(fabrica_de_objetos.otro_mail_para_un_abogado,
                                                     fabrica_de_objetos.una_contrasenia,
@@ -40,26 +40,27 @@ describe DemandasController, type: :controller do
 
     let(:otro_abogado) { crear_cuenta_para_abogado(otros_parametros) }
 
-    subject { post :create, params: {demanda: {cuerpo: 'un cuerpo', titulo: 'un titulo'}, expediente_id: expediente.id} }
+    subject { post :create, params: {contestacion_de_demanda: {cuerpo: 'un cuerpo', titulo: 'un titulo'}, expediente_id: expediente.id} }
 
     context 'Cuando es correcta' do
       subject { get :new, params: {expediente_id: expediente.id} }
 
-      it 'se obtiene un escrito vacio' do
+      it 'se obtiene un escrito con encabezado para Contestacion de Demanda' do
         subject
 
         expect(@controller.escrito).to_not be nil
         expect(@controller.escrito.cuerpo).to be nil
+        expect(@controller.escrito.encabezado(abogado, expediente, cliente)).to eq fabrica_de_objetos.encabezado_con_datos_del_expediente(abogado, expediente, cliente).valor
       end
     end
 
     context 'Cuando es incorrecta' do
-      subject { post :create, params: {demanda: {cuerpo: '', titulo: ''}, expediente_id: expediente.id} }
+      subject { post :create, params: {contestacion_de_demanda: {cuerpo: '', titulo: ''}, expediente_id: expediente.id} }
 
       it 'el cuerpo no puede ser vacio' do
         subject
 
-        asertar_que_se_incluye_un_mensaje_de_error("Cuerpo #{Demanda.mensaje_de_error_para_campo_vacio}")
+        asertar_que_se_incluye_un_mensaje_de_error("Cuerpo #{ContestacionDeDemanda.mensaje_de_error_para_campo_vacio}")
         asertar_que_la_respuesta_tiene_estado(response, :ok)
         asertar_que_el_template_es(:new)
       end

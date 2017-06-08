@@ -3,6 +3,7 @@ class CreateEscritos < ActiveRecord::Migration[5.0]
     create_table :escritos do |t|
       t.text :titulo, null: false
       t.text :cuerpo, null: false
+      t.text :encabezado
       t.references :expediente, foreign_key: true
 
       t.timestamps
