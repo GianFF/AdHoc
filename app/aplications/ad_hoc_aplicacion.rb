@@ -148,6 +148,12 @@ class AdHocAplicacion
     end
   end
 
+  def crear_nuevo_mero_tramite!(parametros_de_un_escrito, un_id_de_un_expediente, un_abogado)
+    crear_nuevo_escrito!(parametros_de_un_escrito, un_id_de_un_expediente, un_abogado) do
+      MeroTramite.new(parametros_de_un_escrito)
+    end
+  end
+
   def editar_escrito!(escrito_id, parametros_escrito, un_abogado)
     escrito = self.buscar_escrito_por_id!(escrito_id, un_abogado)
     begin

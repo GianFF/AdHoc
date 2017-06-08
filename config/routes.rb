@@ -10,6 +10,7 @@ Rails.application.routes.draw do
   resources :expedientes do
     resources :demandas
     resources :contestacion_de_demandas
+    resources :mero_tramites
   end
 
   root 'clientes#new'
