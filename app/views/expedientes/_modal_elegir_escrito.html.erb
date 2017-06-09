@@ -11,7 +11,7 @@
         <%= link_to 'Demanda', new_expediente_demanda_path(@expediente.id), method: :get, class: 'btn btn-success btn-group' %>
         <%= link_to 'Contestacion', new_expediente_contestacion_de_demanda_path(@expediente.id), method: :get, class: 'btn btn-success btn-group'%>
         <%= link_to 'Mero Tramite', new_expediente_mero_tramite_path(@expediente.id), method: :get, class: 'btn btn-success btn-group'%>
-        <%= link_to 'Notificacion', new_expediente_demanda_path(@expediente.id), method: :get, class: 'btn btn-success', disabled: true %>
+        <%= link_to 'Notificacion', new_expediente_notificacion_path(@expediente.id), method: :get, class: 'btn btn-success'%>
         <%= link_to 'Mandamiento', new_expediente_demanda_path(@expediente.id), method: :get, class: 'btn btn-success', disabled: true %>
       </div>
       <div class="modal-footer">

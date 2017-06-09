@@ -1,0 +1,102 @@
+<%= render 'tabs' do %>
+  <%= form_for [@expediente, @escrito], html: {class: 'form-horizontal'} do |f| %>
+    <div class="field form-group">
+      <%= f.label :fuero, class: 'col-sm-2 control-label' %>*
+      <div class="col-sm-8">
+        <%= f.text_field :fuero, class: 'form-control', autofocus: true %>
+      </div>
+    </div>
+
+    <div class="field form-group">
+      <%= f.label :fecha_recepcion, class: 'col-sm-2 control-label' %>*
+      <div class="col-sm-8">
+        <%= f.date_select :fecha_recepcion, class: 'form-control' %>
+      </div>
+    </div>
+
+    <div class="field form-group">
+      <%= f.label :organo, class: 'col-sm-2 control-label' %>*
+      <div class="col-sm-8">
+        <%= f.text_field :organo, class: 'form-control' %>
+      </div>
+    </div>
+
+    <div class="field form-group">
+      <%= f.label :nombre, class: 'col-sm-2 control-label' %>*
+      <div class="col-sm-8">
+        <%= f.text_field :nombre, class: 'form-control' %>
+      </div>
+    </div>
+
+    <div class="field form-group">
+      <%= f.label :calle, class: 'col-sm-2 control-label' %>*
+      <div class="col-sm-8">
+        <%= f.text_field :calle, class: 'form-control' %>
+      </div>
+    </div>
+
+    <div class="field form-group">
+      <%= f.label :nro, class: 'col-sm-2 control-label' %>*
+      <div class="col-sm-8">
+        <%= f.number_field :nro, class: 'form-control' %>
+      </div>
+    </div>
+
+    <div class="field form-group">
+      <%= f.label :piso, class: 'col-sm-2 control-label' %>*
+      <div class="col-sm-8">
+        <%= f.number_field :piso, class: 'form-control' %>
+      </div>
+    </div>
+
+    <div class="field form-group">
+      <%= f.label :localidad, class: 'col-sm-2 control-label' %>*
+      <div class="col-sm-8">
+        <%= f.text_field :localidad, class: 'form-control' %>
+      </div>
+    </div>
+
+    <div class="field form-group">
+      <%= f.label :tipo_domicilio, class: 'col-sm-2 control-label' %>*
+      <div class="col-sm-8">
+        <%= f.text_field :tipo_domicilio, class: 'form-control' %>
+      </div>
+    </div>
+
+    <div class="field form-group">
+      <%= f.label :caracter, class: 'col-sm-2 control-label' %>*
+      <div class="col-sm-8">
+        <%= f.text_field :caracter, class: 'form-control' %>
+      </div>
+    </div>
+
+    <div class="field form-group">
+      <%= f.label :observaciones, class: 'col-sm-2 control-label' %>*
+      <div class="col-sm-8">
+        <%= f.text_field :observaciones, class: 'form-control' %>
+      </div>
+    </div>
+
+    <div class="actions form-group cliente__edit-botones">
+      <div class="col-sm-4">
+        <%= f.submit 'Guardar', {class: 'btn btn-success cliente__form-guardar'}%>
+      </div>
+    </div>
+  <% end %>
+  <%= link_to 'Cancelar', cliente_expediente_path(@cliente.id, @expediente.id), method: :get,  class: 'btn btn-warning escrito__boton-cancelar' %>
+  <% if mostrar_boton_borrar %>
+    <%= link_to 'Borrar', [@expediente, @escrito], method: :delete, class: 'btn btn-danger escrito__boton-cancelar',
+                data: {
+                    confirm: '¿Seguro que quiere eliminar éste escrito?',
+                    'confirm-button-text': 'Seguro',
+                    'confirm-button-color': '#5cb85c',
+                    'cancel-button-text': 'Cancelar',
+                    'cancel-button-color': '#ec971f',
+                    'sweet-alert-type': 'warning',
+                    text: 'Esta accion no se podra revertir.'
+                }
+    %>
+  <% end %>
+<% end %>
+<%= render 'tab_expediente' %>
+<%= render 'shared/tab_cliente' %>

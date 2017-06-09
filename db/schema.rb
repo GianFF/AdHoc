@@ -74,12 +74,23 @@ ActiveRecord::Schema.define(version: 20170605221442) do
   end
 
   create_table "escritos", force: :cascade do |t|
-    t.text     "titulo",        null: false
-    t.text     "cuerpo",        null: false
-    t.text     "encabezado"
+    t.text     "titulo",          null: false
     t.integer  "expediente_id"
-    t.datetime "created_at",    null: false
-    t.datetime "updated_at",    null: false
+    t.text     "cuerpo",          null: false
+    t.text     "encabezado"
+    t.text     "fuero"
+    t.text     "fecha_recepcion"
+    t.text     "organo"
+    t.text     "nombre"
+    t.text     "calle"
+    t.text     "nro"
+    t.text     "piso"
+    t.text     "localidad"
+    t.text     "tipo_domicilio"
+    t.text     "caracter"
+    t.text     "observaciones"
+    t.datetime "created_at",      null: false
+    t.datetime "updated_at",      null: false
     t.string   "type"
     t.index ["expediente_id"], name: "index_escritos_on_expediente_id"
     t.index ["type"], name: "index_escritos_on_type"

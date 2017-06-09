@@ -3,6 +3,7 @@ class Expediente < ApplicationRecord
   has_many :demandas
   has_many :contestacion_de_demandas
   has_many :mero_tramites
+  has_many :notificacions
 
   def self.mensaje_de_error_para_campo_vacio
     'no puede estar en blanco'
@@ -52,7 +53,7 @@ class Expediente < ApplicationRecord
   end
 
   def escritos
-    self.demandas + self.contestacion_de_demandas + self.mero_tramites || []
+    self.demandas + self.contestacion_de_demandas + self.mero_tramites + self.notificacions || []
   end
 
   def validar_que_no_falte_ningun_dato_para_la_numeracion!(datos)

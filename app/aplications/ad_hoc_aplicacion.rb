@@ -125,7 +125,7 @@ class AdHocAplicacion
     escrito
   end
 
-  def crear_nuevo_escrito!(parametros_de_un_escrito, un_id_de_un_expediente, un_abogado)
+  def crear_nuevo_escrito!(un_id_de_un_expediente, un_abogado)
     escrito = yield
     escrito.expediente = buscar_expediente_por_id!(un_id_de_un_expediente, un_abogado)
     begin
@@ -137,20 +137,26 @@ class AdHocAplicacion
   end
 
   def crear_nueva_demanda!(parametros_de_un_escrito, un_id_de_un_expediente, un_abogado)
-    crear_nuevo_escrito!(parametros_de_un_escrito, un_id_de_un_expediente, un_abogado) do
+    crear_nuevo_escrito!(un_id_de_un_expediente, un_abogado) do
       Demanda.new(parametros_de_un_escrito)
     end
   end
 
   def crear_nueva_contestacion_de_demanda!(parametros_de_un_escrito, un_id_de_un_expediente, un_abogado)
-    crear_nuevo_escrito!(parametros_de_un_escrito, un_id_de_un_expediente, un_abogado) do
+    crear_nuevo_escrito!(un_id_de_un_expediente, un_abogado) do
       ContestacionDeDemanda.new(parametros_de_un_escrito)
     end
   end
 
   def crear_nuevo_mero_tramite!(parametros_de_un_escrito, un_id_de_un_expediente, un_abogado)
-    crear_nuevo_escrito!(parametros_de_un_escrito, un_id_de_un_expediente, un_abogado) do
+    crear_nuevo_escrito!(un_id_de_un_expediente, un_abogado) do
       MeroTramite.new(parametros_de_un_escrito)
+    end
+  end
+
+  def crear_nueva_notificacion!(parametros_de_un_escrito, un_id_de_un_expediente, un_abogado)
+    crear_nuevo_escrito!(un_id_de_un_expediente, un_abogado) do
+      Notificacion.new(parametros_de_un_escrito)
     end
   end
 
