@@ -11,15 +11,15 @@ class CreateEscritos < ActiveRecord::Migration[5.0]
       # Notificaciones
       t.text :fuero
       t.text :fecha_recepcion
-      t.text :organo
+      t.text :caracter
+      t.text :observaciones
+      #   Datos del cliente
       t.text :nombre
       t.text :calle
       t.text :nro
       t.text :piso
       t.text :localidad
       t.text :tipo_domicilio
-      t.text :caracter
-      t.text :observaciones
 
       t.timestamps
     end
