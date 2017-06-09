@@ -1,10 +1,3 @@
-# This file should contain all the record creation needed to seed the database with its default values.
-# The data can then be loaded with the rails db:seed command (or created alongside the database with db:setup).
-#
-# Examples:
-#
-#   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
-#   Character.create(name: 'Luke', movie: movies.first)
 require_relative '../spec/fabrica_de_objetos'
 
 fabrica_de_objetos = FabricaDeObjetos.new
@@ -45,5 +38,7 @@ expediente_mujer = fabrica_de_objetos.crear_expediente(cliente_mujer.id)
 
 fabrica_de_objetos.crear_demanda(expediente_hombre.id)
 fabrica_de_objetos.crear_contestacion_de_demanda(expediente_hombre.id)
+fabrica_de_objetos.crear_mero_tramite(expediente_hombre.id)
 fabrica_de_objetos.crear_demanda(expediente_mujer.id)
 fabrica_de_objetos.crear_contestacion_de_demanda(expediente_mujer.id)
+fabrica_de_objetos.crear_mero_tramite(expediente_mujer.id)

@@ -76,7 +76,7 @@ ActiveRecord::Schema.define(version: 20170605221442) do
   create_table "escritos", force: :cascade do |t|
     t.text     "titulo",          null: false
     t.integer  "expediente_id"
-    t.text     "cuerpo",          null: false
+    t.text     "cuerpo"
     t.text     "encabezado"
     t.text     "fuero"
     t.text     "fecha_recepcion"

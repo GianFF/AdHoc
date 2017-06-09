@@ -207,6 +207,10 @@ class FabricaDeObjetos
     ContestacionDeDemanda.create!(titulo: otro_titulo_de_una_demanda, cuerpo: otro_cuerpo_de_una_demanda, expediente_id: expediente_id)
   end
 
+  def crear_mero_tramite(expediente_id)
+    MeroTramite.create!(titulo: 'Mero Tramite 01', cuerpo: otro_cuerpo_de_una_demanda, expediente_id: expediente_id)
+  end
+
   def un_titulo_de_una_demanda
     'Demanda 01'
   end

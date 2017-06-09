@@ -43,6 +43,27 @@ function iniciarEditorConEncabezadoPatrocinanteParaContestacionDeDemanda() {
     editor.render();
 }
 
+function iniciarEditorNotificacion() {
+    var editor = new tinymce.Editor('editor', {
+        selector: '#editor',
+        branding: false,
+        plugins: [
+            'code advlist autolink lists charmap print preview hr anchor pagebreak',
+            'searchreplace wordcount visualblocks visualchars fullscreen insertdatetime nonbreaking',
+            'table contextmenu directionality paste textcolor'
+        ],
+        toolbar: 'code | insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | ' +
+        'bullist numlist outdent indent | print preview fullpage | forecolor backcolor emoticons',
+        removed_menuitems: 'undo, redo, newdocument, formats',
+        setup: function (editor){
+            editor.on("init", function(){formularioParaNotificacion();});
+        }
+    }, tinymce.EditorManager);
+    traducirEditorAlCastellano();
+    editor.render();
+}
+
+
 // private
 
 function recargarEditor() {
@@ -87,13 +108,21 @@ function titulosParaDemanda() {
         '<p>&nbsp;</p>';
 }
 
+// Setear contenido
+
 function encabezadoYTitulos() {
-    tinymce.activeEditor.setContent(contenidoDelEncabezadoParaDemanda().concat(titulosParaDemanda()))
+    tinymce.activeEditor.setContent(contenidoDelEncabezadoParaDemanda().concat(titulosParaDemanda()));
 }
 
 function encabezadoYTitulosParaContestacion() {
-    tinymce.activeEditor.setContent(contenidoDelEncabezadoParaContestacion())
+    tinymce.activeEditor.setContent(contenidoDelEncabezadoParaContestacion());
 }
+
+function formularioParaNotificacion() {
+    tinymce.activeEditor.setContent(contenidoDelFormularioParaNotificacion());
+}
+
+// Contenido
 
 function contenidoDelEncabezadoParaDemanda() {
     return $('#encabezado').text();
@@ -101,4 +130,8 @@ function contenidoDelEncabezadoParaDemanda() {
 
 function contenidoDelEncabezadoParaContestacion() {
     return $('#encabezado_para_demanda').text();
+}
+
+function contenidoDelFormularioParaNotificacion() {
+    return $('#formulario_notificacion').html();
 }

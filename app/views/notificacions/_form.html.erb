@@ -1,9 +1,16 @@
 <%= render 'tabs' do %>
   <%= form_for [@expediente, @escrito], html: {class: 'form-horizontal'} do |f| %>
     <div class="field form-group">
+      <%= f.label :titulo, class: 'col-sm-2 control-label' %>*
+      <div class="col-sm-8">
+        <%= f.text_field :titulo, class: 'form-control', autofocus: true %>
+      </div>
+    </div>
+
+    <div class="field form-group">
       <%= f.label :fuero, class: 'col-sm-2 control-label' %>*
       <div class="col-sm-8">
-        <%= f.text_field :fuero, class: 'form-control', autofocus: true %>
+        <%= f.text_field :fuero, class: 'form-control'%>
       </div>
     </div>
 
@@ -59,14 +66,19 @@
     <div class="field form-group">
       <%= f.label :tipo_domicilio, class: 'col-sm-2 control-label' %>*
       <div class="col-sm-8">
-        <%= f.text_field :tipo_domicilio, class: 'form-control' %>
+        <%= f.select(:tipo_domicilio, TipoDeDomicilio.tipos_de_domicilios,
+                     options = {include_blank: true},
+                     html_options = {class: 'form-control'}) %>
       </div>
     </div>
 
     <div class="field form-group">
       <%= f.label :caracter, class: 'col-sm-2 control-label' %>*
       <div class="col-sm-8">
-        <%= f.text_field :caracter, class: 'form-control' %>
+        <%= f.select(:caracter, Caracter.caracteres,
+                           options = {include_blank: true},
+                           html_options = {class: 'form-control'}) %>
+        <br />
       </div>
     </div>
 

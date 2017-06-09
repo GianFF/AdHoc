@@ -5,7 +5,7 @@ class CreateEscritos < ActiveRecord::Migration[5.0]
       t.references :expediente, foreign_key: true
 
       # Meros Tramites, Demandas, Contestaciones de Demandas:
-      t.text :cuerpo, null: false
+      t.text :cuerpo
       t.text :encabezado
 
       # Notificaciones
