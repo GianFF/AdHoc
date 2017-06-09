@@ -1,0 +1,13 @@
+<% escritos_que_no_son(@escrito, @expediente.escritos ).each do |escrito| %>
+    <li role="presentation" >
+      <% if escrito.type.eql?('Demanda') %>
+          <%= link_to escrito.titulo, expediente_demanda_path(@expediente.id, escrito.id) %>
+      <% elsif escrito.type.eql?('ContestacionDeDemanda')%>
+          <%= link_to escrito.titulo, expediente_contestacion_de_demanda_path(@expediente.id, escrito.id) %>
+      <% elsif escrito.type.eql?('MeroTramite') %>
+          <%= link_to escrito.titulo, expediente_mero_tramite_path(@expediente.id, escrito.id) %>
+      <% elsif escrito.type.eql?('Notificacion') %>
+          <%= link_to escrito.titulo, expediente_notificacion_path(@expediente.id, escrito.id) %>
+      <% end %>
+    </li>
+<% end %>

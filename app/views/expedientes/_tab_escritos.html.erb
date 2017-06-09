@@ -3,10 +3,6 @@
     <li role="presentation" class="active">
       <%= render 'modal_elegir_escrito' %>
     </li>
-    <% @escritos.each do |escrito| %>
-        <li role="presentation" >
-          <%= link_to escrito.titulo, expediente_demanda_path(@expediente.id, escrito.id) %>
-        </li>
-    <% end %>
+    <%= render 'shared/tabs_escritos' %>
   </ul>
 <% end %>
