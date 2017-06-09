@@ -85,4 +85,6 @@ Rails.application.configure do
   config.active_record.dump_schema_after_migration = false
 
   config.react.variant = :production
+
+  config.autoload_paths += Dir[Rails.root.join('app', 'models', '*/')]
 end

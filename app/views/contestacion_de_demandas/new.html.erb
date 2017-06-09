@@ -1,0 +1,5 @@
+<%= render partial: 'escritos/form', locals: {mostrar_boton_cancelar: true} %>
+<div id="encabezado_para_demanda" hidden><%= @escrito.encabezado(current_abogado, @expediente, @cliente) %></div>
+<script>
+  $( iniciarEditorConEncabezadoPatrocinanteParaContestacionDeDemanda );
+</script>

@@ -10,11 +10,11 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170520204121) do
+ActiveRecord::Schema.define(version: 20170605221442) do
 
   create_table "abogados", force: :cascade do |t|
-    t.string   "email",                          default: "", null: false
-    t.string   "encrypted_password",             default: "", null: false
+    t.string   "email"
+    t.string   "encrypted_password"
     t.string   "nombre"
     t.string   "apellido"
     t.string   "sexo"
@@ -30,12 +30,12 @@ ActiveRecord::Schema.define(version: 20170520204121) do
     t.datetime "confirmed_at"
     t.datetime "confirmation_sent_at"
     t.string   "unconfirmed_email"
-    t.integer  "failed_attempts",                default: 0,  null: false
+    t.integer  "failed_attempts",                default: 0, null: false
     t.string   "unlock_token"
     t.datetime "locked_at"
-    t.datetime "created_at",                                  null: false
-    t.datetime "updated_at",                                  null: false
-    t.index ["email"], name: "index_abogados_on_email", unique: true
+    t.datetime "created_at",                                 null: false
+    t.datetime "updated_at",                                 null: false
+    t.index ["email"], name: "index_abogados_on_email"
     t.index ["reset_password_token"], name: "index_abogados_on_reset_password_token", unique: true
   end
 
@@ -74,12 +74,26 @@ ActiveRecord::Schema.define(version: 20170520204121) do
   end
 
   create_table "escritos", force: :cascade do |t|
-    t.text     "titulo",        null: false
-    t.text     "cuerpo",        null: false
+    t.text     "titulo",          null: false
     t.integer  "expediente_id"
-    t.datetime "created_at",    null: false
-    t.datetime "updated_at",    null: false
+    t.text     "cuerpo"
+    t.text     "encabezado"
+    t.text     "fuero"
+    t.text     "fecha_recepcion"
+    t.text     "organo"
+    t.text     "nombre"
+    t.text     "calle"
+    t.text     "nro"
+    t.text     "piso"
+    t.text     "localidad"
+    t.text     "tipo_domicilio"
+    t.text     "caracter"
+    t.text     "observaciones"
+    t.datetime "created_at",      null: false
+    t.datetime "updated_at",      null: false
+    t.string   "type"
     t.index ["expediente_id"], name: "index_escritos_on_expediente_id"
+    t.index ["type"], name: "index_escritos_on_type"
   end
 
   create_table "expedientes", force: :cascade do |t|

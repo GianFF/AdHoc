@@ -1,13 +1,8 @@
-<!--TODO: este partial deberia ser mas bien comoel _tabs_expedientes -->
 <%= render 'shared/tabs_contenedor' do %>
   <ul class="nav nav-tabs">
     <li role="presentation" class="active">
-      <%= render 'boton_elegir_escrito' %>
+      <%= render 'modal_elegir_escrito' %>
     </li>
-    <% @escritos.each do |escrito| %>
-        <li role="presentation" >
-          <%= link_to escrito.titulo, expediente_escrito_path(@expediente.id, escrito.id) %>
-        </li>
-    <% end %>
+    <%= render 'shared/tabs_escritos' %>
   </ul>
 <% end %>

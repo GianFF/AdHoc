@@ -52,31 +52,31 @@ class FabricaDeObjetos
   end
 
   def un_nombre_para_un_abogado
-    'Foo'
+    'Pablo'
   end
 
   def un_apellido_para_un_abogado
-    'Bar'
+    'Caceres'
   end
 
   def un_mail_para_un_abogado
-    'ejemplo@mail.com'
+    'pablo@mail.com'
   end
 
   def otro_nombre_para_un_abogado
-    'Bar'
+    'Dulce Noelia'
   end
 
   def otro_apellido_para_un_abogado
-    'Zaz'
+    'Fioriello'
   end
 
   def otro_mail_para_un_abogado
-    'otro_ejemplo@mail.com'
+    'noe@mail.com'
   end
 
   def una_contrasenia
-    'password'
+    'abc123'
   end
 
   def una_contrasenia_incorrecta
@@ -86,15 +86,19 @@ class FabricaDeObjetos
   #Clientes:
 
   def crear_cliente(abogado_id)
-    Cliente.create!(nombre: 'Foo', apellido: 'Bar', abogado_id: abogado_id)
+    Cliente.create!(nombre: un_nombre_para_un_cliente, apellido: un_apellido_para_un_cliente, abogado_id: abogado_id)
+  end
+
+  def crear_otro_cliente(abogado_id)
+    Cliente.create!(nombre: otro_nombre_para_un_cliente, apellido: otro_apellido_para_un_cliente, abogado_id: abogado_id)
   end
 
   def un_nombre_para_un_cliente
-    'Foo'
+    'Juan'
   end
 
   def un_apellido_para_un_cliente
-    'Bar'
+    'Perez'
   end
 
   def un_telefono_para_un_cliente
@@ -110,11 +114,11 @@ class FabricaDeObjetos
   end
 
   def otro_nombre_para_un_cliente
-    'Zaz'
+    'Juana'
   end
 
   def otro_apellido_para_un_cliente
-    'Foo'
+    'Rosas'
   end
 
   def parametros_para_cliente(un_id_de_un_abogado, un_nombre, un_apellido, un_telefono=nil, un_mail=nil,
@@ -195,29 +199,59 @@ class FabricaDeObjetos
 
   #Escritos
 
-  def crear_escrito(expediente_id)
-    Escrito.create!(titulo: un_titulo_de_una_demanda, cuerpo: un_cuerpo_de_una_demanda, expediente_id: expediente_id)
+  def crear_demanda(expediente_id)
+    Demanda.create!(titulo: un_titulo_de_una_demanda, cuerpo: un_cuerpo_de_una_demanda, expediente_id: expediente_id)
+  end
+
+  def crear_contestacion_de_demanda(expediente_id)
+    ContestacionDeDemanda.create!(titulo: otro_titulo_de_una_demanda, cuerpo: otro_cuerpo_de_una_demanda, expediente_id: expediente_id)
+  end
+
+  def crear_mero_tramite(expediente_id)
+    MeroTramite.create!(titulo: 'Mero Tramite 01', cuerpo: otro_cuerpo_de_una_demanda, expediente_id: expediente_id)
   end
 
   def un_titulo_de_una_demanda
-    'un titulo'
+    'Demanda 01'
   end
 
   def un_cuerpo_de_una_demanda
-    'un cuerpo'
+    '<h1 style="text-align: center;">I.- OBJETO</h1>'+
+        '<p>&nbsp;</p>'+
+        '<h1 style="text-align: center;">II.- HECHOS</h1>'+
+        '<p>&nbsp;</p>'+
+        '<h1 style="text-align: center;">III.- DERECHO</h1>'+
+        '<p>&nbsp;</p>'+
+        '<h1 style="text-align: center;">IV.- PRUEBA</h1>'+
+        '<p>&nbsp;</p>'+
+        '<h1 style="text-align: center;">V.- PETITORIO</h1>'+
+        '<p>&nbsp;</p>';
   end
 
   def otro_titulo_de_una_demanda
-    'otro titulo'
+    'Contestacion de Demanda 01'
   end
 
   def otro_cuerpo_de_una_demanda
-    'otro cuerpo'
+    '<h1 style="text-align: center;">I.- OBJETO</h1>'+
+        '<p>&nbsp;</p>'+
+        '<h1 style="text-align: center;">II.- HECHOS</h1>'+
+        '<p>&nbsp;</p>'+
+        '<h1 style="text-align: center;">III.- DERECHO</h1>'+
+        '<p>&nbsp;</p>'+
+        '<h1 style="text-align: center;">IV.- PRUEBA</h1>'+
+        '<p>&nbsp;</p>'+
+        '<h1 style="text-align: center;">V.- PETITORIO</h1>'+
+        '<p>&nbsp;</p>';
   end
 
   #Encabezados
 
-  def crear_encabezado(abogado, expediente, cliente)
+  def encabezado_para_demanda(abogado, expediente, cliente)
     Encabezado.new(abogado, expediente, cliente)
+  end
+
+  def encabezado_con_datos_del_expediente(abogado, expediente, cliente)
+    EncabezadoConDatosDelExpediente.new(abogado, expediente, cliente)
   end
 end

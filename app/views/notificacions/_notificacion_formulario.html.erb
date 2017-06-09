@@ -1,0 +1,364 @@
+<p class="western" lang="es-ES" style="text-align: center;">&nbsp;</p>
+<center>
+  <table width="559" cellspacing="0" cellpadding="5"><colgroup> <col width="45" /> <col width="4" /> <col width="13" /> <col width="16" /> <col width="6" /> <col width="9" /> <col width="10" /> </colgroup> <colgroup> <col width="4367" /> <col width="16" /> </colgroup> <colgroup> <col width="19" /> <col width="4361" /> <col width="4365" /> <col width="4369" /> <col width="32" /> <col width="1" /> <col width="29" /> <col width="21" /> <col width="13" /> <col width="4367" /> <col width="21" /> <col width="4367" /> <col width="4362" /> <col width="25" /> </colgroup> <colgroup> <col width="14" /> <col width="1" /> </colgroup> <colgroup> <col width="32" /> </colgroup>
+      <tbody>
+      <tr>
+        <td colspan="14" valign="top" width="285">&nbsp;
+          <h1 class="western" lang="es-ES" align="left"><span style="font-size: 300%;"><strong><%= @escrito.fuero %></strong></span><a></a></h1>
+        </td>
+
+          <td colspan="12" valign="bottom" width="254">
+              <h1 class="western" lang="es-ES" align="center"><span style="font-size: small;"><strong>Fecha de recepci&oacute;n en Ofic./Deleg. o Juzgado de Paz</strong></span></h1>
+          </td>
+      </tr>
+      <tr>
+          <td colspan="3" valign="top" width="81" height="106">
+              <p class="western" lang="es-ES" align="center">&nbsp;</p>
+          </td>
+          <td colspan="16" width="304">
+              <p class="western" lang="es-ES" align="center"><span style="font-size: large;"><strong>PODER JUDICIAL PROVINCIA DE BUENOS AIRES</strong></span></p>
+              <p class="western" lang="es-ES" align="center"><span style="font-size: large;"><strong>CEDULA DE NOTIFICACION</strong></span></p>
+          </td>
+          <td colspan="7" width="143">
+              <p class="western" lang="es-ES" align="center">&nbsp;</p>
+          </td>
+      </tr>
+      <tr>
+          <td colspan="3" width="81" height="43">
+              <p class="western" lang="es-ES" align="left">ORGANO:</p>
+          </td>
+          <td colspan="16" width="304">
+              <p class="western" lang="es-ES" align="left">&nbsp;<a></a><%= @escrito.expediente.juzgado %></p>
+          </td>
+          <td colspan="7" valign="bottom" width="143">
+              <p class="western" lang="es-ES" align="center"><span style="font-size: small;">Sello del &Oacute;rgano</span></p>
+          </td>
+      </tr>
+      <tr>
+          <td colspan="3" width="81">
+              <p class="western" lang="es-ES" align="left">NOMBRE:</p>
+          </td>
+          <td colspan="23" width="457">
+              <p class="western" lang="es-ES" align="left">&nbsp;<a></a><%= @escrito.nombre %></p>
+          </td>
+      </tr>
+      <tr>
+          <td colspan="2" width="58">
+              <p class="western" lang="es-ES" align="left">CALLE:</p>
+          </td>
+          <td colspan="14" width="266">
+              <p class="western" lang="es-ES" align="left">&nbsp;<a></a><%= @escrito.calle %></p>
+          </td>
+          <td colspan="2" width="44">
+              <p class="western" lang="es-ES" align="left">NRO:</p>
+          </td>
+          <td colspan="8" width="151">
+              <p class="western" lang="es-ES" align="left">&nbsp;<a></a><%= @escrito.nro %></p>
+          </td>
+      </tr>
+      <tr>
+          <td colspan="6" width="142">
+              <p class="western" lang="es-ES" align="left">PISO/DEPTO./UNID.</p>
+          </td>
+          <td colspan="4" width="74">
+              <p class="western" lang="es-ES" align="left">&nbsp;<a></a><%= @escrito.piso %></p>
+          </td>
+          <td colspan="8" width="152">
+              <p class="western" lang="es-ES" align="left"><span style="font-size: small;">LOCALIDAD/PARTIDO:</span></p>
+          </td>
+          <td colspan="8" width="151">
+              <p class="western" lang="es-ES" align="left">&nbsp;<a></a><%= @escrito.localidad %></p>
+          </td>
+      </tr>
+      <tr>
+          <td colspan="26" valign="top" width="549">
+              <p class="western" lang="es-ES" align="left">TIPO DE DOMICILIO: (marcar lo que corresponda)</p>
+          </td>
+      </tr>
+      <tr>
+          <td colspan="5" width="123" height="21">
+              <p class="western" lang="es-ES" align="left">DENUNCIADO</p>
+          </td>
+          <td colspan="2" width="29">
+              <p class="western" lang="es-ES" align="left">&nbsp;</p>
+          </td>
+          <td colspan="2" width="24">
+              <p class="western" lang="es-ES" align="left"><a></a>&nbsp;
+                <%= 'X' if @escrito.tipo_domicilio == 'DENUNCIADO' %>
+              </p>
+          </td>
+          <td colspan="4" width="36">
+              <p class="western" lang="es-ES" align="left">&nbsp;</p>
+          </td>
+          <td colspan="7" width="174">
+              <p class="western" lang="es-ES" align="left">CONSTITUIDO</p>
+          </td>
+          <td colspan="3" width="36">
+              <p class="western" lang="es-ES" align="left">&nbsp;</p>
+          </td>
+          <td colspan="2" width="25">
+              <p class="western" lang="es-ES" align="left">&nbsp;<a></a>
+                <%= 'X' if @escrito.tipo_domicilio == 'CONSTITUIDO' %>
+              </p>
+          </td>
+          <td width="32">
+              <p class="western" lang="es-ES" align="left">&nbsp;</p>
+          </td>
+      </tr>
+      <tr>
+          <td colspan="26" valign="top" width="549" height="43">
+              <p class="western" lang="es-ES" align="left">CAR&Aacute;CTER: (marcar lo que corresponda)</p>
+          </td>
+      </tr>
+      <tr>
+          <td colspan="5" width="123" height="15">
+              <p class="western" lang="es-ES" align="left">URGENTE</p>
+          </td>
+          <td colspan="2" width="29">
+              <p class="western" lang="es-ES" align="left">&nbsp;</p>
+          </td>
+          <td colspan="2" width="24">
+              <p class="western" lang="es-ES" align="left"><a></a>&nbsp;
+                <%= 'X' if @escrito.caracter == 'URGENTE' %>
+              </p>
+          </td>
+          <td colspan="4" width="36">
+              <p class="western" lang="es-ES" align="left">&nbsp;</p>
+          </td>
+          <td colspan="9" width="185">
+              <p class="western" lang="es-ES" align="left"><span style="font-size: xx-small;">Y/O HABILITACION DE DIA Y HORA</span></p>
+          </td>
+          <td width="25">
+              <p class="western" lang="es-ES" align="left">&nbsp;</p>
+          </td>
+          <td colspan="2" width="25">
+              <p class="western" lang="es-ES" align="left"><a></a>&nbsp;
+                <%= 'X' if @escrito.caracter == 'NO URGENTE' %>
+              </p>
+          </td>
+          <td width="32">
+              <p class="western" lang="es-ES" align="left">&nbsp;</p>
+          </td>
+      </tr>
+      <tr>
+          <td colspan="11" width="227">
+              <p class="western" lang="es-ES" align="left">OBSERVACIONES ESPECIALES:</p>
+          </td>
+          <td colspan="15" width="312">
+              <p class="western" lang="es-ES" align="left">&nbsp;<a></a>
+                <%= @escrito.observaciones %>
+              </p>
+          </td>
+      </tr>
+      <tr>
+          <td colspan="26" valign="top" width="549">
+              <p class="western" lang="es-ES" align="left">(Insan&iacute;a art. 620 CPCC &ndash; Traslado de demanda - Art.94 CPCC- Art. 524 CPCC - Bajo responsabilidad de la parte)</p>
+          </td>
+      </tr>
+      </tbody>
+      <tbody>
+      <tr valign="bottom">
+          <td width="45" height="29">
+              <p class="western" lang="es-ES" align="left">&nbsp;</p>
+          </td>
+          <td colspan="3" width="53">
+              <p class="western" lang="es-ES" align="left">&nbsp;</p>
+          </td>
+          <td colspan="4" width="53">
+              <p class="western" lang="es-ES" align="left">&nbsp;</p>
+          </td>
+          <td colspan="4" width="53">
+              <p class="western" lang="es-ES" align="left">&nbsp;</p>
+          </td>
+          <td colspan="3" width="53">
+              <p class="western" lang="es-ES" align="left">&nbsp;</p>
+          </td>
+          <td colspan="11" width="244">
+              <p class="western" lang="es-ES" align="center"><span style="font-family: Arial, serif;"><span style="font-size: xx-small;">(testar lo que no corresponda)</span></span></p>
+          </td>
+      </tr>
+      <tr valign="bottom">
+          <td width="45" height="7">
+              <p class="western" lang="es-ES" align="left">&nbsp;</p>
+          </td>
+          <td colspan="3" width="53">
+              <p class="western" lang="es-ES" align="left">&nbsp;</p>
+          </td>
+          <td colspan="4" width="53">
+              <p class="western" lang="es-ES" align="left">&nbsp;</p>
+          </td>
+          <td colspan="4" width="53">
+              <p class="western" lang="es-ES" align="left">&nbsp;</p>
+          </td>
+          <td colspan="3" width="53">
+              <p class="western" lang="es-ES" align="left">&nbsp;</p>
+          </td>
+          <td colspan="2" width="59">
+              <p class="western" lang="es-ES" align="left">&nbsp;</p>
+          </td>
+          <td colspan="4" width="59">
+              <p class="western" lang="es-ES" align="center"><span style="font-family: Arial, serif;"><span style="font-size: xx-small;">SI/NO copias</span></span></p>
+          </td>
+          <td colspan="3" width="52">
+              <p class="western" lang="es-ES" align="center"><span style="font-family: Arial, serif;"><span style="font-size: xx-small;">SI/NO</span></span></p>
+          </td>
+          <td colspan="2" width="42">
+              <p class="western" lang="es-ES" align="center"><span style="font-family: Arial, serif;"><span style="font-size: xx-small;">SI/NO</span></span></p>
+          </td>
+      </tr>
+      <tr>
+          <td valign="bottom" width="45" height="6">
+              <p class="western" lang="es-ES" align="left">&nbsp;</p>
+          </td>
+          <td colspan="3" valign="bottom" width="53">
+              <p class="western" lang="es-ES" align="left">&nbsp;</p>
+          </td>
+          <td colspan="4" valign="bottom" width="53">
+              <p class="western" lang="es-ES" align="left">&nbsp;</p>
+          </td>
+          <td colspan="4" valign="bottom" width="53">
+              <p class="western" lang="es-ES" align="left">&nbsp;</p>
+          </td>
+          <td colspan="3" valign="bottom" width="53">
+              <p class="western" lang="es-ES" align="left">&nbsp;</p>
+          </td>
+          <td colspan="2" valign="bottom" width="59">
+              <p class="western" lang="es-ES" align="center">&nbsp;</p>
+          </td>
+          <td colspan="4" width="59">
+              <p class="western" lang="es-ES" align="left">&nbsp;</p>
+          </td>
+          <td colspan="3" valign="bottom" width="52">
+              <p class="western" lang="es-ES" align="left">&nbsp;</p>
+          </td>
+          <td colspan="2" valign="bottom" width="42">
+              <p class="western" lang="es-ES" align="left">&nbsp;</p>
+          </td>
+      </tr>
+      <tr valign="bottom">
+          <td width="45" height="39">
+              <p class="western" lang="es-ES" align="center"><span style="font-family: Arial, serif;"><span style="font-size: xx-small;">N&ordm; de orden</span></span></p>
+          </td>
+          <td colspan="3" width="53">
+              <p class="western" lang="es-ES" align="center"><span style="font-family: Arial, serif;"><span style="font-size: xx-small;">Expte. N&ordm;</span></span></p>
+          </td>
+          <td colspan="4" width="53">
+              <p class="western" lang="es-ES" align="center"><span style="font-family: Arial, serif;"><span style="font-size: xx-small;">ZONA</span></span></p>
+          </td>
+          <td colspan="4" width="53">
+              <p class="western" lang="es-ES" align="center"><span style="font-family: Arial, serif;"><span style="font-size: xx-small;">FUERO</span></span></p>
+          </td>
+          <td colspan="3" width="53">
+              <p class="western" lang="es-ES" align="center"><span style="font-family: Arial, serif;"><span style="font-size: xx-small;">N&ordm; ORG.</span></span></p>
+          </td>
+          <td colspan="2" width="59">
+              <p class="western" lang="es-ES" align="center"><span style="font-family: Arial, serif;"><span style="font-size: xx-small;">DEP. JUD.</span></span></p>
+          </td>
+          <td colspan="4" width="59">
+              <p class="western" lang="es-ES" align="left"><span style="font-family: Arial, serif;"><span style="font-size: xx-small;">En fs.</span></span></p>
+          </td>
+          <td colspan="3" width="52">
+              <p class="western" lang="es-ES" align="center"><span style="font-family: Arial, serif;"><span style="font-size: xx-small;">PERSONAL</span></span></p>
+          </td>
+          <td colspan="2" width="42">
+              <p class="western" lang="es-ES" align="center">&nbsp;</p>
+          </td>
+      </tr>
+      </tbody>
+      <tbody>
+      <tr>
+          <td colspan="26" width="549">
+              <p class="western" lang="es-ES" align="left">NOTIFICO a Ud. que en el expediente caratulado:</p>
+          </td>
+      </tr>
+      <tr>
+          <td colspan="26" valign="top" width="549">
+              <p class="western" lang="es-ES" align="left">&nbsp;</p>
+          </td>
+      </tr>
+      </tbody>
+  </table>
+  <p class="western" lang="es-ES" style="text-align: center;" align="left">&nbsp;</p>
+  <table style="margin-left: auto; margin-right: auto;" width="559" cellspacing="0" cellpadding="7">
+      <tbody>
+      <tr>
+          <td colspan="2" valign="top" width="545">
+              <p class="western" lang="es-ES" align="left">que tramita por ante este &oacute;rgano, se ha resuelto:</p>
+          </td>
+      </tr>
+      <tr>
+          <td colspan="2" valign="top" width="545" height="175">
+              <p class="western" lang="es-ES" align="left">&nbsp;</p>
+          </td>
+      </tr>
+      <tr>
+          <td valign="top" width="66">
+              <p class="western" lang="es-ES" align="left">Copias:</p>
+          </td>
+          <td width="465">
+              <p class="western" lang="es-ES" align="left">&nbsp;</p>
+          </td>
+      </tr>
+      <tr>
+          <td colspan="2" valign="top" width="545">
+              <p class="western" lang="es-ES" align="left">QUEDA UD. DEBIDAMENTE NOTIFICADO.</p>
+          </td>
+      </tr>
+      </tbody>
+  </table>
+  <p class="western" lang="es-ES" style="text-align: center;" align="left">&nbsp;</p>
+  <p class="western" lang="es-ES" style="text-align: center;" align="right">, de de .</p>
+  <table style="margin-left: auto; margin-right: auto;" width="555" cellspacing="0" cellpadding="7">
+      <tbody>
+      <tr>
+          <td valign="top" width="541" height="3">
+              <p class="western" lang="es-ES" align="left">Pase para su diligenciamiento a la Oficina y/o Juzgado de Paz</p>
+          </td>
+      </tr>
+      <tr>
+          <td valign="top" width="541" height="3">
+              <p class="western" lang="es-ES" align="left">&nbsp;</p>
+          </td>
+      </tr>
+      </tbody>
+  </table>
+  <p class="western" lang="es-ES" style="text-align: center;" align="right">&nbsp;</p>
+  <table style="margin-left: auto; margin-right: auto;" width="559" cellspacing="0" cellpadding="7">
+      <tbody>
+      <tr valign="top">
+          <td width="295" height="43">
+              <p class="western" lang="es-ES" align="left">&nbsp;</p>
+          </td>
+          <td width="236">
+              <p class="western" lang="es-ES" align="left">&nbsp;</p>
+          </td>
+      </tr>
+      <tr>
+          <td valign="top" width="295">
+              <p class="western" lang="es-ES" align="left">&nbsp;</p>
+          </td>
+          <td width="236">
+              <p class="western" lang="es-ES" align="center">Firma y sello</p>
+          </td>
+      </tr>
+      </tbody>
+  </table>
+  <p class="western" lang="es-ES" style="text-align: center;" align="left">&nbsp;</p>
+  <p class="western" lang="es-ES" style="text-align: center;" align="justify">&nbsp;</p>
+  <p class="western" lang="es-ES" style="text-align: center;" align="justify">EN LA CIUDAD DE A LOS <br /> DIAS DEL MES DE DE 20 , SIENDO LAS<br /> HORAS, ME CONSTITU&Iacute; EN EL DOMICILIO <br /> <br /> REQUIRIENDO LA PRESENCIA DE <br /> Y RESPONDIENDO A MIS LLAMADOS UNA PERSONA QUE DIJO SER <br /> Y AQUEL VIVE ALLI PROCEDI A NOTIFICARLE, <br /> HACIENDOLE ENTREGA DE DUPLICADO DE IGUAL TENOR A LA PRESENTE COPIA PREVIA LECTURA <br /> Y RECIBIENDO ELLO FIRMO.-</p>
+  <p class="western" lang="es-ES" style="text-align: center;" align="left">&nbsp;</p>
+  <p class="western" lang="es-ES" style="text-align: center;" align="left">&nbsp;</p>
+  <table style="margin-left: auto; margin-right: auto;" width="559" cellspacing="0" cellpadding="7">
+      <tbody>
+      <tr>
+          <td valign="top" width="295">
+              <p class="western" lang="es-ES" align="left">&nbsp;</p>
+          </td>
+          <td width="236">
+              <p class="western" lang="es-ES" align="center">Firma y sello</p>
+          </td>
+      </tr>
+      </tbody>
+  </table>
+  <p class="western" lang="es-ES" style="text-align: center;" align="left">&nbsp;</p>
+</center>

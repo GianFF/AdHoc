@@ -212,7 +212,7 @@ describe ClientesController do
 
       context 'Cuando se busca por una letra' do
 
-        subject { get :index, params: { query: fabrica_de_objetos.un_nombre_para_un_abogado.chars.last} }
+        subject { get :index, params: { query: fabrica_de_objetos.un_nombre_para_un_cliente.chars.last} }
 
         it 'te redirecciona a la vista del cliente' do
           subject

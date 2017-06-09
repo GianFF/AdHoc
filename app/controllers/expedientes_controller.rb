@@ -4,8 +4,9 @@ class ExpedientesController < ApplicationController
   def show
     begin
       buscar_expediente_escritos_y_cliente
-    rescue HackExcepcion => excepcion
-      rescue_hack_exception(excepcion)
+    rescue AdHocHackExcepcion => excepcion
+      mostrar_errores(excepcion, mantener_error: true)
+      redirect_back(fallback_location: root_path)
     end
   end
 
@@ -18,8 +19,9 @@ class ExpedientesController < ApplicationController
   def edit
     begin
       buscar_expediente_escritos_y_cliente
-    rescue HackExcepcion => excepcion
-      rescue_hack_exception(excepcion)
+    rescue AdHocHackExcepcion => excepcion
+      mostrar_errores(excepcion, mantener_error: true)
+      redirect_back(fallback_location: root_path)
     end
   end
 
@@ -41,15 +43,16 @@ class ExpedientesController < ApplicationController
     begin
       @expediente = @ad_hoc.editar_expediente!(params[:id], validar_parametros_expediente, abogado_actual)
       @cliente = @ad_hoc.buscar_cliente_por_id!(validar_parametros_cliente, abogado_actual)
-      @escritos = @expediente.escritos || []
+      buscar_escritos
       flash.now[:success] = @ad_hoc.mensaje_de_confirmacion_para_la_correcta_edicion_de_un_expediente
       render :show
     rescue UIExcepcion => excepcion
       mostrar_errores(excepcion)
       buscar_expediente_escritos_y_cliente
       render :edit, status: :bad_request
-    rescue HackExcepcion => excepcion
-      rescue_hack_exception(excepcion)
+    rescue AdHocHackExcepcion => excepcion
+      mostrar_errores(excepcion, mantener_error: true)
+      redirect_back(fallback_location: root_path)
     end
   end
 
@@ -58,8 +61,9 @@ class ExpedientesController < ApplicationController
       @ad_hoc.eliminar_expediente!(params[:id], abogado_actual)
       flash.now[:success] = @ad_hoc.mensaje_de_confirmacion_para_la_correcta_eliminacion_de_un_expediente
       redirect_to cliente_url(validar_parametros_cliente)
-    rescue HackExcepcion => excepcion
-      rescue_hack_exception(excepcion)
+    rescue AdHocHackExcepcion => excepcion
+      mostrar_errores(excepcion, mantener_error: true)
+      redirect_back(fallback_location: root_path)
     end
   end
 
@@ -67,8 +71,9 @@ class ExpedientesController < ApplicationController
     begin
       buscar_expediente_escritos_y_cliente
       @ad_hoc.validar_que_no_haya_sido_numerado(@expediente)
-    rescue HackExcepcion => excepcion
-      rescue_hack_exception(excepcion)
+    rescue AdHocHackExcepcion => excepcion
+      mostrar_errores(excepcion, mantener_error: true)
+      redirect_back(fallback_location: root_path)
     end
   end
 
@@ -82,8 +87,9 @@ class ExpedientesController < ApplicationController
       mostrar_errores(excepcion)
       buscar_expediente_escritos_y_cliente
       render :numerar
-    rescue HackExcepcion => excepcion
-      rescue_hack_exception(excepcion)
+    rescue AdHocHackExcepcion => excepcion
+      mostrar_errores(excepcion, mantener_error: true)
+      redirect_back(fallback_location: root_path)
     end
   end
 
@@ -95,8 +101,12 @@ class ExpedientesController < ApplicationController
   end
 
   def buscar_escritos_y_cliente
-    @escritos = @expediente.escritos || []
+    buscar_escritos
     @cliente = @expediente.cliente
+  end
+
+  def buscar_escritos
+    @escritos = @expediente.escritos
   end
 
   def validar_parametros_expediente

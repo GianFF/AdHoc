@@ -35,7 +35,7 @@ describe Encabezado do
 
   let(:expediente){ fabrica_de_objetos.crear_expediente(cliente.id) }
 
-  let(:encabezado){ fabrica_de_objetos.crear_encabezado(abogado, expediente, cliente) } # TODO: mover al factory
+  let(:encabezado){ fabrica_de_objetos.encabezado_para_demanda(abogado, expediente, cliente) }
 
   context 'Se compone de' do
 
@@ -87,14 +87,31 @@ describe Encabezado do
 
   context 'Un encabezado puede ser para patrocinante' do
 
-    it 'cuando el expediente no fue numerado tiene un cuerpo' do
-      expect(encabezado.cuerpo).to eq "#{cliente.nombre_completo} por mi propio derecho, en compañia de mi letrada patrocinante, la #{abogado.presentacion}, abogada inscripta al #{abogado.matricula} del #{abogado.nombre_del_colegio_de_abogados} cuit e IIBB #{abogado.cuit} con domicilio procesal en calle #{abogado.domicilio_procesal} y electronico en #{abogado.domicilio_electronico}, en el marco del expediente caratulado #{expediente.caratula_para_el_encabezado_automatico} en tramite ante <strong><span style='color: #ff0000;'>[JUZGADO O TRIBUNAL NO HA SIDO DEFINIDO]</span></strong> ante S.S. me presento y respetuosamente expongo:"
+    context 'Cuando es para una Demanda no tiene los datos del expediente' do
+
+      it 'cuando el expediente no fue numerado tiene un cuerpo' do
+        expect(encabezado.valor).to eq "#{cliente.nombre_completo} por mi propio derecho, en compañia de mi letrada patrocinante, la #{abogado.presentacion}, abogada inscripta al #{abogado.matricula} del #{abogado.nombre_del_colegio_de_abogados} cuit e IIBB #{abogado.cuit} con domicilio procesal en calle #{abogado.domicilio_procesal} y electronico en #{abogado.domicilio_electronico} ante S.S. me presento y respetuosamente expongo:"
+      end
+
+      it 'cuando el expediente fue numerado tiene otro cuerpo' do
+        numerar_expediente
+
+        expect(encabezado.valor).to eq "#{cliente.nombre_completo} por mi propio derecho, en compañia de mi letrada patrocinante, la #{abogado.presentacion}, abogada inscripta al #{abogado.matricula} del #{abogado.nombre_del_colegio_de_abogados} cuit e IIBB #{abogado.cuit} con domicilio procesal en calle #{abogado.domicilio_procesal} y electronico en #{abogado.domicilio_electronico} ante S.S. me presento y respetuosamente expongo:"
+      end
     end
 
-    it 'cuando el expediente fue numerado tiene otro cuerpo' do
-      numerar_expediente
+    context 'Cuando es para un Mero Tramite tiene los datos del expediente' do
+      let(:encabezado){ fabrica_de_objetos.encabezado_con_datos_del_expediente(abogado, expediente, cliente) }
 
-      expect(encabezado.cuerpo).to eq "#{cliente.nombre_completo} por mi propio derecho, en compañia de mi letrada patrocinante, la #{abogado.presentacion}, abogada inscripta al #{abogado.matricula} del #{abogado.nombre_del_colegio_de_abogados} cuit e IIBB #{abogado.cuit} con domicilio procesal en calle #{abogado.domicilio_procesal} y electronico en #{abogado.domicilio_electronico}, en el marco del expediente caratulado #{expediente.caratula_para_el_encabezado_automatico} en tramite ante #{expediente.juzgado} ante S.S. me presento y respetuosamente expongo:"
+      it 'cuando el expediente no fue numerado tiene un cuerpo' do
+        expect(encabezado.valor).to eq "#{cliente.nombre_completo} por mi propio derecho, en compañia de mi letrada patrocinante, la #{abogado.presentacion}, abogada inscripta al #{abogado.matricula} del #{abogado.nombre_del_colegio_de_abogados} cuit e IIBB #{abogado.cuit} con domicilio procesal en calle #{abogado.domicilio_procesal} y electronico en #{abogado.domicilio_electronico}, en el marco del expediente caratulado #{expediente.caratula_para_el_encabezado_automatico} en tramite ante <strong><span style='color: #ff0000;'>[JUZGADO O TRIBUNAL NO HA SIDO DEFINIDO]</span></strong> ante S.S. me presento y respetuosamente expongo:"
+      end
+
+      it 'cuando el expediente fue numerado tiene otro cuerpo' do
+        numerar_expediente
+
+        expect(encabezado.valor).to eq "#{cliente.nombre_completo} por mi propio derecho, en compañia de mi letrada patrocinante, la #{abogado.presentacion}, abogada inscripta al #{abogado.matricula} del #{abogado.nombre_del_colegio_de_abogados} cuit e IIBB #{abogado.cuit} con domicilio procesal en calle #{abogado.domicilio_procesal} y electronico en #{abogado.domicilio_electronico}, en el marco del expediente caratulado #{expediente.caratula_para_el_encabezado_automatico} en tramite ante #{expediente.juzgado} ante S.S. me presento y respetuosamente expongo:"
+      end
     end
   end
 end

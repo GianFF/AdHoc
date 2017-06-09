@@ -1,9 +1,9 @@
 class DeviseCreateAbogados < ActiveRecord::Migration[5.0]
   def change
     create_table :abogados do |t|
-      ## Database authenticatable
-      t.string :email,              null: false, default: ''
-      t.string :encrypted_password, null: false, default: ''
+        ## Database authenticatable
+      t.string :email
+      t.string :encrypted_password
       t.string :nombre
       t.string :apellido
       t.string :sexo
@@ -42,7 +42,7 @@ class DeviseCreateAbogados < ActiveRecord::Migration[5.0]
       t.timestamps null: false
     end
 
-    add_index :abogados, :email,                unique: true
+    add_index :abogados, :email
     add_index :abogados, :reset_password_token, unique: true
     # add_index :abogados, :confirmation_token,   unique: true
     # add_index :abogados, :unlock_token,         unique: true

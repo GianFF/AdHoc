@@ -55,4 +55,6 @@ Rails.application.configure do
   config.file_watcher = ActiveSupport::EventedFileUpdateChecker
 
   config.react.variant = :development
+
+  config.autoload_paths += Dir[Rails.root.join('app', 'models', '*/')]
 end

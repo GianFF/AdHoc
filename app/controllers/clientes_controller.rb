@@ -17,8 +17,9 @@ class ClientesController < ApplicationController
     begin
       @cliente = @ad_hoc.buscar_cliente_por_id!(params[:id], abogado_actual.id)
       @expedientes = @cliente.expedientes
-    rescue HackExcepcion => excepcion
-      rescue_hack_exception(excepcion)
+    rescue AdHocHackExcepcion => excepcion
+      mostrar_errores(excepcion, mantener_error: true)
+      redirect_back(fallback_location: root_path)
     end
   end
 
@@ -29,8 +30,9 @@ class ClientesController < ApplicationController
   def edit
     begin
       @cliente = @ad_hoc.buscar_cliente_por_id!(cliente_id, abogado_actual.id)
-    rescue HackExcepcion => excepcion
-      rescue_hack_exception(excepcion)
+    rescue AdHocHackExcepcion => excepcion
+      mostrar_errores(excepcion, mantener_error: true)
+      redirect_back(fallback_location: root_path)
     end
   end
 
@@ -57,8 +59,9 @@ class ClientesController < ApplicationController
       mostrar_errores(excepcion)
       @cliente = @ad_hoc.buscar_cliente_por_id!(cliente_id, abogado_actual.id)
       render :edit
-    rescue HackExcepcion => excepcion
-      rescue_hack_exception(excepcion)
+    rescue AdHocHackExcepcion => excepcion
+      mostrar_errores(excepcion, mantener_error: true)
+      redirect_back(fallback_location: root_path)
     end
   end
 
@@ -68,8 +71,9 @@ class ClientesController < ApplicationController
       flash.now[:success] = @ad_hoc.mensaje_de_confirmacion_para_correcta_eliminacion_de_un_cliente
       @cliente = nil
       render :new
-    rescue HackExcepcion => excepcion
-      rescue_hack_exception(excepcion)
+    rescue AdHocHackExcepcion => excepcion
+      mostrar_errores(excepcion, mantener_error: true)
+      redirect_back(fallback_location: root_path)
     end
   end
 
