@@ -222,10 +222,6 @@ class AdHocAplicacion
   end
 
 
-  def mensaje_de_error_para_cliente_inexistente
-    'Cliente inexistente'
-  end
-
   def mensaje_de_error_para_busqueda_de_cliente_fallida(nombre_de_cliente)
     "No se encontraron clientes con nombre: #{nombre_de_cliente}"
   end
@@ -238,12 +234,20 @@ class AdHocAplicacion
     'Debes completar tu contraseña actual para poder editar tu perfil'
   end
 
+  def mensaje_de_error_para_cliente_inexistente
+    'Cliente inexistente'
+  end
+
   def mensaje_de_error_para_expediente_inexistente
     'Expediente inexistente'
   end
 
   def mensaje_de_error_para_escrito_invalido
     'Escrito inexistente'
+  end
+
+  def mensaje_de_error_para_adjunto_invalido
+    'Adjunto inexsitente'
   end
 
   def validar_que_no_haya_sido_numerado(expediente)

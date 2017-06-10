@@ -1,0 +1,13 @@
+<ul class="nav nav-tabs">
+  <li role="presentation" class="active">
+    <a>Nuevo Adjunto</a>
+  </li>
+  <% @expediente.adjuntos.each do |adjunto| %>
+      <li role="presentation" >
+        <%= link_to adjunto.titulo, expediente_adjunto_path(@expediente.id, adjunto.id) %>
+      </li>
+  <% end %>
+</ul>
+<%= render 'shared/tabs_contenedor' do %>
+    <%= yield %>
+<% end %>

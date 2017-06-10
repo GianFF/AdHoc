@@ -22,8 +22,6 @@ describe ClientesController do
 
   let(:ad_hoc){ AdHocAplicacion.new }
 
-  let(:asertar){ Asertar.new }
-
   context 'Creacion de clientes' do
     subject { post :create, params: parametros }
 

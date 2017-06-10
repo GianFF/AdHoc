@@ -4,6 +4,7 @@ class Expediente < ApplicationRecord
   has_many :contestacion_de_demandas
   has_many :mero_tramites
   has_many :notificacions
+  has_many :adjuntos
 
   def self.mensaje_de_error_para_campo_vacio
     'no puede estar en blanco'

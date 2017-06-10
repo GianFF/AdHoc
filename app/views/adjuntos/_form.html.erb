@@ -1,0 +1,53 @@
+<%= render 'tabs' do %>
+  <%= form_for [@expediente, @adjunto], html: {class: 'form-horizontal'} do |f| %>
+    <div class="field form-group">
+      <%= f.label :titulo, class: 'col-sm-2 control-label' %>*
+      <div class="col-sm-8">
+        <%= f.text_field :titulo, class: 'form-control', autofocus: true %>
+      </div>
+    </div>
+    <% if @adjunto.archivo_adjunto? %>
+      <% if @adjunto.archivo_adjunto.file.extension.downcase == 'pdf' %>
+        <iframe src=<%= @adjunto.archivo_adjunto.url %> width="600" height="780" style="border: none;"> </iframe>
+      <% else %>
+        <%= image_tag(@adjunto.archivo_adjunto.url)%>
+      <% end %>
+    <% else %>
+      <div class="field form-group">
+        <%= f.label :archivo_adjunto, class: 'col-sm-2 control-label' %>*
+        <div class="col-sm-8">
+          <%= f.file_field :archivo_adjunto%>
+        </div>
+      </div>
+    <% end %>
+    <div class="actions form-group cliente__edit-botones">
+      <div class="col-sm-4">
+        <%= f.submit 'Guardar', {class: 'btn btn-success cliente__form-guardar'}%>
+      </div>
+    </div>
+    <% unless @adjunto.archivo_adjunto? %>
+      <%= link_to 'Cancelar', cliente_expediente_path(@cliente.id, @expediente.id), method: :get,
+                  class: 'btn btn-warning notificacion__boton-cancelar' %>
+    <% else %>
+      <%= link_to 'Borrar',
+                  [@expediente, @adjunto],
+                  method: :delete,
+                  class: 'btn btn-danger notificacion__boton-cancelar',
+                  data: {
+                      confirm: '¿Seguro que quiere eliminar este adjunto?',
+                      'confirm-button-text': 'Seguro',
+                      'confirm-button-color': '#5cb85c',
+                      'cancel-button-text': 'Cancelar',
+                      'cancel-button-color': '#ec971f',
+                      'sweet-alert-type': 'warning',
+                      text: 'Esta acción no se podra revertir.'
+                  }
+      %>
+    <% end %>
+  <% end %>
+<% end %>
+<%= render 'shared/tabs_contenedor' do %>
+<%= render 'escritos/tabs' %>
+<% end %>
+<%= render 'escritos/tab_expediente' %>
+<%= render 'shared/tab_cliente' %>
