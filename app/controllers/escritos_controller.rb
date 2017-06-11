@@ -16,7 +16,7 @@ class EscritosController < ApplicationController
   end
 
   def create
-      begin
+    begin
       yield
       buscar_expediente_y_cliente_para_escrito
       flash.now[:success] = @ad_hoc.mensaje_de_confirmacion_para_la_correcta_creacion_de_un_escrito
@@ -52,6 +52,22 @@ class EscritosController < ApplicationController
       mostrar_errores(excepcion, mantener_error: true)
       redirect_back(fallback_location: root_path)
     end
+  end
+
+  def presentar
+    begin
+      @escrito = @ad_hoc.presentar_escrito!(params[:id], abogado_actual)
+      buscar_expediente_y_cliente_para_escrito
+      flash.now[:success] = @ad_hoc.mensaje_de_confirmacion_para_la_correcta_presentacion_de_un_escrito
+    rescue AdHocUIExcepcion => excepcion
+      mostrar_errores(excepcion)
+      show_escrito_expediente_y_cliente
+    rescue AdHocHackExcepcion => excepcion
+      mostrar_errores(excepcion, mantener_error: true)
+      redirect_back(fallback_location: root_path)
+    end
+
+    render :show
   end
 
   private

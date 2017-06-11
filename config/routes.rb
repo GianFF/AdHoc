@@ -13,7 +13,14 @@ Rails.application.routes.draw do
     resources :mero_tramites
     resources :notificacions
     resources :adjuntos
+    put 'presentar/:id', to: 'demandas#presentar', as: :presentar_demanda
+    put 'presentar/:id', to: 'contestacion_de_demandas#presentar', as: :presentar_contestacion_de_demanda
+    put 'presentar/:id', to: 'mero_tramites#presentar', as: :presentar_mero_tramite
+    put 'presentar/:id', to: 'notificacions#presentar', as: :presentar_notificacion
   end
+
+  # You may have defined two routes with the same name using the `:as` option, or you may be overriding a route already
+  # defined by a resource with the same naming. For the latter, you can restrict the routes created with `resources` as explained here:
 
   root 'clientes#new'
 end

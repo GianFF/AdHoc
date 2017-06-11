@@ -155,4 +155,50 @@ describe DemandasController, type: :controller do
       expect(Demanda.all.count).to eq 0
     end
   end
+
+  context 'En la presentacion de un escrito' do
+    let(:demanda){fabrica_de_objetos.crear_demanda(expediente.id)}
+
+    subject {put :presentar, params: { id: demanda.id, expediente_id: expediente.id }}
+
+    it 'se puede presentar un escrito' do
+      subject
+
+      asertar_que_se_muestra_un_mensaje_de_confirmacion(ad_hoc.mensaje_de_confirmacion_para_la_correcta_presentacion_de_un_escrito)
+      asertar_que_el_template_es(:show)
+      asertar_que_la_respuesta_tiene_estado(response, :ok)
+    end
+
+    context 'Una vez presentado el escrito' do
+
+      it 'tiene estado presentado' do
+        subject
+        demanda.reload
+
+        expect(demanda.fue_presentado?).to be true
+      end
+
+      it 'no puede seguir editandose' do
+        subject
+
+        demanda.reload
+        put :update,
+            params: {
+                id: demanda.id,
+                demanda: {
+                    titulo: fabrica_de_objetos.otro_titulo_de_una_demanda,
+                    cuerpo: fabrica_de_objetos.otro_cuerpo_de_una_demanda
+                },
+                expediente_id: expediente.id
+            }
+
+        expect(demanda.fue_presentado?).to be true
+        expect(demanda.titulo).to eq fabrica_de_objetos.un_titulo_de_una_demanda
+        expect(demanda.cuerpo).to eq fabrica_de_objetos.un_cuerpo_de_una_demanda
+        asertar_que_se_incluye_un_mensaje_de_error(demanda.mensaje_de_error_para_escrito_presentado)
+        asertar_que_la_respuesta_tiene_estado(response, :ok)
+        asertar_que_el_template_es(:show)
+      end
+    end
+  end
 end
