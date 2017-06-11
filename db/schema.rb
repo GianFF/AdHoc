@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170605221442) do
+ActiveRecord::Schema.define(version: 20170610171959) do
 
   create_table "abogados", force: :cascade do |t|
     t.string   "email"
@@ -37,6 +37,15 @@ ActiveRecord::Schema.define(version: 20170605221442) do
     t.datetime "updated_at",                                 null: false
     t.index ["email"], name: "index_abogados_on_email"
     t.index ["reset_password_token"], name: "index_abogados_on_reset_password_token", unique: true
+  end
+
+  create_table "adjuntos", force: :cascade do |t|
+    t.text     "titulo",          null: false
+    t.string   "archivo_adjunto"
+    t.integer  "expediente_id",   null: false
+    t.datetime "created_at",      null: false
+    t.datetime "updated_at",      null: false
+    t.index ["expediente_id"], name: "index_adjuntos_on_expediente_id"
   end
 
   create_table "clientes", force: :cascade do |t|
@@ -80,15 +89,14 @@ ActiveRecord::Schema.define(version: 20170605221442) do
     t.text     "encabezado"
     t.text     "fuero"
     t.text     "fecha_recepcion"
-    t.text     "organo"
+    t.text     "caracter"
+    t.text     "observaciones"
     t.text     "nombre"
     t.text     "calle"
     t.text     "nro"
     t.text     "piso"
     t.text     "localidad"
     t.text     "tipo_domicilio"
-    t.text     "caracter"
-    t.text     "observaciones"
     t.datetime "created_at",      null: false
     t.datetime "updated_at",      null: false
     t.string   "type"

@@ -12,6 +12,7 @@ Rails.application.routes.draw do
     resources :contestacion_de_demandas
     resources :mero_tramites
     resources :notificacions
+    resources :adjuntos
   end
 
   root 'clientes#new'

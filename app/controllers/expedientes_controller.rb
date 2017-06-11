@@ -31,7 +31,7 @@ class ExpedientesController < ApplicationController
       buscar_escritos_y_cliente
       flash.now[:success] = @ad_hoc.mensaje_de_confirmacion_para_la_correcta_creacion_de_un_expediente
       render :show
-    rescue UIExcepcion => excepcion
+    rescue AdHocUIExcepcion => excepcion
       mostrar_errores(excepcion)
       @expediente = Expediente.new
       @cliente = @ad_hoc.buscar_cliente_por_id!(validar_parametros_cliente, abogado_actual)
@@ -46,7 +46,7 @@ class ExpedientesController < ApplicationController
       buscar_escritos
       flash.now[:success] = @ad_hoc.mensaje_de_confirmacion_para_la_correcta_edicion_de_un_expediente
       render :show
-    rescue UIExcepcion => excepcion
+    rescue AdHocUIExcepcion => excepcion
       mostrar_errores(excepcion)
       buscar_expediente_escritos_y_cliente
       render :edit, status: :bad_request
@@ -83,7 +83,7 @@ class ExpedientesController < ApplicationController
       buscar_escritos_y_cliente
       flash.now[:success] = @ad_hoc.mensaje_de_confirmacion_para_la_correcta_numeracion_de_un_expediente
       render :show
-    rescue UIExcepcion => excepcion
+    rescue AdHocUIExcepcion => excepcion
       mostrar_errores(excepcion)
       buscar_expediente_escritos_y_cliente
       render :numerar

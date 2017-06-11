@@ -1,6 +1,3 @@
-require_relative '../../app/aplications/ad_hoc_aplicacion'
-require_relative '../../app/errors/ad_hoc_excepcion'
-
 class ApplicationController < ActionController::Base
   attr_reader :ad_hoc
   layout 'application'

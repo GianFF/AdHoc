@@ -69,7 +69,7 @@ class AdHocAplicacion
     rescue ActiveRecord::RecordNotFound
       raise AdHocUIExcepcion.new([mensaje_de_error_para_expediente_inexistente])
     end
-    validar_que_el_expediente_pertenece_al_abogado(expediente, un_abogado)
+    validar_que_pertenece_al_abogado(expediente, un_abogado, mensaje_de_error_para_expediente_inexistente)
     expediente
   end
 
@@ -121,7 +121,7 @@ class AdHocAplicacion
     rescue ActiveRecord::RecordNotFound
       raise AdHocUIExcepcion.new([mensaje_de_error_para_escrito_invalido])
     end
-    validar_que_el_escrito_pertenece_al_abogado(escrito, un_abogado)
+    validar_que_pertenece_al_abogado(escrito, un_abogado, mensaje_de_error_para_escrito_invalido)
     escrito
   end
 
@@ -175,8 +175,37 @@ class AdHocAplicacion
     escrito.destroy
   end
 
-  def validar_que_el_escrito_pertenece_al_abogado(un_escrito, un_abogado)
-    raise AdHocHackExcepcion.new([mensaje_de_error_para_escrito_invalido]) unless un_escrito.pertenece_a? un_abogado
+  # Adjuntos
+
+  def buscar_adjunto_por_id!(adjunto_id, expediente_id, un_abogado)
+    begin
+      adjunto = Adjunto.find_by!({id: adjunto_id, expediente_id: expediente_id})
+    rescue ActiveRecord::RecordNotFound
+      raise AdHocUIExcepcion.new([mensaje_de_error_para_adjunto_invalido])
+    end
+    validar_que_pertenece_al_abogado(adjunto, un_abogado, mensaje_de_error_para_adjunto_invalido)
+    adjunto
+  end
+
+  def crear_nuevo_adjunto!(parametros_adjunto, expediente_id, abogado_actual)
+    adjunto = Adjunto.new(parametros_adjunto)
+    adjunto.expediente = buscar_expediente_por_id!(expediente_id, abogado_actual)
+    begin
+      adjunto.save!
+    rescue ActiveRecord::RecordInvalid => error
+      raise AdHocUIExcepcion.new(error.record.errors.full_messages)
+    end
+    adjunto
+  end
+
+  def editar_adjunto!(adjunto_id, expediente_id, un_abogado, parametros_adjunto)
+    adjunto = buscar_adjunto_por_id!(adjunto_id, expediente_id, un_abogado)
+    begin
+      adjunto.update!(parametros_adjunto)
+    rescue ActiveRecord::RecordInvalid => error
+      raise AdHocUIExcepcion.new(error.record.errors.full_messages)
+    end
+    adjunto
   end
 
   # Mensajes de error:
@@ -222,10 +251,6 @@ class AdHocAplicacion
   end
 
 
-  def mensaje_de_error_para_cliente_inexistente
-    'Cliente inexistente'
-  end
-
   def mensaje_de_error_para_busqueda_de_cliente_fallida(nombre_de_cliente)
     "No se encontraron clientes con nombre: #{nombre_de_cliente}"
   end
@@ -238,6 +263,10 @@ class AdHocAplicacion
     'Debes completar tu contraseña actual para poder editar tu perfil'
   end
 
+  def mensaje_de_error_para_cliente_inexistente
+    'Cliente inexistente'
+  end
+
   def mensaje_de_error_para_expediente_inexistente
     'Expediente inexistente'
   end
@@ -246,12 +275,22 @@ class AdHocAplicacion
     'Escrito inexistente'
   end
 
+  def mensaje_de_error_para_adjunto_invalido
+    'Adjunto inexsitente'
+  end
+
+  # Validaciones
+
   def validar_que_no_haya_sido_numerado(expediente)
     begin
       expediente.validar_que_el_expediente_no_haya_sido_numerado!
     rescue StandardError => excepcion
       raise AdHocHackExcepcion.new([excepcion.message])
     end
+  end
+
+  def validar_que_pertenece_al_abogado(una_cosa, un_abogado, un_mensaje_de_error)
+    raise AdHocHackExcepcion.new([un_mensaje_de_error]) unless una_cosa.pertenece_a? un_abogado
   end
 
   private
@@ -274,9 +313,5 @@ class AdHocAplicacion
     if la_contrasenia_es_blanca?(contrasenia_del_abogado)
       block.call(mensaje_de_error_para_contrasenia_no_proveida)
     end
-  end
-
-  def validar_que_el_expediente_pertenece_al_abogado(expediente, un_abogado)
-    raise AdHocHackExcepcion.new([mensaje_de_error_para_expediente_inexistente]) unless expediente.pertenece_a? un_abogado
   end
 end
