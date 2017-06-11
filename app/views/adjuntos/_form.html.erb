@@ -46,8 +46,6 @@
     <% end %>
   <% end %>
 <% end %>
-<%= render 'shared/tabs_contenedor' do %>
-<%= render 'escritos/tabs' %>
-<% end %>
-<%= render 'escritos/tab_expediente' %>
+<%= render partial: 'shared/tab_escritos' %>
+<%= render 'shared/tab_expediente' %>
 <%= render 'shared/tab_cliente' %>

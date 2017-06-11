@@ -2,13 +2,18 @@
   <li role="presentation" class="active">
     <a href="#" id="tabs__tab-activa">
       <% if @cliente &&  @cliente.nombre && @cliente.apellido %>
-          <%= @cliente.nombre_completo %>
+        <%= @cliente.nombre_completo %>
       <% else %>
-          Nuevo cliente
+        Nuevo cliente
       <% end %>
     </a>
   </li>
-  <li role="presentation" class="tab_inactiva">
+  <% (current_abogado.clientes - [@cliente] ).each do |cliente| %>
+    <li role="presentation" >
+      <%= link_to cliente.nombre_completo, cliente_path(cliente.id) %>
+    </li>
+  <% end %>
+  <li role="presentation">
     <a href="/">Nuevo cliente</a>
   </li>
 </ul>
