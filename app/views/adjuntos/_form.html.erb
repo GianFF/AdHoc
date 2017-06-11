@@ -8,9 +8,9 @@
     </div>
     <% if @adjunto.archivo_adjunto? %>
       <% if @adjunto.archivo_adjunto.file.extension.downcase == 'pdf' %>
-        <iframe src=<%= @adjunto.archivo_adjunto.url %> width="600" height="780" style="border: none;"> </iframe>
+        <iframe src=<%= @adjunto.archivo_adjunto.url %> class='form_adjunto__archivo_adjunto'> </iframe>
       <% else %>
-        <%= image_tag(@adjunto.archivo_adjunto.url)%>
+        <%= image_tag @adjunto.archivo_adjunto.url, class: 'form_adjunto__archivo_adjunto' %>
       <% end %>
     <% else %>
       <div class="field form-group">
