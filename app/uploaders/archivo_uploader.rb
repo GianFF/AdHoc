@@ -11,7 +11,19 @@ class ArchivoUploader < CarrierWave::Uploader::Base
   # Override the directory where uploaded files will be stored.
   # This is a sensible default for uploaders that are meant to be mounted:
   def store_dir
-    "uploads/#{model.class.to_s.underscore}/#{mounted_as}/#{model.id}"
+    store_dir_for(model)
+  end
+
+  def store_dir_for(model)
+    "uploads/tmp/#{model.id}"
+  end
+
+  def path_for(model)
+    "/#{store_dir_for(model)}/#{model.archivo_adjunto.file.filename}"
+  end
+
+  def complete_path_for(model)
+    "#{Rails.root.join('public', "#{store_dir_for(model)}", "#{model.archivo_adjunto.file.filename}")}"
   end
 
   # Provide a default URL as a default if there hasn't been a file uploaded:

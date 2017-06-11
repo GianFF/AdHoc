@@ -254,4 +254,18 @@ class FabricaDeObjetos
   def encabezado_con_datos_del_expediente(abogado, expediente, cliente)
     EncabezadoConDatosDelExpediente.new(abogado, expediente, cliente)
   end
+
+  #Adjuntos
+
+  def un_adjunto_para(un_expediente, archivo_adjunto, un_titulo_para_un_adjunto)
+    Adjunto.create!({titulo: un_titulo_para_un_adjunto, archivo_adjunto: archivo_adjunto, expediente_id: un_expediente.id})
+  end
+
+  def un_titulo_para_un_adjunto
+    'Adjunto 01'
+  end
+
+  def otro_titulo_para_un_adjunto
+    'otro titulo'
+  end
 end

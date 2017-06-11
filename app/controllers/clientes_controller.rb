@@ -44,7 +44,6 @@ class ClientesController < ApplicationController
       render :show
     rescue AdHocUIExcepcion => excepcion
       mostrar_errores(excepcion)
-      @cliente = nil
       render :new
     end
   end

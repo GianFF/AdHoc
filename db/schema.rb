@@ -41,7 +41,7 @@ ActiveRecord::Schema.define(version: 20170610171959) do
 
   create_table "adjuntos", force: :cascade do |t|
     t.text     "titulo",          null: false
-    t.string   "archivo_adjunto", null: false
+    t.string   "archivo_adjunto"
     t.integer  "expediente_id",   null: false
     t.datetime "created_at",      null: false
     t.datetime "updated_at",      null: false
