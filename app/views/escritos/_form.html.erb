@@ -28,11 +28,17 @@
                         text: 'Esta accion no se podra revertir.'
                     } %>
     <% end %>
-    <div class="actions form-group cliente__edit-botones">
-      <div class="col-sm-4">
-        <%= f.submit 'Guardar', {class: 'btn btn-success escrito__form-guardar'}%>
+    <% unless @escrito.fue_presentado? %>
+      <div class="actions form-group cliente__edit-botones">
+        <div class="col-sm-4">
+          <%= f.submit 'Guardar', {class: 'btn btn-success escrito__form-guardar'}%>
+        </div>
       </div>
-    </div>
+    <% end %>
+
+    <% if @escrito.id %>
+      <%= render 'boton_presentar' %>
+    <% end %>
   <% end %>
 <% end %>
 <%= render 'shared/tab_adjuntos' %>

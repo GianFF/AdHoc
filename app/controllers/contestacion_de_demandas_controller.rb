@@ -5,6 +5,12 @@ class ContestacionDeDemandasController < EscritosController
     end
   end
 
+  def presentar
+    super do
+      render :show
+    end
+  end
+
   private
 
   def new_escrito_expediente_y_cliente

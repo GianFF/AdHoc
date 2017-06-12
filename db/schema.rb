@@ -83,8 +83,9 @@ ActiveRecord::Schema.define(version: 20170610171959) do
   end
 
   create_table "escritos", force: :cascade do |t|
-    t.text     "titulo",          null: false
+    t.text     "titulo",                          null: false
     t.integer  "expediente_id"
+    t.boolean  "presentado",      default: false
     t.text     "cuerpo"
     t.text     "encabezado"
     t.text     "fuero"
@@ -97,8 +98,8 @@ ActiveRecord::Schema.define(version: 20170610171959) do
     t.text     "piso"
     t.text     "localidad"
     t.text     "tipo_domicilio"
-    t.datetime "created_at",      null: false
-    t.datetime "updated_at",      null: false
+    t.datetime "created_at",                      null: false
+    t.datetime "updated_at",                      null: false
     t.string   "type"
     t.index ["expediente_id"], name: "index_escritos_on_expediente_id"
     t.index ["type"], name: "index_escritos_on_type"

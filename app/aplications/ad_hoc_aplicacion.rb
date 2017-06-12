@@ -117,7 +117,7 @@ class AdHocAplicacion
 
   def buscar_escrito_por_id!(escrito_id, un_abogado)
     begin
-      escrito = Escrito.find(escrito_id)
+      escrito = Escrito.find(escrito_id) #TODO: deberia recibir el expediente_id tambien y buscar por los dos campos.
     rescue ActiveRecord::RecordNotFound
       raise AdHocUIExcepcion.new([mensaje_de_error_para_escrito_invalido])
     end
@@ -163,6 +163,7 @@ class AdHocAplicacion
   def editar_escrito!(escrito_id, parametros_escrito, un_abogado)
     escrito = self.buscar_escrito_por_id!(escrito_id, un_abogado)
     begin
+      escrito.validar_que_no_haya_sido_presentado
       escrito.update!(parametros_escrito)
     rescue ActiveRecord::RecordInvalid => error
       raise AdHocUIExcepcion.new(error.record.errors.full_messages)
@@ -173,6 +174,13 @@ class AdHocAplicacion
   def eliminar_escrito!(escrito_id, un_abogado)
     escrito = self.buscar_escrito_por_id!(escrito_id, un_abogado)
     escrito.destroy
+  end
+
+  def presentar_escrito!(un_escrito_id, un_abogado)
+    escrito = self.buscar_escrito_por_id!(un_escrito_id, un_abogado)
+    escrito.marcar_como_presentado!
+    escrito.save!
+    escrito
   end
 
   # Adjuntos
@@ -248,6 +256,10 @@ class AdHocAplicacion
 
   def mensaje_de_confirmacion_para_la_correcta_eliminacion_de_un_escrito
     'Escrito eliminado satisfactoriamente'
+  end
+
+  def mensaje_de_confirmacion_para_la_correcta_presentacion_de_un_escrito
+    'Escrito marcado como presentado correctamente'
   end
 
 

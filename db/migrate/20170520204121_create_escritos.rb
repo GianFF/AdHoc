@@ -3,6 +3,7 @@ class CreateEscritos < ActiveRecord::Migration[5.0]
     create_table :escritos do |t|
       t.text :titulo, null: false
       t.references :expediente, foreign_key: true
+      t.boolean :presentado, default: false
 
       # Meros Tramites, Demandas, Contestaciones de Demandas:
       t.text :cuerpo
