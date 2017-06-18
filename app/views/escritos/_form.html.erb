@@ -3,41 +3,44 @@
     <div class="field form-group">
       <%= f.label :titulo, class: 'col-sm-2 control-label' %>*
       <div class="col-sm-8">
-        <%= f.text_field :titulo, class: 'form-control', autofocus: true %>
+        <%= f.text_field :titulo, class: 'form-control', readonly: @expediente.ha_sido_archivado?, autofocus: true %>
       </div>
     </div>
     <%= f.text_area :cuerpo, id: 'editor' %>
-    <% if mostrar_boton_cancelar %>
+    <% unless @expediente.ha_sido_archivado? %>
+      <% if mostrar_boton_cancelar %>
         <%= link_to 'Cancelar',
                     cliente_expediente_path(@cliente.id, @expediente.id),
                     method: :get,
                     class: 'btn btn-warning escrito__boton-cancelar'
         %>
-    <% else %>
-        <%= link_to 'Borrar',
-                    [@expediente, @escrito],
-                    method: :delete,
-                    class: 'btn btn-danger escrito__boton-cancelar',
-                    data: {
-                        confirm: '¿Seguro que quiere eliminar éste escrito?',
-                        'confirm-button-text': 'Seguro',
-                        'confirm-button-color': '#5cb85c',
-                        'cancel-button-text': 'Cancelar',
-                        'cancel-button-color': '#ec971f',
-                        'sweet-alert-type': 'warning',
-                        text: 'Esta accion no se podra revertir.'
-                    } %>
-    <% end %>
-    <% unless @escrito.fue_presentado? %>
-      <div class="actions form-group cliente__edit-botones">
-        <div class="col-sm-4">
-          <%= f.submit 'Guardar', {class: 'btn btn-success escrito__form-guardar'}%>
-        </div>
-      </div>
-    <% end %>
+      <% else %>
+          <%= link_to 'Borrar',
+                      [@expediente, @escrito],
+                      method: :delete,
+                      class: 'btn btn-danger escrito__boton-cancelar',
+                      data: {
+                          confirm: '¿Seguro que quiere eliminar éste escrito?',
+                          'confirm-button-text': 'Seguro',
+                          'confirm-button-color': '#5cb85c',
+                          'cancel-button-text': 'Cancelar',
+                          'cancel-button-color': '#ec971f',
+                          'sweet-alert-type': 'warning',
+                          text: 'Esta accion no se podra revertir.'
+                      } %>
+      <% end %>
 
-    <% if @escrito.id %>
-      <%= render 'boton_presentar' %>
+      <% unless @escrito.fue_presentado? %>
+        <div class="actions form-group cliente__edit-botones">
+          <div class="col-sm-4">
+            <%= f.submit 'Guardar', {class: 'btn btn-success escrito__form-guardar'}%>
+          </div>
+        </div>
+      <% end %>
+
+      <% if @escrito.id %>
+        <%= render 'boton_presentar' %>
+      <% end %>
     <% end %>
   <% end %>
 <% end %>

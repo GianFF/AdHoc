@@ -93,6 +93,22 @@ class ExpedientesController < ApplicationController
     end
   end
 
+  def archivar
+    @escrito = @ad_hoc.buscar_expediente_por_id!(params[:id], abogado_actual)
+    @escrito.update!(ha_sido_archivado: true)
+
+    flash.now[:success] = @ad_hoc.mensaje_de_confirmacion_para_la_correcta_edicion_de_un_expediente
+    redirect_to cliente_url(validar_parametros_cliente)
+  end
+
+  def expedientes_archivados
+    @expedientes_archivados = @ad_hoc.buscar_expedientes_archivados
+
+    respond_to do |format|
+      format.json { render json: @expedientes_archivados }
+    end
+  end
+
   private
 
   def buscar_expediente_escritos_y_cliente

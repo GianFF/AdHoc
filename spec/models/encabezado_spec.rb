@@ -33,7 +33,7 @@ describe Encabezado do
 
   let(:cliente){ fabrica_de_objetos.crear_cliente(abogado.id) }
 
-  let(:expediente){ fabrica_de_objetos.crear_expediente(cliente.id) }
+  let(:expediente){ fabrica_de_objetos.un_expediente_para(cliente.id) }
 
   let(:encabezado){ fabrica_de_objetos.encabezado_para_demanda(abogado, expediente, cliente) }
 

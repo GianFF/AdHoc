@@ -33,8 +33,10 @@ abogada_mujer = fabrica_de_objetos.crear_un_abogado(mujer)
 cliente_hommbre = fabrica_de_objetos.crear_cliente(abogado_hommbre.id)
 cliente_mujer = fabrica_de_objetos.crear_otro_cliente(abogada_mujer.id)
 
-expediente_hombre = fabrica_de_objetos.crear_expediente(cliente_hommbre.id)
-expediente_mujer = fabrica_de_objetos.crear_expediente(cliente_mujer.id)
+expediente_hombre = fabrica_de_objetos.un_expediente_para(cliente_hommbre.id)
+expediente_archivado_hombre = fabrica_de_objetos.un_expediente_archivado_para(cliente_mujer.id)
+expediente_mujer = fabrica_de_objetos.un_expediente_para(cliente_mujer.id)
+expediente_archivado_mujer = fabrica_de_objetos.un_expediente_archivado_para(cliente_mujer.id)
 
 fabrica_de_objetos.crear_demanda(expediente_hombre.id)
 fabrica_de_objetos.crear_contestacion_de_demanda(expediente_hombre.id)

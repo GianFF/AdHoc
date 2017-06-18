@@ -1,7 +1,7 @@
 <%= render 'shared/tabs_contenedor' do %>
   <ul class="nav nav-tabs">
     <%= render 'boton_elegir_proceso' %>
-    <% @expedientes.each do |expediente| %>
+    <% expedientes_activos(@expedientes).each do |expediente| %>
       <li role="presentation" >
         <%= link_to expediente.titulo, cliente_expediente_path(@cliente.id, expediente.id) %>
       </li>

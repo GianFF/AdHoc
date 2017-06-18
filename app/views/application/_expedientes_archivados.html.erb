@@ -1,0 +1,29 @@
+<%= link_to expedientes_archivados_path, remote: true, data: {turbolinks: false}, class: 'btn btn-default btn-block', id: 'panel_izquierdo__archivador' do %>
+    <i class="glyphicon glyphicon-inbox pull-left"></i> Archivador
+<% end %>
+<div id="archivador-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog modal-md">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title" id="exampleModalLabel">Archivo de Expedientes</h3>
+      </div>
+      <div class="modal-body">
+        <table class="table table-bordered">
+          <thead>
+          <tr>
+            <th>Cliente</th>
+            <th>Expediente</th>
+            <th>Escritos</th>
+          </tr>
+          </thead>
+          <tbody id="expedientes_archivados__table_body">
+
+          </tbody>
+        </table>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-warning" data-dismiss="modal">Cerrar</button>
+      </div>
+    </div>
+  </div>
+</div>

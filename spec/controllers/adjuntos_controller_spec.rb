@@ -35,7 +35,7 @@ describe AdjuntosController, type: :controller do
 
   let(:cliente){ fabrica_de_objetos.crear_cliente(abogado.id) }
 
-  let(:expediente){ fabrica_de_objetos.crear_expediente(cliente.id) }
+  let(:expediente){ fabrica_de_objetos.un_expediente_para(cliente.id) }
 
   let(:ad_hoc){ AdHocAplicacion.new }
 
@@ -272,6 +272,8 @@ describe AdjuntosController, type: :controller do
     it 'el archivo adjunto tambien es eliminado' do
       subject
       adjuntos = Adjunto.all
+
+      Adjunto.page(7)
 
       expect(adjuntos.size).to eq 0
     end

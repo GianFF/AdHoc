@@ -19,10 +19,10 @@
     <div class="navbar-form navbar-right">
       <% if abogado_signed_in? %>
         <div class="form-group">
-          <%= link_to destroy_abogado_session_path, method: :delete, class: "btn btn-danger navbar-btn navbar-right" do %>
+          <%= link_to destroy_abogado_session_path, method: :delete, class: 'btn btn-danger navbar-btn navbar-right' do %>
             <i class="glyphicon glyphicon-log-out"></i> Salir
           <% end %>
-          <%= render 'boton_perfil' %>
+          <%= render 'application/boton_perfil' %>
         </div>
       <% else %>
         <div class="form-group">

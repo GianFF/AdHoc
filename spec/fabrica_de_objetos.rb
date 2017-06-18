@@ -141,8 +141,22 @@ class FabricaDeObjetos
 
   #Expedientes
 
-  def crear_expediente(cliente_id)
+  def un_expediente_archivado(un_expediente)
+    {
+        id: un_expediente.id,
+        titulo: expediente.titulo,
+        cliente_id: expediente.cliente.id,
+        cliente_nombre: expediente.cliente.nombre_completo,
+        escritos: []
+    }
+  end
+
+  def un_expediente_para(cliente_id)
     Expediente.create!(actor: self.un_actor, demandado: self.un_demandado, materia: self.una_materia, cliente_id: cliente_id)
+  end
+
+  def un_expediente_archivado_para(cliente_id)
+    Expediente.create!(actor: self.otro_actor, demandado: self.un_demandado, materia: self.una_materia, ha_sido_archivado: true, cliente_id: cliente_id)
   end
 
   def una_caratula_numerada(expediente, numero, anio, juzgado, numero_de_juzgado, departamento, ubicacion_del_departamento)

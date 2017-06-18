@@ -148,7 +148,7 @@ describe ExpedientesController do
   end
 
   context 'Edicion de Expedientes' do
-    let(:expediente) {fabrica_de_objetos.crear_expediente(cliente.id)}
+    let(:expediente) {fabrica_de_objetos.un_expediente_para(cliente.id)}
 
     context 'En la correcta edicion de un Expediente' do
 
@@ -336,6 +336,100 @@ describe ExpedientesController do
         assert_template :numerar
         asertar_que_se_incluye_un_mensaje_de_error(expediente.mensaje_de_error_para_datos_faltantes_en_la_numeracion)
         asertar_que_el_expediente_no_fue_numerado
+      end
+    end
+  end
+
+  context 'Archivo de Expedientes' do
+    let(:expediente) { fabrica_de_objetos.un_expediente_para(cliente.id) }
+
+    subject { post :archivar, params: {id: expediente.id, cliente_id: cliente.id} }
+
+    context 'Archivar Expedientes' do
+
+      it 'un expediente que no se mando a archivar no esta archivado' do
+        expect(expediente.ha_sido_archivado?).to be false
+      end
+
+      it 'un expediente que se mando a archivar esta archivado' do
+        subject
+        expediente.reload
+
+        expect(expediente.ha_sido_archivado?).to be true
+        asertar_que_la_respuesta_tiene_estado(response, :found)
+        asertar_que_se_redirecciono_a(cliente_url(cliente.id))
+        asertar_que_se_muestra_un_mensaje_de_confirmacion(ad_hoc.mensaje_de_confirmacion_para_la_correcta_edicion_de_un_expediente)
+      end
+
+      context 'no se puede editar un expediente archivado' do
+
+        it 'ni sus escritos' do
+          expect.fail
+        end
+
+        it 'ni sus adjuntos' do
+          expect.fail
+        end
+      end
+
+      context 'En la incorrecta archivacion de un expediente' do
+        subject { post :archivar, params: {id: 0, cliente_id: cliente.id} }
+
+        it 'no se puede archivar un expediente que no corresponde a un abogado' do
+          subject
+          expediente.reload
+
+          expect(expediente.ha_sido_archivado?).to be false
+          asertar_que_la_respuesta_tiene_estado(response, :bad_request)
+          asertar_que_se_incluye_un_mensaje_de_error(ad_hoc.mensaje_de_error_para_expediente_inexistente)
+          asertar_que_el_expediente_no_cambio(fabrica_de_objetos.un_actor, fabrica_de_objetos.un_demandado, fabrica_de_objetos.una_materia)
+        end
+      end
+    end
+
+    context 'Busqueda de Expedientes archivados' do
+
+      it 'cuando un expediente se archiva se encuentra en el archivador' do
+        subject
+        expediente.reload
+        expediente_archivado = un_expediente_archivado(expediente)
+
+        expedientes_archivados = ad_hoc.buscar_expedientes_archivados
+
+        expect(expedientes_archivados.count).to eq 1
+        expect(expedientes_archivados.first).to eq expediente_archivado
+      end
+
+      it 'la respuesta contiene el id y titulo del expediente' do
+        subject
+        expediente.reload
+
+        expediente_archivado = ad_hoc.buscar_expedientes_archivados.first
+
+        expect(expediente_archivado[:id]).to eq expediente.id
+        expect(expediente_archivado[:titulo]).to eq expediente.titulo
+      end
+
+      it 'la respuesta contiene el id y nombre completo del cliente' do
+        subject
+        expediente.reload
+
+        expediente_archivado = ad_hoc.buscar_expedientes_archivados.first
+
+        expect(expediente_archivado[:cliente_id]).to eq cliente.id
+        expect(expediente_archivado[:cliente_nombre]).to eq cliente.nombre_completo
+      end
+
+      it 'la respuesta contiene cada id y titulo de los escritos del expediente' do
+        subject
+        escrito = ad_hoc.crear_nueva_demanda!({cuerpo: 'un cuerpo', titulo: 'un titulo'}, expediente.id, abogado)
+        expediente.reload
+
+        expediente_archivado = ad_hoc.buscar_expedientes_archivados.first
+
+        expect(expediente_archivado[:escritos].count).to eq 1
+        expect(expediente_archivado[:escritos].first[:escrito_id]).to eq escrito.id
+        expect(expediente_archivado[:escritos].first[:escrito_titulo]).to eq escrito.titulo
       end
     end
   end

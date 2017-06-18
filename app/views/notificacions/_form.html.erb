@@ -80,23 +80,24 @@
         <%= f.submit 'Guardar', {class: 'btn btn-success cliente__form-guardar'}%>
       </div>
     </div>
-
-    <%= link_to 'Cancelar', cliente_expediente_path(@cliente.id, @expediente.id), method: :get,
+    <% unless @expediente.ha_sido_archivado? %>
+      <%= link_to 'Cancelar', cliente_expediente_path(@cliente.id, @expediente.id), method: :get,
                 class: 'btn btn-warning notificacion__boton-cancelar' %>
 
     <% end %>
-  <% if mostrar_boton_borrar %>
-    <%= link_to 'Borrar', [@expediente, @escrito], method: :delete, class: 'btn btn-danger escrito__boton-cancelar',
-                data: {
-                    confirm: '¿Seguro que quiere eliminar éste escrito?',
-                    'confirm-button-text': 'Seguro',
-                    'confirm-button-color': '#5cb85c',
-                    'cancel-button-text': 'Cancelar',
-                    'cancel-button-color': '#ec971f',
-                    'sweet-alert-type': 'warning',
-                    text: 'Esta accion no se podra revertir.'
-                }
-    %>
+  <% end %>
+    <% if mostrar_boton_borrar && @expediente.ha_sido_archivado? %>
+      <%= link_to 'Borrar', [@expediente, @escrito], method: :delete, class: 'btn btn-danger escrito__boton-cancelar',
+                  data: {
+                      confirm: '¿Seguro que quiere eliminar éste escrito?',
+                      'confirm-button-text': 'Seguro',
+                      'confirm-button-color': '#5cb85c',
+                      'cancel-button-text': 'Cancelar',
+                      'cancel-button-color': '#ec971f',
+                      'sweet-alert-type': 'warning',
+                      text: 'Esta accion no se podra revertir.'
+                  }
+      %>
   <% end %>
 <% end %>
 <%= render 'shared/tab_expediente' %>

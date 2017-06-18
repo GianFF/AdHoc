@@ -8,6 +8,7 @@
       <% end %>
     </a>
   </li>
+  <%=  paginate Expediente.all	  %>
   <% (current_abogado.clientes - [@cliente] ).each do |cliente| %>
     <li role="presentation" >
       <%= link_to cliente.nombre_completo, cliente_path(cliente.id) %>

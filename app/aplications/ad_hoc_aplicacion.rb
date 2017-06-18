@@ -73,6 +73,24 @@ class AdHocAplicacion
     expediente
   end
 
+  def buscar_expedientes_archivados
+    expedientes_archivados = Expediente.where(ha_sido_archivado: true) || []
+    expedientes_archivados.map do |expediente|
+      {
+          id: expediente.id,
+          titulo: expediente.titulo,
+          cliente_id: expediente.cliente.id,
+          cliente_nombre: expediente.cliente.nombre_completo,
+          escritos: expediente.escritos.map do |escrito|
+            {
+                escrito_id: escrito.id,
+                escrito_titulo: escrito.titulo
+            }
+          end
+      }
+    end
+  end
+
   def crear_expediente_nuevo!(parametros_expediente, cliente_id, abogado)
     expediente = Expediente.new(parametros_expediente)
     expediente.cliente = buscar_cliente_por_id!(cliente_id, abogado)
