@@ -94,19 +94,21 @@ class ExpedientesController < ApplicationController
   end
 
   def archivar
-    @escrito = @ad_hoc.buscar_expediente_por_id!(params[:id], abogado_actual)
-    @escrito.update!(ha_sido_archivado: true)
+    begin
+      @escrito = ad_hoc.archivar_expediente!(params[:id], abogado_actual)
 
-    flash.now[:success] = @ad_hoc.mensaje_de_confirmacion_para_la_correcta_edicion_de_un_expediente
-    redirect_to cliente_url(validar_parametros_cliente)
+      flash.now[:success] = @ad_hoc.mensaje_de_confirmacion_para_la_correcta_edicion_de_un_expediente
+      redirect_to cliente_url(validar_parametros_cliente)
+    rescue AdHocHackExcepcion => excepcion
+      mostrar_errores(excepcion, mantener_error: true)
+      redirect_back(fallback_location: root_path)
+    end
   end
 
   def expedientes_archivados
     @expedientes_archivados = @ad_hoc.buscar_expedientes_archivados
 
-    respond_to do |format|
-      format.json { render json: @expedientes_archivados }
-    end
+    respond_to { |format| format.json { render json: @expedientes_archivados } }
   end
 
   private

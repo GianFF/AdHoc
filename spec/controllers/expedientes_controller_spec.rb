@@ -361,26 +361,56 @@ describe ExpedientesController do
         asertar_que_se_muestra_un_mensaje_de_confirmacion(ad_hoc.mensaje_de_confirmacion_para_la_correcta_edicion_de_un_expediente)
       end
 
-      context 'no se puede editar un expediente archivado' do
+      context 'No se puede editar un expediente archivado' do
 
-        it 'ni sus escritos' do
-          expect.fail
+        it 'no se puede editar un expediente archivado' do
+          subject
+
+          put :update, params: { id: expediente.id,
+                                 expediente:
+                                     { actor: fabrica_de_objetos.otro_actor,
+                                       demandado: fabrica_de_objetos.otro_demandado,
+                                       materia: fabrica_de_objetos.otra_materia},
+                                 cliente_id: cliente.id }
+
+          asertar_que_la_respuesta_tiene_estado(response, :found)
+          asertar_que_se_incluye_un_mensaje_de_error(ad_hoc.mensaje_de_error_para_expediente_archivado)
+          asertar_que_el_expediente_no_cambio(fabrica_de_objetos.un_actor, fabrica_de_objetos.un_demandado, fabrica_de_objetos.una_materia)
         end
 
-        it 'ni sus adjuntos' do
-          expect.fail
+        it 'ni sus escritos' do
+          demanda = fabrica_de_objetos.crear_demanda(expediente.id)
+
+          subject
+          parametros_escrito = {
+              id: demanda.id,
+              titulo: fabrica_de_objetos.otro_titulo_de_una_demanda,
+              cuerpo: fabrica_de_objetos.otro_cuerpo_de_una_demanda,
+              expediente_id: expediente.id
+          }
+          expect{ad_hoc.editar_escrito!(demanda.id, parametros_escrito, abogado)}.to raise_error AdHocHackExcepcion
+          asertar_que_el_escrito_no_cambio(demanda, fabrica_de_objetos.un_titulo_de_una_demanda,
+                                           fabrica_de_objetos.un_cuerpo_de_una_demanda)
+        end
+
+        pending 'ni sus adjuntos' do
+          fail
         end
       end
 
       context 'En la incorrecta archivacion de un expediente' do
-        subject { post :archivar, params: {id: 0, cliente_id: cliente.id} }
+        let(:otro_abogado){ login_abogado(fabrica_de_objetos.otros_parametros_para_otro_abogado) }
+        let(:otro_cliente){ fabrica_de_objetos.crear_otro_cliente(otro_abogado.id) }
+        let(:otro_expediente){ fabrica_de_objetos.un_expediente_para(otro_cliente.id) }
+
+        subject { post :archivar, params: {id: otro_expediente.id, cliente_id: cliente.id} }
 
         it 'no se puede archivar un expediente que no corresponde a un abogado' do
           subject
           expediente.reload
 
           expect(expediente.ha_sido_archivado?).to be false
-          asertar_que_la_respuesta_tiene_estado(response, :bad_request)
+          asertar_que_la_respuesta_tiene_estado(response, :found)
           asertar_que_se_incluye_un_mensaje_de_error(ad_hoc.mensaje_de_error_para_expediente_inexistente)
           asertar_que_el_expediente_no_cambio(fabrica_de_objetos.un_actor, fabrica_de_objetos.un_demandado, fabrica_de_objetos.una_materia)
         end
@@ -392,7 +422,7 @@ describe ExpedientesController do
       it 'cuando un expediente se archiva se encuentra en el archivador' do
         subject
         expediente.reload
-        expediente_archivado = un_expediente_archivado(expediente)
+        expediente_archivado = fabrica_de_objetos.un_expediente_archivado(expediente)
 
         expedientes_archivados = ad_hoc.buscar_expedientes_archivados
 

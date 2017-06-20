@@ -41,6 +41,11 @@ module ExpedientesHelper
     expect(expediente.materia).to eq una_materia
   end
 
+  def asertar_que_el_escrito_no_cambio(un_escrito, un_titulo, un_cuerpo)
+    expect(un_escrito.titulo).to eq un_titulo
+    expect(un_escrito.cuerpo).to eq un_cuerpo
+  end
+
   def asertar_que_se_elimino_el_expediente
     expect(Expediente.all.count).to eq 0
   end
