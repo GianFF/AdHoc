@@ -273,8 +273,6 @@ describe AdjuntosController, type: :controller do
       subject
       adjuntos = Adjunto.all
 
-      Adjunto.page(7)
-
       expect(adjuntos.size).to eq 0
     end
   end

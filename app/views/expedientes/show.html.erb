@@ -2,11 +2,22 @@
   <h1 class="expediente__caratula">
     <%= @expediente.caratula %>
   </h1>
-  <% unless @expediente.ha_sido_archivado? %>
-    <%= button_to 'Numerar', cliente_expediente_numerar_path(@cliente.id, @expediente.id), method: :get,
-                  disabled: @expediente.ha_sido_numerado?, class: 'btn btn-warning expediente__numerar'%>
-    <div class="form-group cliente__show-botones" role="group">
-      <%= button_to 'Editar', edit_cliente_expediente_path(@cliente.id, @expediente.id), method: :get, class: 'btn btn-success cliente__show-boton-editar' %>
+  <%= button_to 'Numerar', cliente_expediente_numerar_path(@cliente.id, @expediente.id), method: :get,
+                disabled: @expediente.ha_sido_numerado?, class: 'btn btn-warning expediente__numerar'%>
+  <div class="form-group cliente__show-botones" role="group">
+    <%= button_to 'Editar', edit_cliente_expediente_path(@cliente.id, @expediente.id), method: :get, class: 'btn btn-success cliente__show-boton-editar' %>
+    <% if @expediente.ha_sido_archivado? %>
+      <%= link_to 'Borrar', [@cliente, @expediente], method: :delete, class: 'btn btn-danger',
+                  data: {
+                      confirm: '¿Seguro que quiere eliminar éste expediente?',
+                      'confirm-button-text': 'Seguro',
+                      'confirm-button-color': '#5cb85c',
+                      'cancel-button-text': 'Cancelar',
+                      'cancel-button-color': '#ec971f',
+                      'sweet-alert-type': 'warning',
+                      text: 'Esta accion no se podra revertir.'
+                  } %>
+    <% else %>
       <%= link_to 'Archivar', cliente_expediente_archivar_path(@cliente.id, @expediente.id), method: :put, class: 'btn btn-danger',
                   data: {
                       confirm: '¿Seguro que quiere concluir este proceso?',
@@ -17,7 +28,7 @@
                       'sweet-alert-type': 'warning',
                       text: 'Tenga en cuenta que no va a poder seguir adelante con la causa'
                   } %>
-    </div>
-  <% end %>
+    <% end %>
+  </div>
 <% end %>
 <%= render 'renglones' %>

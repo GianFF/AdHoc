@@ -361,43 +361,6 @@ describe ExpedientesController do
         asertar_que_se_muestra_un_mensaje_de_confirmacion(ad_hoc.mensaje_de_confirmacion_para_la_correcta_edicion_de_un_expediente)
       end
 
-      context 'No se puede editar un expediente archivado' do
-
-        it 'no se puede editar un expediente archivado' do
-          subject
-
-          put :update, params: { id: expediente.id,
-                                 expediente:
-                                     { actor: fabrica_de_objetos.otro_actor,
-                                       demandado: fabrica_de_objetos.otro_demandado,
-                                       materia: fabrica_de_objetos.otra_materia},
-                                 cliente_id: cliente.id }
-
-          asertar_que_la_respuesta_tiene_estado(response, :found)
-          asertar_que_se_incluye_un_mensaje_de_error(ad_hoc.mensaje_de_error_para_expediente_archivado)
-          asertar_que_el_expediente_no_cambio(fabrica_de_objetos.un_actor, fabrica_de_objetos.un_demandado, fabrica_de_objetos.una_materia)
-        end
-
-        it 'ni sus escritos' do
-          demanda = fabrica_de_objetos.crear_demanda(expediente.id)
-
-          subject
-          parametros_escrito = {
-              id: demanda.id,
-              titulo: fabrica_de_objetos.otro_titulo_de_una_demanda,
-              cuerpo: fabrica_de_objetos.otro_cuerpo_de_una_demanda,
-              expediente_id: expediente.id
-          }
-          expect{ad_hoc.editar_escrito!(demanda.id, parametros_escrito, abogado)}.to raise_error AdHocHackExcepcion
-          asertar_que_el_escrito_no_cambio(demanda, fabrica_de_objetos.un_titulo_de_una_demanda,
-                                           fabrica_de_objetos.un_cuerpo_de_una_demanda)
-        end
-
-        pending 'ni sus adjuntos' do
-          fail
-        end
-      end
-
       context 'En la incorrecta archivacion de un expediente' do
         let(:otro_abogado){ login_abogado(fabrica_de_objetos.otros_parametros_para_otro_abogado) }
         let(:otro_cliente){ fabrica_de_objetos.crear_otro_cliente(otro_abogado.id) }
