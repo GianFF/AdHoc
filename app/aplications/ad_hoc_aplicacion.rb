@@ -73,6 +73,24 @@ class AdHocAplicacion
     expediente
   end
 
+  def buscar_expedientes_archivados
+    expedientes_archivados = Expediente.where(ha_sido_archivado: true) || []
+    expedientes_archivados.map do |expediente|
+      {
+          id: expediente.id,
+          titulo: expediente.titulo,
+          cliente_id: expediente.cliente.id,
+          cliente_nombre: expediente.cliente.nombre_completo,
+          escritos: expediente.escritos.map do |escrito|
+            {
+                escrito_id: escrito.id,
+              escrito_titulo: escrito.titulo
+            }
+          end
+      }
+    end
+  end
+
   def crear_expediente_nuevo!(parametros_expediente, cliente_id, abogado)
     expediente = Expediente.new(parametros_expediente)
     expediente.cliente = buscar_cliente_por_id!(cliente_id, abogado)
@@ -87,6 +105,7 @@ class AdHocAplicacion
   def editar_expediente!(expediente_id, parametros_expediente, abogado)
     expediente = self.buscar_expediente_por_id!(expediente_id, abogado)
     begin
+      validar_que_el_expediente_no_haya_sido_archivado(expediente)
       expediente.validar_que_no_falte_ningun_dato_para_la_numeracion!(parametros_expediente) if expediente.ha_sido_numerado?
       expediente.update!(parametros_expediente)
     rescue ArgumentError => error # TODO: ¿ smell ?
@@ -113,6 +132,11 @@ class AdHocAplicacion
     expediente
   end
 
+  def archivar_expediente!(un_expediente_id, un_abogado)
+    escrito = buscar_expediente_por_id!(un_expediente_id, un_abogado)
+    escrito.update!(ha_sido_archivado: true)
+    escrito
+  end
   # Escritos
 
   def buscar_escrito_por_id!(escrito_id, un_abogado)
@@ -164,6 +188,7 @@ class AdHocAplicacion
     escrito = self.buscar_escrito_por_id!(escrito_id, un_abogado)
     begin
       escrito.validar_que_no_haya_sido_presentado
+      validar_que_el_expediente_no_haya_sido_archivado(escrito.expediente)
       escrito.update!(parametros_escrito)
     rescue ActiveRecord::RecordInvalid => error
       raise AdHocUIExcepcion.new(error.record.errors.full_messages)
@@ -291,6 +316,10 @@ class AdHocAplicacion
     'Adjunto inexsitente'
   end
 
+  def mensaje_de_error_para_expediente_archivado
+    'El expediente ha sido archivado y no puede seguir siendo editado'
+  end
+
   # Validaciones
 
   def validar_que_no_haya_sido_numerado(expediente)
@@ -303,6 +332,10 @@ class AdHocAplicacion
 
   def validar_que_pertenece_al_abogado(una_cosa, un_abogado, un_mensaje_de_error)
     raise AdHocHackExcepcion.new([un_mensaje_de_error]) unless una_cosa.pertenece_a? un_abogado
+  end
+
+  def validar_que_el_expediente_no_haya_sido_archivado(expediente)
+    raise AdHocHackExcepcion.new(mensaje_de_error_para_expediente_archivado) if expediente.ha_sido_archivado?
   end
 
   private

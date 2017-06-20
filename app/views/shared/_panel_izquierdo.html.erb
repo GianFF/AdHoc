@@ -4,7 +4,7 @@
       <%= form_tag(clientes_path, method: 'get') do %>
         <div class="input-group">
           <span class="input-group-btn">
-            <%= button_tag(type: "submit", class: "btn btn-default", id: 'panel_izquierdo__buscar') do %>
+            <%= button_tag(type: 'submit', class: 'btn btn-default', id: 'panel_izquierdo__buscar') do %>
                 <i class="glyphicon glyphicon-search panel_izquierdo__buscar"></i>
             <% end %>
           </span>
@@ -12,6 +12,10 @@
         </div>
       <% end %>
     </li>
+
+    <%= render 'application/expedientes_archivados' %>
+
+
     <li role="presentation">
       <button type="button" class="btn btn-default btn-block">
         <i class="glyphicon glyphicon-calendar pull-left"></i> Calendario
@@ -39,27 +43,3 @@
     </li>
   </ul>
 <% end %>
-<script type="text/javascript">
-  $("#panel_izquierdo__query").val("");
-
-  $( "#panel_izquierdo__buscar" ).prop('disabled', true);
-
-  $("#panel_izquierdo__query").on('change keyup paste', function() {
-    var busqueda = $("#panel_izquierdo__query").val();
-
-    if(busqueda != "" ){
-
-      $( "#panel_izquierdo__buscar" ).prop('disabled', false);
-    }else{
-
-      $( "#panel_izquierdo__buscar" ).prop('disabled', true);
-    }
-  });
-
-  $('#panel_izquierdo__query').keypress(function(e){
-    if(e.keyCode==13){
-
-      $('#panel_izquierdo__buscar').click();
-    }
-  });
-</script>

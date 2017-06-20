@@ -8,11 +8,11 @@
     </div>
     <%= f.text_area :cuerpo, id: 'editor' %>
     <% if mostrar_boton_cancelar %>
-        <%= link_to 'Cancelar',
-                    cliente_expediente_path(@cliente.id, @expediente.id),
-                    method: :get,
-                    class: 'btn btn-warning escrito__boton-cancelar'
-        %>
+      <%= link_to 'Cancelar',
+                  cliente_expediente_path(@cliente.id, @expediente.id),
+                  method: :get,
+                  class: 'btn btn-warning escrito__boton-cancelar'
+      %>
     <% else %>
         <%= link_to 'Borrar',
                     [@expediente, @escrito],
@@ -28,6 +28,7 @@
                         text: 'Esta accion no se podra revertir.'
                     } %>
     <% end %>
+
     <% unless @escrito.fue_presentado? %>
       <div class="actions form-group cliente__edit-botones">
         <div class="col-sm-4">

@@ -116,6 +116,7 @@ ActiveRecord::Schema.define(version: 20170610171959) do
     t.text     "departamento"
     t.text     "ubicacion_del_departamento"
     t.boolean  "ha_sido_numerado",           default: false
+    t.boolean  "ha_sido_archivado",          default: false
     t.integer  "cliente_id"
     t.datetime "created_at",                                 null: false
     t.datetime "updated_at",                                 null: false

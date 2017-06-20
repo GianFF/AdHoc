@@ -16,6 +16,10 @@ module ApplicationHelper
   end
 
   def expedientes_que_no_son(un_expediente, expedientes)
-    expedientes - [un_expediente]
+    expedientes_activos(expedientes) - [un_expediente]
+  end
+
+  def expedientes_activos(expedientes)
+    expedientes.to_a.delete_if { |expediente| expediente.ha_sido_archivado? }
   end
 end

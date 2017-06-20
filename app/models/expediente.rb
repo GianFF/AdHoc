@@ -44,10 +44,6 @@ class Expediente < ApplicationRecord
     self.cliente.pertenece_a?(un_abogado)
   end
 
-  def ha_sido_numerado?
-    self.ha_sido_numerado
-  end
-
   def los_datos_para_numerar_son_invalidos?(datos)
     datos[:actor].blank? || datos[:demandado].blank? || datos[:materia].blank? || datos[:numero].blank? ||
         datos[:juzgado].blank? || datos[:numero_de_juzgado].blank? || datos[:departamento].blank? || datos[:ubicacion_del_departamento].blank?

@@ -1,5 +1,25 @@
 class FabricaDeObjetos
   #Abogados:
+  def un_abogado
+    crear_un_abogado(unos_parametros_para_un_abogado)
+  end
+
+  def unos_parametros_para_un_abogado
+    parametros_para_un_abogado(un_mail_para_un_abogado, una_contrasenia, un_nombre_para_un_abogado,
+                               un_apellido_para_un_abogado, Sexo::MASCULINO, una_matricula, un_colegio,
+                               un_cuit, un_domicilio_procesal, un_domicilio_electronico)
+  end
+
+  def otro_abogado
+    crear_un_abogado(otros_parametros_para_otro_abogado)
+  end
+
+  def otros_parametros_para_otro_abogado
+    parametros_para_un_abogado(otro_mail_para_un_abogado, una_contrasenia, otro_nombre_para_un_abogado,
+                               otro_apellido_para_un_abogado, Sexo::FEMENINO, otra_matricula, un_colegio,
+                               otro_cuit, un_domicilio_procesal, otro_domicilio_electronico)
+  end
+
   def parametros_para_un_abogado(mail, contrasenia, nombre, apellido, sexo, una_matricula, un_colegio, un_cuit,
                                  un_domicilio_procesal, un_domicilio_electronico)
     {email: mail, password: contrasenia, nombre: nombre, apellido: apellido, sexo: sexo,
@@ -141,8 +161,22 @@ class FabricaDeObjetos
 
   #Expedientes
 
-  def crear_expediente(cliente_id)
+  def un_expediente_archivado(un_expediente)
+    {
+        id: un_expediente.id,
+        titulo: un_expediente.titulo,
+        cliente_id: un_expediente.cliente.id,
+        cliente_nombre: un_expediente.cliente.nombre_completo,
+        escritos: []
+    }
+  end
+
+  def un_expediente_para(cliente_id)
     Expediente.create!(actor: self.un_actor, demandado: self.un_demandado, materia: self.una_materia, cliente_id: cliente_id)
+  end
+
+  def un_expediente_archivado_para(cliente_id)
+    Expediente.create!(actor: self.otro_actor, demandado: self.un_demandado, materia: self.una_materia, ha_sido_archivado: true, cliente_id: cliente_id)
   end
 
   def una_caratula_numerada(expediente, numero, anio, juzgado, numero_de_juzgado, departamento, ubicacion_del_departamento)

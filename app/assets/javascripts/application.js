@@ -18,14 +18,62 @@
 //= require sweet-alert2-rails
 //= require_tree .
 
-$(document).ready(function(){
+document.addEventListener("turbolinks:load", function() {
+    comportamiento_alertas();
+    comportamiento_buscador();
+    comportamiento_archivador();
+});
+
+// private
+
+function link_to(id, titulo, path) {
+    return "<a href=" + '/' + path + '/' + id + ">" + titulo + "</a>";
+}
+
+function dropdown(escritos) {
+    return "<select class='form-control' name='notificacion[tipo_domicilio]' id='notificacion_tipo_domicilio'>"+
+                "<option value=''></option>" +
+                escritos.map(function (escrito) {
+                    return "<option value=''>" + escrito['escrito_titulo'] + "</option>";
+                });
+}
+
+
+/// Comportamientos
+
+function comportamiento_archivador(){
+
+    $('#panel_izquierdo__archivador').on('ajax:success', function (e, data, status, xhr) {
+        var filas = data.map(function( expediente_archivado ) {
+            return "<tr>"+
+                "<td>" + link_to(expediente_archivado['cliente_id'], expediente_archivado['cliente_nombre'], 'clientes')+"</td>" +
+                "<td>" + link_to(expediente_archivado['id'], expediente_archivado['titulo'], 'expedientes')+"</td>" +
+                "<td>"+dropdown(expediente_archivado['escritos'])+"</td>" +
+                "</tr>";
+        });
+
+        $('#expedientes_archivados__table_body').html(filas);
+
+        $('#archivador-modal').modal('show');
+    });
+}
+function comportamiento_buscador() {
+    vaciar_buscador();
+
+    deshabilitar_buscador();
+
+    habilitar_deshabilitar_segun_corresponda();
+
+    habilitar_enter_para_buscar();
+}
+function comportamiento_alertas() {
     borrarAlertaDentroDe(7000);
 
     cerrarAlerta();
-});
+}
 
 
-// private
+/// Alertas
 
 function borrarAlertaDentroDe(unCiertoTiempo) {
     setTimeout(function () {
@@ -35,5 +83,38 @@ function borrarAlertaDentroDe(unCiertoTiempo) {
 function cerrarAlerta() {
     $(".close").click(function () {
         $('.alert').remove();
+    });
+}
+
+
+/// Buscador
+
+function contenido_buscador() {
+    return $("#panel_izquierdo__query");
+}
+function vaciar_buscador() {
+    contenido_buscador().val("");
+}
+function buscador() {
+    return $("#panel_izquierdo__buscar");
+}
+function deshabilitar_buscador() {
+    buscador().prop('disabled', true);
+}
+
+function habilitar_buscador() {
+    buscador().prop('disabled', false);
+}
+function habilitar_deshabilitar_segun_corresponda() {
+    contenido_buscador().on('change keyup paste', function () {
+        var busqueda = contenido_buscador().val();
+
+        if (busqueda != "") habilitar_buscador();
+        else deshabilitar_buscador();
+    });
+}
+function habilitar_enter_para_buscar() {
+    contenido_buscador().keypress(function (e) {
+        if (e.keyCode == 13) buscador().click();
     });
 }
