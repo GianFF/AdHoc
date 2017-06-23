@@ -1,0 +1,34 @@
+<%= link_to 'Clonar',
+            expediente_escritos_para_clonar_path(@expediente.id, @escrito.id),
+            class: 'btn btn-success boton_presentar',
+            id: 'escritos__boton_clonar',
+            remote: true,
+            data: {turbolinks: false},
+            disabled: @escrito.fue_presentado?
+%>
+<div id="clonar-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog modal-md">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title">Escritos</h3>
+      </div>
+      <div class="modal-body">
+        <table class="table table-bordered">
+          <thead>
+          <tr>
+            <th>Escrito</th>
+            <th>Expediente</th>
+            <th>Cliente</th>
+          </tr>
+          </thead>
+          <tbody id="escritos__table_body">
+
+          </tbody>
+        </table>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-warning" data-dismiss="modal">Cerrar</button>
+      </div>
+    </div>
+  </div>
+</div>

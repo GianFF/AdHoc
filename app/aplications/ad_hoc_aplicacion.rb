@@ -137,7 +137,23 @@ class AdHocAplicacion
     escrito.update!(ha_sido_archivado: true)
     escrito
   end
+
   # Escritos
+
+  def buscar_escritos_para_clonar_en(escrito_id, un_abogado)
+    escritos = Escrito.left_outer_joins(expediente: [cliente: [:abogado]]).where(abogados: {id: un_abogado.id})
+    escritos.map do |escrito|
+      {
+          id: escrito.id,
+          hasta_id: escrito_id,
+          titulo: escrito.titulo,
+          tipo: escrito.type,
+          expediente: escrito.expediente.titulo,
+          expediente_id: escrito.expediente.id,
+          cliente: escrito.expediente.cliente.nombre_completo,
+      }
+    end
+  end
 
   def buscar_escrito_por_id!(escrito_id, un_abogado)
     begin
@@ -206,6 +222,13 @@ class AdHocAplicacion
     escrito.marcar_como_presentado!
     escrito.save!
     escrito
+  end
+
+  def clonar_cuerpo(desde_id, hasta_id, un_abogado)
+    hasta_escrito = buscar_escrito_por_id!(hasta_id, un_abogado)
+    hasta_escrito.validar_que_no_haya_sido_presentado
+    desde_escrito = buscar_escrito_por_id!(desde_id, un_abogado)
+    hasta_escrito.update!({cuerpo: desde_escrito.cuerpo})
   end
 
   # Adjuntos

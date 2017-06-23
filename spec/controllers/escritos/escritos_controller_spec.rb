@@ -5,16 +5,7 @@ describe DemandasController, type: :controller do
 
   let(:fabrica_de_objetos){ FabricaDeObjetos.new }
 
-  let(:parametros) { fabrica_de_objetos.parametros_para_un_abogado(fabrica_de_objetos.un_mail_para_un_abogado,
-                                                                   fabrica_de_objetos.una_contrasenia,
-                                                                   fabrica_de_objetos.un_nombre_para_un_abogado,
-                                                                   fabrica_de_objetos.un_apellido_para_un_abogado,
-                                                                   Sexo::MASCULINO,
-                                                                   fabrica_de_objetos.una_matricula,
-                                                                   fabrica_de_objetos.un_colegio,
-                                                                   fabrica_de_objetos.un_cuit,
-                                                                   fabrica_de_objetos.un_domicilio_procesal,
-                                                                   fabrica_de_objetos.un_domicilio_electronico) }
+  let(:parametros) { fabrica_de_objetos.unos_parametros_para_un_abogado }
 
   let(:abogado){ login_abogado(parametros) }
 
@@ -25,18 +16,7 @@ describe DemandasController, type: :controller do
   let(:ad_hoc){ AdHocAplicacion.new }
 
   context 'En la creacion de un escrito' do
-    let(:otros_parametros) {
-      fabrica_de_objetos.parametros_para_un_abogado(fabrica_de_objetos.otro_mail_para_un_abogado,
-                                                    fabrica_de_objetos.una_contrasenia,
-                                                    fabrica_de_objetos.otro_nombre_para_un_abogado,
-                                                    fabrica_de_objetos.otro_apellido_para_un_abogado,
-                                                    Sexo::MASCULINO,
-                                                    fabrica_de_objetos.otra_matricula,
-                                                    fabrica_de_objetos.un_colegio,
-                                                    fabrica_de_objetos.otro_cuit,
-                                                    fabrica_de_objetos.un_domicilio_procesal,
-                                                    fabrica_de_objetos.otro_domicilio_electronico)
-    }
+    let(:otros_parametros) { fabrica_de_objetos.otros_parametros_para_otro_abogado }
 
     let(:otro_abogado) { crear_cuenta_para_abogado(otros_parametros) }
 
@@ -63,7 +43,7 @@ describe DemandasController, type: :controller do
 
       asertar_que_se_redirecciono_a(root_path)
       asertar_que_la_respuesta_tiene_estado(response, :found)
-      asertar_que_se_incluye_un_mensaje_de_error(@controller.ad_hoc.mensaje_de_error_para_escrito_invalido)
+      asertar_que_se_incluye_un_mensaje_de_error(ad_hoc.mensaje_de_error_para_escrito_invalido)
     end
 
     context 'Cuando es incorrecta' do
@@ -80,7 +60,7 @@ describe DemandasController, type: :controller do
   end
 
   context 'En la edicion de un escrito' do
-    let(:demanda){fabrica_de_objetos.crear_demanda(expediente.id)}
+    let(:demanda){fabrica_de_objetos.una_demanda_para(expediente.id)}
 
     subject {
       put :update,
@@ -136,7 +116,7 @@ describe DemandasController, type: :controller do
   end
 
   context 'En la eliminacion de un escrito' do
-    let(:demanda){fabrica_de_objetos.crear_demanda(expediente.id)}
+    let(:demanda){fabrica_de_objetos.una_demanda_para(expediente.id)}
 
     subject {
       delete :destroy,
@@ -157,7 +137,7 @@ describe DemandasController, type: :controller do
   end
 
   context 'En la presentacion de un escrito' do
-    let(:demanda){fabrica_de_objetos.crear_demanda(expediente.id)}
+    let(:demanda){fabrica_de_objetos.una_demanda_para(expediente.id)}
 
     subject {put :presentar, params: { id: demanda.id, expediente_id: expediente.id }}
 
@@ -199,6 +179,45 @@ describe DemandasController, type: :controller do
         asertar_que_la_respuesta_tiene_estado(response, :ok)
         asertar_que_el_template_es(:show)
       end
+    end
+  end
+
+  context 'Clonacion de un escrito' do
+
+    it 'se pueden buscar escritos para ser clonados' do
+      escrito = fabrica_de_objetos.una_demanda_para(expediente.id)
+      escrito_dao = {
+          id: escrito.id,
+          hasta_id: escrito.id,
+          titulo: escrito.titulo,
+          tipo: escrito.type,
+          expediente: escrito.expediente.titulo,
+          expediente_id: escrito.expediente.id,
+          cliente: escrito.expediente.cliente.nombre_completo,
+      }
+
+      escritos = ad_hoc.buscar_escritos_para_clonar_en(escrito.id, abogado)
+
+      expect(escritos.count).to be 1
+      expect(escritos.first).to eq escrito_dao
+    end
+
+    it 'se puede clonar el cuerpo de un escrito en otro escrito' do
+      desde_escrito = fabrica_de_objetos.una_demanda_para(expediente.id)
+      hasta_escrito = fabrica_de_objetos.una_contestacion_de_demanda_para(expediente.id)
+
+      ad_hoc.clonar_cuerpo(desde_escrito.id, hasta_escrito.id, abogado)
+      hasta_escrito.reload
+
+      expect(hasta_escrito.cuerpo).to eq desde_escrito.cuerpo
+    end
+
+    it 'no se puede clonar un escrito en otro que ya haya sido presentado' do
+      desde_escrito = fabrica_de_objetos.una_demanda_para(expediente.id)
+      hasta_escrito = fabrica_de_objetos.una_contestacion_de_demanda_para(expediente.id)
+      ad_hoc.presentar_escrito!(hasta_escrito.id, abogado)
+
+      expect{ad_hoc.clonar_cuerpo(desde_escrito.id, hasta_escrito.id, abogado)}.to raise_error AdHocExcepcion
     end
   end
 end

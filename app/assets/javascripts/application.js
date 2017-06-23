@@ -22,6 +22,7 @@ document.addEventListener("turbolinks:load", function() {
     comportamiento_alertas();
     comportamiento_buscador();
     comportamiento_archivador();
+    comportamiento_boton_clonar();
 });
 
 // private
@@ -29,7 +30,6 @@ document.addEventListener("turbolinks:load", function() {
 function link_to(id, titulo, path) {
     return "<a href=" + '/' + path + '/' + id + ">" + titulo + "</a>";
 }
-
 function dropdown(escritos) {
     return "<select class='form-control' name='notificacion[tipo_domicilio]' id='notificacion_tipo_domicilio'>"+
                 "<option value=''></option>" +
@@ -37,18 +37,37 @@ function dropdown(escritos) {
                     return "<option value=''>" + escrito['escrito_titulo'] + "</option>";
                 });
 }
+function link_to_clonar(expediente_id, desde_id, hasta_id, titulo, tipo) {
+    var id = "clonar_escrito"+desde_id;
+    var link = "<a id='"+id+"' href='/expedientes/" + expediente_id + "/clonar/" + desde_id+"/"+hasta_id+"'"+ ">"+titulo+"</a>";
+    return link;
+}
 
 
 /// Comportamientos
+function comportamiento_boton_clonar(){
 
+    $('#escritos__boton_clonar').on('ajax:success', function (e, data, status, xhr) {
+        var filas = data.map(function( escrito ) {
+            return "<tr>" +
+                        "<td>" + link_to_clonar(escrito['expediente_id'], escrito['id'], escrito['hasta_id'], escrito['titulo'], escrito['tipo']) + "</td>" +
+                        "<td>" + escrito['expediente'] + "</td>" +
+                        "<td>" + escrito['cliente'] + "</td>" +
+                    "</tr>";
+        });
+
+        $('#escritos__table_body').html(filas);
+        $('#clonar-modal').modal('show');
+    });
+}
 function comportamiento_archivador(){
 
     $('#panel_izquierdo__archivador').on('ajax:success', function (e, data, status, xhr) {
         var filas = data.map(function( expediente_archivado ) {
             return "<tr>"+
-                "<td>" + link_to(expediente_archivado['cliente_id'], expediente_archivado['cliente_nombre'], 'clientes')+"</td>" +
-                "<td>" + link_to(expediente_archivado['id'], expediente_archivado['titulo'], 'expedientes')+"</td>" +
-                "<td>"+dropdown(expediente_archivado['escritos'])+"</td>" +
+                "<td>" + link_to(expediente_archivado['cliente_id'], expediente_archivado['cliente_nombre'], 'clientes') + "</td>" +
+                "<td>" + link_to(expediente_archivado['id'], expediente_archivado['titulo'], 'expedientes') + "</td>" +
+                "<td>" + dropdown(expediente_archivado['escritos'])+"</td>" +
                 "</tr>";
         });
 

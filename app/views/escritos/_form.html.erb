@@ -3,7 +3,7 @@
     <div class="field form-group">
       <%= f.label :titulo, class: 'col-sm-2 control-label' %>*
       <div class="col-sm-8">
-        <%= f.text_field :titulo, class: 'form-control', autofocus: true %>
+        <%= f.text_field :titulo, class: 'form-control', autofocus: true, disabled: @escrito.fue_presentado? %>
       </div>
     </div>
     <%= f.text_area :cuerpo, id: 'editor' %>
@@ -37,8 +37,9 @@
       </div>
     <% end %>
 
-    <% if @escrito.id %>
+    <% if @escrito.persisted? %>
       <%= render 'boton_presentar' %>
+      <%= render 'boton_clonar' %>
     <% end %>
   <% end %>
 <% end %>
