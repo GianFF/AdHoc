@@ -67,7 +67,7 @@ class AdHocAplicacion
     begin
       expediente = Expediente.find(expediente_id)
     rescue ActiveRecord::RecordNotFound
-      raise AdHocUIExcepcion.new([mensaje_de_error_para_expediente_inexistente])
+      raise AdHocHackExcepcion.new([mensaje_de_error_para_expediente_inexistente])
     end
     validar_que_pertenece_al_abogado(expediente, un_abogado, mensaje_de_error_para_expediente_inexistente)
     expediente
@@ -158,7 +158,7 @@ class AdHocAplicacion
     begin
       escrito = Escrito.find(escrito_id) #TODO: deberia recibir el expediente_id tambien y buscar por los dos campos.
     rescue ActiveRecord::RecordNotFound
-      raise AdHocUIExcepcion.new([mensaje_de_error_para_escrito_invalido])
+      raise AdHocHackExcepcion.new([mensaje_de_error_para_escrito_invalido])
     end
     validar_que_pertenece_al_abogado(escrito, un_abogado, mensaje_de_error_para_escrito_invalido)
     escrito
@@ -235,7 +235,7 @@ class AdHocAplicacion
     begin
       adjunto = Adjunto.find_by!({id: adjunto_id, expediente_id: expediente_id})
     rescue ActiveRecord::RecordNotFound
-      raise AdHocUIExcepcion.new([mensaje_de_error_para_adjunto_invalido])
+      raise AdHocHackExcepcion.new([mensaje_de_error_para_adjunto_invalido])
     end
     validar_que_pertenece_al_abogado(adjunto, un_abogado, mensaje_de_error_para_adjunto_invalido)
     adjunto

@@ -8,13 +8,8 @@ class AdjuntosController < ApplicationController
   end
 
   def show
-    begin
-      @adjunto = @ad_hoc.buscar_adjunto_por_id!(params[:id], validar_parametros_expediente, abogado_actual)
-      cargar_expediente_y_cliente
-    rescue AdHocHackExcepcion => excepcion
-      mostrar_errores(excepcion, mantener_error: true)
-      redirect_back(fallback_location: root_path)
-    end
+    @adjunto = @ad_hoc.buscar_adjunto_por_id!(params[:id], validar_parametros_expediente, abogado_actual)
+    cargar_expediente_y_cliente
   end
 
   def create
@@ -30,9 +25,6 @@ class AdjuntosController < ApplicationController
       @cliente = @expediente.cliente
 
       render :new
-    rescue AdHocHackExcepcion => excepcion
-      mostrar_errores(excepcion, mantener_error: true)
-      redirect_back(fallback_location: root_path)
     end
   end
 
@@ -49,26 +41,18 @@ class AdjuntosController < ApplicationController
       @cliente = @expediente.cliente
 
       render :show
-    rescue AdHocHackExcepcion => excepcion
-      mostrar_errores(excepcion, mantener_error: true)
-      redirect_back(fallback_location: root_path)
     end
   end
 
   def destroy
-    begin
-      adjunto = @ad_hoc.buscar_adjunto_por_id!(params[:id], validar_parametros_expediente, abogado_actual)
-      adjunto.remove_archivo_adjunto!
-      adjunto.destroy
+    adjunto = @ad_hoc.buscar_adjunto_por_id!(params[:id], validar_parametros_expediente, abogado_actual)
+    adjunto.remove_archivo_adjunto!
+    adjunto.destroy
 
-      @expediente = @ad_hoc.buscar_expediente_por_id!(validar_parametros_expediente, abogado_actual)
-      @cliente = @expediente.cliente
+    @expediente = @ad_hoc.buscar_expediente_por_id!(validar_parametros_expediente, abogado_actual)
+    @cliente = @expediente.cliente
 
-      redirect_to expediente_url(validar_parametros_expediente)
-    rescue AdHocHackExcepcion => excepcion
-      mostrar_errores(excepcion, mantener_error: true)
-      redirect_back(fallback_location: root_path)
-    end
+    redirect_to expediente_url(validar_parametros_expediente)
   end
 
   private

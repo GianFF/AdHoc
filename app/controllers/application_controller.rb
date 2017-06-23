@@ -4,6 +4,15 @@ class ApplicationController < ActionController::Base
   before_action :crear_aplicacion
   protect_from_forgery with: :exception
 
+  rescue_from do
+    flash.keep[:error] = ['Algo ha salido mal.. contacte con su administrador si el problema persiste']
+    redirect_back(fallback_location: root_path)
+  end
+  rescue_from AdHocHackExcepcion do |excepcion|
+    mostrar_errores(excepcion, mantener_error: true)
+    redirect_back(fallback_location: root_path)
+  end
+
   def abogado_actual
     current_abogado
   end
