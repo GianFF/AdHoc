@@ -5,6 +5,7 @@ class ApplicationController < ActionController::Base
   protect_from_forgery with: :exception
 
   rescue_from do
+    #TODO: loggear
     flash.keep[:error] = ['Algo ha salido mal.. contacte con su administrador si el problema persiste']
     redirect_back(fallback_location: root_path)
   end
