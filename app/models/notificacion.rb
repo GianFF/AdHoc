@@ -1,4 +1,3 @@
 class Notificacion < Escrito
-  validates :fuero, :nombre, :calle, :nro, :piso, :localidad, :tipo_domicilio, :caracter,
-            :observaciones, presence: { message: mensaje_de_error_para_campo_vacio }
+  validates :fuero, :nombre, :calle, :nro, :localidad, :tipo_domicilio, :caracter, presence: { message: mensaje_de_error_para_campo_vacio }
 end

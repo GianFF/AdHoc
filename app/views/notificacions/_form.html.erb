@@ -36,9 +36,9 @@
     </div>
 
     <div class="field form-group">
-      <%= f.label :piso, class: 'col-sm-2 control-label' %>*
+      <%= f.label :piso, class: 'col-sm-2 control-label' %>
       <div class="col-sm-8">
-        <%= f.number_field :piso, class: 'form-control' %>
+        <%= f.number_field :piso, min: '0', max: '100', class: 'form-control' %>
       </div>
     </div>
 
@@ -69,7 +69,7 @@
     </div>
 
     <div class="field form-group">
-      <%= f.label :observaciones, class: 'col-sm-2 control-label' %>*
+      <%= f.label :observaciones, class: 'col-sm-2 control-label' %>
       <div class="col-sm-8">
         <%= f.text_field :observaciones, class: 'form-control' %>
       </div>

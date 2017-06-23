@@ -254,9 +254,7 @@ describe AdjuntosController, type: :controller do
 
     let(:path) { 'images/test.png' }
 
-    let(:un_adjunto) do
-      fabrica_de_objetos.un_adjunto_para(expediente, fixture_file_upload(path, extension_del_adjunto), fabrica_de_objetos.un_titulo_para_un_adjunto)
-    end
+    let(:un_adjunto) { fabrica_de_objetos.un_adjunto_para(expediente, fixture_file_upload(path, extension_del_adjunto), fabrica_de_objetos.un_titulo_para_un_adjunto) }
 
     let(:parametros) { {
         id: un_adjunto.id,

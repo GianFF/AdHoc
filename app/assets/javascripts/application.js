@@ -23,6 +23,9 @@ document.addEventListener("turbolinks:load", function() {
     comportamiento_buscador();
     comportamiento_archivador();
     comportamiento_boton_clonar();
+    $("#archivo_adjunto").on('change', function() {
+        $("#nombre_del_archivo_adjunto").html("Archivo cargado correctamente");
+    });
 });
 
 // private
@@ -37,7 +40,7 @@ function dropdown(escritos) {
                     return "<option value=''>" + escrito['escrito_titulo'] + "</option>";
                 });
 }
-function link_to_clonar(expediente_id, desde_id, hasta_id, titulo, tipo) {
+function link_to_clonar(expediente_id, desde_id, hasta_id, titulo) {
     var id = "clonar_escrito"+desde_id;
     var link = "<a id='"+id+"' href='/expedientes/" + expediente_id + "/clonar/" + desde_id+"/"+hasta_id+"'"+ ">"+titulo+"</a>";
     return link;
@@ -50,7 +53,7 @@ function comportamiento_boton_clonar(){
     $('#escritos__boton_clonar').on('ajax:success', function (e, data, status, xhr) {
         var filas = data.map(function( escrito ) {
             return "<tr>" +
-                        "<td>" + link_to_clonar(escrito['expediente_id'], escrito['id'], escrito['hasta_id'], escrito['titulo'], escrito['tipo']) + "</td>" +
+                        "<td>" + link_to_clonar(escrito['expediente_id'], escrito['id'], escrito['hasta_id'], escrito['titulo']) + "</td>" +
                         "<td>" + escrito['expediente'] + "</td>" +
                         "<td>" + escrito['cliente'] + "</td>" +
                     "</tr>";

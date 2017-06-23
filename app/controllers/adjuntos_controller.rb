@@ -9,7 +9,8 @@ class AdjuntosController < ApplicationController
 
   def show
     begin
-      show_adjunto
+      @adjunto = @ad_hoc.buscar_adjunto_por_id!(params[:id], validar_parametros_expediente, abogado_actual)
+      cargar_expediente_y_cliente
     rescue AdHocHackExcepcion => excepcion
       mostrar_errores(excepcion, mantener_error: true)
       redirect_back(fallback_location: root_path)
@@ -18,11 +19,16 @@ class AdjuntosController < ApplicationController
 
   def create
     begin
-      create_adjunto
+      @adjunto = @ad_hoc.crear_nuevo_adjunto!(validar_parametros_adjunto, validar_parametros_expediente, abogado_actual)
+      cargar_expediente_y_cliente
 
       render :show
     rescue AdHocUIExcepcion => excepcion
       mostrar_errores(excepcion)
+      @adjunto = Adjunto.new
+      @expediente = @ad_hoc.buscar_expediente_por_id!(validar_parametros_expediente, abogado_actual)
+      @cliente = @expediente.cliente
+
       render :new
     rescue AdHocHackExcepcion => excepcion
       mostrar_errores(excepcion, mantener_error: true)
@@ -32,11 +38,16 @@ class AdjuntosController < ApplicationController
 
   def update
     begin
-      update_adjunto
+      @adjunto = @ad_hoc.editar_adjunto!(params[:id], validar_parametros_expediente, abogado_actual, validar_parametros_adjunto)
+      cargar_expediente_y_cliente
 
       render :show
     rescue AdHocUIExcepcion => excepcion
       mostrar_errores(excepcion)
+      @adjunto = @ad_hoc.buscar_adjunto_por_id!(params[:id], validar_parametros_expediente, abogado_actual)
+      @expediente = @ad_hoc.buscar_expediente_por_id!(validar_parametros_expediente, abogado_actual)
+      @cliente = @expediente.cliente
+
       render :show
     rescue AdHocHackExcepcion => excepcion
       mostrar_errores(excepcion, mantener_error: true)
@@ -61,21 +72,6 @@ class AdjuntosController < ApplicationController
   end
 
   private
-
-  def show_adjunto
-    @adjunto = @ad_hoc.buscar_adjunto_por_id!(params[:id], validar_parametros_expediente, abogado_actual)
-    cargar_expediente_y_cliente
-  end
-
-  def create_adjunto
-    @adjunto = @ad_hoc.crear_nuevo_adjunto!(validar_parametros_adjunto, validar_parametros_expediente, abogado_actual)
-    cargar_expediente_y_cliente
-  end
-
-  def update_adjunto
-    @adjunto = @ad_hoc.editar_adjunto!(params[:id], validar_parametros_expediente, abogado_actual, validar_parametros_adjunto)
-    cargar_expediente_y_cliente
-  end
 
   def cargar_expediente_y_cliente
     @expediente = @adjunto.expediente

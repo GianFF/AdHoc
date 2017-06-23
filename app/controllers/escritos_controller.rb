@@ -33,14 +33,17 @@ class EscritosController < ApplicationController
       @escrito = @ad_hoc.editar_escrito!(params[:id], validar_parametros_escrito, abogado_actual)
       buscar_expediente_y_cliente_para_escrito
       flash.now[:success] = @ad_hoc.mensaje_de_confirmacion_para_la_correcta_edicion_de_un_escrito
+
+      render :show
     rescue AdHocUIExcepcion => excepcion
       mostrar_errores(excepcion)
       show_escrito_expediente_y_cliente
+
+      render :show
     rescue AdHocHackExcepcion => excepcion
       mostrar_errores(excepcion, mantener_error: true)
       redirect_back(fallback_location: root_path)
     end
-    render :show
   end
 
   def destroy

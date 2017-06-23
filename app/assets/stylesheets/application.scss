@@ -113,7 +113,13 @@
   margin-right: 20px;
 }
 
-.form_adjunto__archivo_adjunto{
+.form_adjunto__archivo_adjunto_pdf{
+  width: 100%;
+  height: 500px;
+  border: none;
+}
+
+.form_adjunto__archivo_adjunto_imagen{
   width: 100%;
   height: 780px;
   border: none;
