@@ -70,6 +70,24 @@ class EscritosController < ApplicationController
     render :show
   end
 
+  def escritos_para_clonar
+    respond_to do |format|
+      format.json { render json: @ad_hoc.buscar_escritos_para_clonar_en(params[:id], abogado_actual) }
+    end
+  end
+
+  def clonar
+    begin
+      @ad_hoc.clonar_cuerpo(params[:id], params[:en_id], abogado_actual)
+      params[:id] = params[:en_id]
+      show_escrito_expediente_y_cliente
+      render :show
+    rescue AdHocHackExcepcion => excepcion
+      mostrar_errores(excepcion, mantener_error: true)
+      redirect_back(fallback_location: root_path)
+    end
+  end
+
   private
 
   def new_escrito_expediente_y_cliente

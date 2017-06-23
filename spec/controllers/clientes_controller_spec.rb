@@ -22,6 +22,9 @@ describe ClientesController do
 
   let(:ad_hoc){ AdHocAplicacion.new }
 
+  let(:cliente){ fabrica_de_objetos.crear_un_cliente(abogado.id, fabrica_de_objetos.un_nombre_para_un_cliente,
+                                                     fabrica_de_objetos.un_apellido_para_un_cliente) }
+
   context 'Creacion de clientes' do
     subject { post :create, params: parametros }
 
@@ -234,9 +237,6 @@ describe ClientesController do
       end
     end
   end
-
-  let(:cliente){ fabrica_de_objetos.crear_un_cliente(abogado.id, fabrica_de_objetos.un_nombre_para_un_cliente,
-                                                     fabrica_de_objetos.un_apellido_para_un_cliente) }
 
   context 'Edicion de clientes' do
 

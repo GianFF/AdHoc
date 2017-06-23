@@ -233,15 +233,15 @@ class FabricaDeObjetos
 
   #Escritos
 
-  def crear_demanda(expediente_id)
+  def una_demanda_para(expediente_id)
     Demanda.create!(titulo: un_titulo_de_una_demanda, cuerpo: un_cuerpo_de_una_demanda, expediente_id: expediente_id)
   end
 
-  def crear_contestacion_de_demanda(expediente_id)
+  def una_contestacion_de_demanda_para(expediente_id)
     ContestacionDeDemanda.create!(titulo: otro_titulo_de_una_demanda, cuerpo: otro_cuerpo_de_una_demanda, expediente_id: expediente_id)
   end
 
-  def crear_mero_tramite(expediente_id)
+  def un_mero_tramite_para(expediente_id)
     MeroTramite.create!(titulo: 'Mero Tramite 01', cuerpo: otro_cuerpo_de_una_demanda, expediente_id: expediente_id)
   end
 
@@ -269,6 +269,7 @@ class FabricaDeObjetos
   def otro_cuerpo_de_una_demanda
     '<h1 style="text-align: center;">I.- OBJETO</h1>'+
         '<p>&nbsp;</p>'+
+        'un texto sobre la demanda' +
         '<h1 style="text-align: center;">II.- HECHOS</h1>'+
         '<p>&nbsp;</p>'+
         '<h1 style="text-align: center;">III.- DERECHO</h1>'+

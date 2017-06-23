@@ -20,7 +20,7 @@ class Escrito < ApplicationRecord
   end
 
   def fue_presentado?
-    self.presentado
+    self.presentado?
   end
 
   def marcar_como_presentado!
