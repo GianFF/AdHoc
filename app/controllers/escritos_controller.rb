@@ -3,12 +3,7 @@ class EscritosController < ApplicationController
   attr_reader :escrito
 
   def show
-    begin
-      show_escrito_expediente_y_cliente
-    rescue AdHocHackExcepcion => excepcion
-      mostrar_errores(excepcion, mantener_error: true)
-      redirect_back(fallback_location: root_path)
-    end
+    show_escrito_expediente_y_cliente
   end
 
   def new
@@ -33,25 +28,20 @@ class EscritosController < ApplicationController
       @escrito = @ad_hoc.editar_escrito!(params[:id], validar_parametros_escrito, abogado_actual)
       buscar_expediente_y_cliente_para_escrito
       flash.now[:success] = @ad_hoc.mensaje_de_confirmacion_para_la_correcta_edicion_de_un_escrito
+
+      render :show
     rescue AdHocUIExcepcion => excepcion
       mostrar_errores(excepcion)
       show_escrito_expediente_y_cliente
-    rescue AdHocHackExcepcion => excepcion
-      mostrar_errores(excepcion, mantener_error: true)
-      redirect_back(fallback_location: root_path)
+
+      render :show
     end
-    render :show
   end
 
   def destroy
-    begin
-      @ad_hoc.eliminar_escrito!(params[:id], abogado_actual)
-      flash.now[:success] = @ad_hoc.mensaje_de_confirmacion_para_la_correcta_eliminacion_de_un_escrito
-      redirect_to expediente_url(validar_parametros_expediente)
-    rescue AdHocHackExcepcion => excepcion
-      mostrar_errores(excepcion, mantener_error: true)
-      redirect_back(fallback_location: root_path)
-    end
+    @ad_hoc.eliminar_escrito!(params[:id], abogado_actual)
+    flash.now[:success] = @ad_hoc.mensaje_de_confirmacion_para_la_correcta_eliminacion_de_un_escrito
+    redirect_to expediente_url(validar_parametros_expediente)
   end
 
   def presentar
@@ -62,9 +52,6 @@ class EscritosController < ApplicationController
     rescue AdHocUIExcepcion => excepcion
       mostrar_errores(excepcion)
       show_escrito_expediente_y_cliente
-    rescue AdHocHackExcepcion => excepcion
-      mostrar_errores(excepcion, mantener_error: true)
-      redirect_back(fallback_location: root_path)
     end
 
     render :show
@@ -77,15 +64,10 @@ class EscritosController < ApplicationController
   end
 
   def clonar
-    begin
-      @ad_hoc.clonar_cuerpo(params[:id], params[:en_id], abogado_actual)
-      params[:id] = params[:en_id]
-      show_escrito_expediente_y_cliente
-      render :show
-    rescue AdHocHackExcepcion => excepcion
-      mostrar_errores(excepcion, mantener_error: true)
-      redirect_back(fallback_location: root_path)
-    end
+    @ad_hoc.clonar_cuerpo(params[:id], params[:en_id], abogado_actual)
+    params[:id] = params[:en_id]
+    show_escrito_expediente_y_cliente
+    render :show
   end
 
   private

@@ -48,11 +48,11 @@ class FabricaDeObjetos
   end
 
   def un_cuit
-    '27-37597072-5'
+    '27375970725'
   end
 
   def otro_cuit
-    '27-16965263-5'
+    '27169652635'
   end
 
   def un_colegio

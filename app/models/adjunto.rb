@@ -6,7 +6,7 @@ class Adjunto < ApplicationRecord
     'no puede estar en blanco'
   end
 
-  validates :titulo, :expediente_id, presence: { message: mensaje_de_error_para_campo_vacio}
+  validates :titulo, :archivo_adjunto, :expediente_id, presence: { message: mensaje_de_error_para_campo_vacio}
 
   def pertenece_a?(un_abogado)
     self.expediente.pertenece_a? un_abogado

@@ -2,12 +2,7 @@ class ExpedientesController < ApplicationController
   before_action :authenticate_abogado!
 
   def show
-    begin
-      buscar_expediente_escritos_y_cliente
-    rescue AdHocHackExcepcion => excepcion
-      mostrar_errores(excepcion, mantener_error: true)
-      redirect_back(fallback_location: root_path)
-    end
+    buscar_expediente_escritos_y_cliente
   end
 
   def new
@@ -17,12 +12,7 @@ class ExpedientesController < ApplicationController
   end
 
   def edit
-    begin
-      buscar_expediente_escritos_y_cliente
-    rescue AdHocHackExcepcion => excepcion
-      mostrar_errores(excepcion, mantener_error: true)
-      redirect_back(fallback_location: root_path)
-    end
+    buscar_expediente_escritos_y_cliente
   end
 
   def create
@@ -50,31 +40,18 @@ class ExpedientesController < ApplicationController
       mostrar_errores(excepcion)
       buscar_expediente_escritos_y_cliente
       render :edit, status: :bad_request
-    rescue AdHocHackExcepcion => excepcion
-      mostrar_errores(excepcion, mantener_error: true)
-      redirect_back(fallback_location: root_path)
     end
   end
 
   def destroy
-    begin
-      @ad_hoc.eliminar_expediente!(params[:id], abogado_actual)
-      flash.now[:success] = @ad_hoc.mensaje_de_confirmacion_para_la_correcta_eliminacion_de_un_expediente
-      redirect_to cliente_url(validar_parametros_cliente)
-    rescue AdHocHackExcepcion => excepcion
-      mostrar_errores(excepcion, mantener_error: true)
-      redirect_back(fallback_location: root_path)
-    end
+    @ad_hoc.eliminar_expediente!(params[:id], abogado_actual)
+    flash.now[:success] = @ad_hoc.mensaje_de_confirmacion_para_la_correcta_eliminacion_de_un_expediente
+    redirect_to cliente_url(validar_parametros_cliente)
   end
 
   def numerar
-    begin
-      buscar_expediente_escritos_y_cliente
-      @ad_hoc.validar_que_no_haya_sido_numerado(@expediente)
-    rescue AdHocHackExcepcion => excepcion
-      mostrar_errores(excepcion, mantener_error: true)
-      redirect_back(fallback_location: root_path)
-    end
+    buscar_expediente_escritos_y_cliente
+    @ad_hoc.validar_que_no_haya_sido_numerado(@expediente)
   end
 
   def realizar_numeraracion
@@ -87,22 +64,14 @@ class ExpedientesController < ApplicationController
       mostrar_errores(excepcion)
       buscar_expediente_escritos_y_cliente
       render :numerar
-    rescue AdHocHackExcepcion => excepcion
-      mostrar_errores(excepcion, mantener_error: true)
-      redirect_back(fallback_location: root_path)
     end
   end
 
   def archivar
-    begin
-      @escrito = ad_hoc.archivar_expediente!(params[:id], abogado_actual)
+    @escrito = ad_hoc.archivar_expediente!(params[:id], abogado_actual)
 
-      flash.now[:success] = @ad_hoc.mensaje_de_confirmacion_para_la_correcta_edicion_de_un_expediente
-      redirect_to cliente_url(validar_parametros_cliente)
-    rescue AdHocHackExcepcion => excepcion
-      mostrar_errores(excepcion, mantener_error: true)
-      redirect_back(fallback_location: root_path)
-    end
+    flash.now[:success] = @ad_hoc.mensaje_de_confirmacion_para_la_correcta_edicion_de_un_expediente
+    redirect_to cliente_url(validar_parametros_cliente)
   end
 
   def expedientes_archivados

@@ -8,40 +8,43 @@
     </div>
     <% if @adjunto.archivo_adjunto? %>
       <% if @adjunto.archivo_adjunto.file.extension.downcase == 'pdf' %>
-        <iframe src=<%= @adjunto.archivo_adjunto.url %> class='form_adjunto__archivo_adjunto'> </iframe>
+        <iframe src=<%= @adjunto.archivo_adjunto.url %> class='form_adjunto__archivo_adjunto_pdf'> </iframe>
       <% else %>
-        <%= image_tag @adjunto.archivo_adjunto.url, class: 'form_adjunto__archivo_adjunto' %>
+        <%= image_tag @adjunto.archivo_adjunto.url, class: 'form_adjunto__archivo_adjunto_imagen' %>
       <% end %>
     <% else %>
       <div class="field form-group">
         <%= f.label :archivo_adjunto, class: 'col-sm-2 control-label' %>*
         <div class="col-sm-8">
-          <%= f.file_field :archivo_adjunto%>
+          <label class="btn btn-default btn-file">
+            Subir <%= f.file_field :archivo_adjunto, class: 'hidden', id: 'archivo_adjunto'%>
+          </label>
+          <p id="nombre_del_archivo_adjunto"></p>
         </div>
       </div>
     <% end %>
-    <% if !@adjunto.persisted? %>
-      <div class="actions form-group cliente__edit-botones">
-        <%= f.submit 'Guardar', {class: 'btn btn-success cliente__edit-botones'}%>
-        <%= link_to 'Cancelar', cliente_expediente_path(@cliente.id, @expediente.id), method: :get,
-                    class: 'btn btn-warning notificacion__boton-cancelar' %>
-      </div>
-    <% else %>
-      <%= link_to 'Borrar',
-                  [@expediente, @adjunto],
-                  method: :delete,
-                  class: 'btn btn-danger notificacion__boton-cancelar',
-                  data: {
-                      confirm: '¿Seguro que quiere eliminar este adjunto?',
-                      'confirm-button-text': 'Seguro',
-                      'confirm-button-color': '#5cb85c',
-                      'cancel-button-text': 'Cancelar',
-                      'cancel-button-color': '#ec971f',
-                      'sweet-alert-type': 'warning',
-                      text: 'Esta acción no se podra revertir.'
-                  }
-      %>
-    <% end %>
+    <div class="actions form-group cliente__edit-botones">
+      <%= f.submit 'Guardar', {class: 'btn btn-success cliente__edit-botones'}%>
+      <% if !@adjunto.persisted? %>
+          <%= link_to 'Cancelar', cliente_expediente_path(@cliente.id, @expediente.id), method: :get,
+                      class: 'btn btn-warning notificacion__boton-cancelar' %>
+      <% else %>
+        <%= link_to 'Borrar',
+                    [@expediente, @adjunto],
+                    method: :delete,
+                    class: 'btn btn-danger notificacion__boton-cancelar',
+                    data: {
+                        confirm: '¿Seguro que quiere eliminar este adjunto?',
+                        'confirm-button-text': 'Seguro',
+                        'confirm-button-color': '#5cb85c',
+                        'cancel-button-text': 'Cancelar',
+                        'cancel-button-color': '#ec971f',
+                        'sweet-alert-type': 'warning',
+                        text: 'Esta acción no se podra revertir.'
+                    }
+        %>
+      <% end %>
+    </div>
   <% end %>
 <% end %>
 <%= render partial: 'shared/tab_escritos' %>
