@@ -1,18 +1,11 @@
 <% if abogado_signed_in? %>
   <ul class="nav nav-pills nav-stacked">
-    <li role="presentation" class="active">
-      <%= form_tag(clientes_path, method: 'get') do %>
-        <div class="input-group">
-          <span class="input-group-btn">
-            <%= button_tag(type: 'submit', class: 'btn btn-default', id: 'panel_izquierdo__buscar') do %>
-                <i class="glyphicon glyphicon-search panel_izquierdo__buscar"></i>
-            <% end %>
-          </span>
-          <%= text_field_tag :query, params[:query], placeholder: 'Clientes', class: 'form-control', id: 'panel_izquierdo__query' %>
-        </div>
-      <% end %>
+    <li role="presentation">
+      <%= render 'application/buscador' %>
     </li>
-    <%= render 'application/expedientes_archivados' %>
+    <li role="presentation">
+      <%= render 'application/expedientes_archivados' %>
+    </li>
     <li role="presentation">
       <button type="button" class="btn btn-default btn-block">
         <i class="glyphicon glyphicon-calendar pull-left"></i> Calendario

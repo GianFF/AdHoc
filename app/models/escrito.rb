@@ -11,6 +11,10 @@ class Escrito < ApplicationRecord
 
   validates :titulo, :expediente_id, presence: { message: mensaje_de_error_para_campo_vacio}
 
+  def url
+    raise 'Subclass responsibility'
+  end
+
   def pertenece_a?(un_abogado)
     self.expediente.pertenece_a? un_abogado
   end

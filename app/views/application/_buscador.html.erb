@@ -1,0 +1,68 @@
+<%= form_tag buscar_path, method: 'get', remote: true, id: 'panel_izquierdo__buscador' do %>
+    <div class="input-group">
+          <span class="input-group-btn">
+            <%= button_tag(type: 'submit', class: 'btn btn-default', id: 'panel_izquierdo__buscar') do %>
+                <i class="glyphicon glyphicon-search"></i>
+            <% end %>
+          </span>
+      <%= text_field_tag :query, params[:query], placeholder: 'Clientes, Expedientes, Escritos...', class: 'form-control', id: 'panel_izquierdo__query' %>
+    </div>
+<% end %>
+<div id="buscador-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title">Resultados de la búsqueda</h3>
+      </div>
+      <div class="modal-body row">
+        <div class="col-xs-6">
+          <table class="table table-bordered">
+            <thead>
+            <tr>
+              <th>Clientes</th>
+            </tr>
+            </thead>
+            <tbody id="buscador_clientes__table_body">
+
+            </tbody>
+          </table>
+          <table class="table table-bordered">
+            <thead>
+            <tr>
+              <th>Expedientes</th>
+            </tr>
+            </thead>
+            <tbody id="buscador_expedientes__table_body">
+
+            </tbody>
+          </table>
+        </div>
+        <div class="col-xs-6">
+          <table class="table table-bordered">
+            <thead>
+            <tr>
+              <th>Escritos</th>
+            </tr>
+            </thead>
+            <tbody id="buscador_escritos__table_body">
+
+            </tbody>
+          </table>
+          <table class="table table-bordered">
+            <thead>
+            <tr>
+              <th>Adjuntos</th>
+            </tr>
+            </thead>
+            <tbody id="buscador_adjuntos__table_body">
+
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-warning" data-dismiss="modal">Cerrar</button>
+      </div>
+    </div>
+  </div>
+</div>

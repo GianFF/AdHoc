@@ -23,9 +23,7 @@ document.addEventListener("turbolinks:load", function() {
     comportamiento_buscador();
     comportamiento_archivador();
     comportamiento_boton_clonar();
-    $("#archivo_adjunto").on('change', function() {
-        $("#nombre_del_archivo_adjunto").html("Archivo cargado correctamente");
-    });
+    comportamiento_uploader();
 });
 
 // private
@@ -48,6 +46,11 @@ function link_to_clonar(expediente_id, desde_id, hasta_id, titulo) {
 
 
 /// Comportamientos
+function comportamiento_uploader(){
+    $("#archivo_adjunto").on('change', function () {
+        $("#nombre_del_archivo_adjunto").html("Archivo cargado correctamente");
+    });
+}
 function comportamiento_boton_clonar(){
 
     $('#escritos__boton_clonar').on('ajax:success', function (e, data, status, xhr) {
@@ -87,6 +90,39 @@ function comportamiento_buscador() {
     habilitar_deshabilitar_segun_corresponda();
 
     habilitar_enter_para_buscar();
+
+
+    function agregar_contenido_de_filas_al_elemnto(filas, elemento) {
+        if (filas.length === 0)
+            $(elemento).html('<h4>No se encontraron resultados</h4>').css('text-align', 'center');
+        else
+            $(elemento).html(filas).css('text-align', 'left');
+    }
+
+    $('#panel_izquierdo__buscador').on('ajax:success', function (e, data, status, xhr) {
+
+        var filas_clientes = data['clientes'].map(function( cliente ) {
+            return "<tr><td>"+link_to(cliente['id'], cliente['nombre'], 'clientes')+"</td></tr>";
+        });
+        agregar_contenido_de_filas_al_elemnto(filas_clientes, '#buscador_clientes__table_body');
+
+        var filas_expedientes = data['expedientes'].map(function( expediente ) {
+            return "<tr><td>"+link_to(expediente['id'], expediente['titulo'], 'clientes/'+expediente['cliente_id']+'/expedientes')+"</td></tr>";
+        });
+        agregar_contenido_de_filas_al_elemnto(filas_expedientes, '#buscador_expedientes__table_body');
+
+        var filas_escritos = data['escritos'].map(function( escrito ) {
+            return "<tr><td>"+link_to(escrito['id'], escrito['titulo'], 'expedientes/'+escrito['expediente_id']+'/'+escrito['tipo'])+"</td></tr>";
+        });
+        agregar_contenido_de_filas_al_elemnto(filas_escritos, '#buscador_escritos__table_body');
+
+        var filas_adjuntos = data['adjuntos'].map(function( adjunto ) {
+            return "<tr><td>"+link_to(adjunto['id'], adjunto['titulo'], 'expedientes/'+adjunto['expediente_id']+'/adjuntos')+"</td></tr>";
+        });
+        agregar_contenido_de_filas_al_elemnto(filas_adjuntos, '#buscador_adjuntos__table_body');
+
+        $('#buscador-modal').modal('show');
+    });
 }
 function comportamiento_alertas() {
     borrarAlertaDentroDe(7000);

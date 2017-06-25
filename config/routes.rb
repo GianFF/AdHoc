@@ -1,5 +1,5 @@
 Rails.application.routes.draw do
-  devise_for :abogados, :controllers => {:registrations => 'abogados'}
+  devise_for :abogados, controllers: {registrations: 'abogados'}
 
   resources :clientes do
     resources :expedientes
@@ -28,6 +28,8 @@ Rails.application.routes.draw do
     get 'clonar/:id/:en_id', to: 'mero_tramites#clonar', as: :clonar_mero_tramite
     get 'clonar/:id/:en_id', to: 'notificacions#clonar', as: :clonar_notificacion
   end
+
+  get 'buscar', to: 'query#buscar', as: :buscar
 
   root 'clientes#new'
 end

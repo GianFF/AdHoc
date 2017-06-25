@@ -113,6 +113,10 @@ class FabricaDeObjetos
     Cliente.create!(nombre: otro_nombre_para_un_cliente, apellido: otro_apellido_para_un_cliente, abogado_id: abogado_id)
   end
 
+  def un_cliente_con(abogado_id, un_nombre, un_apellido)
+    Cliente.create!(parametros_para_cliente(abogado_id, un_nombre, un_apellido))
+  end
+
   def un_nombre_para_un_cliente
     'Juan'
   end
@@ -155,11 +159,11 @@ class FabricaDeObjetos
     }
   end
 
-  def crear_un_cliente(abogado_id, un_nombre, un_apellido)
-    Cliente.create!(parametros_para_cliente(abogado_id, un_nombre, un_apellido))
-  end
-
   #Expedientes
+
+  def un_expediente_con(un_actor, un_demandado, una_materia, cliente_id)
+    Expediente.create!(actor: un_actor, demandado: un_demandado, materia: una_materia, cliente_id: cliente_id)
+  end
 
   def un_expediente_archivado(un_expediente)
     {
@@ -233,6 +237,10 @@ class FabricaDeObjetos
 
   #Escritos
 
+  def una_demanda_con(un_titulo, un_cuerpo, un_expediente_id)
+    Demanda.create!(titulo: un_titulo, cuerpo: un_cuerpo, expediente_id: un_expediente_id)
+  end
+
   def una_demanda_para(expediente_id)
     Demanda.create!(titulo: un_titulo_de_una_demanda, cuerpo: un_cuerpo_de_una_demanda, expediente_id: expediente_id)
   end
@@ -292,6 +300,14 @@ class FabricaDeObjetos
 
   #Adjuntos
 
+  def un_adjunto(un_expediente)
+    un_adjunto_para(un_expediente, pdf, un_titulo_para_un_adjunto)
+  end
+
+  def otro_adjunto(un_expediente)
+    un_adjunto_para(un_expediente,  pdf, otro_titulo_para_un_adjunto)
+  end
+
   def un_adjunto_para(un_expediente, archivo_adjunto, un_titulo_para_un_adjunto)
     Adjunto.create!({titulo: un_titulo_para_un_adjunto, archivo_adjunto: archivo_adjunto, expediente_id: un_expediente.id})
   end
@@ -301,6 +317,11 @@ class FabricaDeObjetos
   end
 
   def otro_titulo_para_un_adjunto
-    'otro titulo'
+    'Adjunto 02'
   end
+
+  def pdf
+    Rack::Test::UploadedFile.new(Rails.root.join('spec', 'fixtures', 'pdfs', 'test.pdf'))
+  end
+
 end
