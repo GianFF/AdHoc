@@ -1,5 +1,25 @@
 class AdHocAplicacion
 
+  # Buscador
+
+  def buscar(una_query, un_abogado)
+    query = "%#{una_query}%"
+
+    clientes = clientes_de(un_abogado)
+                   .where('nombre like :query or apellido like :query', {query: query})
+                   .map { |cliente| {cliente_id: cliente.id, cliente_nombre: cliente.nombre_completo} }
+
+    escritos = escritos_de(un_abogado)
+                   .where('titulo like :query or cuerpo like :query', {query: query})
+                   .map { |escrito| {escrito_id: escrito.id, escrito_titulo: escrito.titulo, tipo: escrito.url, expediente_id: escrito.expediente.id} }
+
+    expedientes = expedientes_de(un_abogado)
+                      .where('actor like :query or demandado like :query or materia like :query', {query: query})
+                      .map { |expediente| {expediente_id: expediente.id, expediente_titulo: expediente.titulo, cliente_id: expediente.cliente.id} }
+
+    {clientes: clientes, escritos: escritos, expedientes: expedientes}
+  end
+
   # Abogados
 
   def editar_abogado!(un_abogado, parametros_abogado)
@@ -84,7 +104,7 @@ class AdHocAplicacion
           escritos: expediente.escritos.map do |escrito|
             {
                 escrito_id: escrito.id,
-              escrito_titulo: escrito.titulo
+                escrito_titulo: escrito.titulo
             }
           end
       }
@@ -140,7 +160,7 @@ class AdHocAplicacion
   # Escritos
 
   def buscar_escritos_para_clonar_en(escrito_id, un_abogado)
-    escritos = Escrito.left_outer_joins(expediente: [cliente: [:abogado]]).where(abogados: {id: un_abogado.id})
+    escritos = escritos_de(un_abogado)
     escritos.map do |escrito|
       {
           id: escrito.id,
@@ -371,5 +391,17 @@ class AdHocAplicacion
     if la_contrasenia_es_blanca?(contrasenia_del_abogado)
       block.call(mensaje_de_error_para_contrasenia_no_proveida)
     end
+  end
+
+  def clientes_de(un_abogado)
+    Cliente.where(abogado_id: un_abogado.id)
+  end
+
+  def escritos_de(un_abogado)
+    Escrito.left_outer_joins(expediente: [cliente: [:abogado]]).where(abogados: {id: un_abogado.id})
+  end
+
+  def expedientes_de(un_abogado)
+    Expediente.left_outer_joins(cliente: [:abogado]).where(abogados: {id: un_abogado.id})
   end
 end

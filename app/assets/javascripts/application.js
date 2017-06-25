@@ -23,9 +23,7 @@ document.addEventListener("turbolinks:load", function() {
     comportamiento_buscador();
     comportamiento_archivador();
     comportamiento_boton_clonar();
-    $("#archivo_adjunto").on('change', function() {
-        $("#nombre_del_archivo_adjunto").html("Archivo cargado correctamente");
-    });
+    comportamiento_uploader();
 });
 
 // private
@@ -48,6 +46,11 @@ function link_to_clonar(expediente_id, desde_id, hasta_id, titulo) {
 
 
 /// Comportamientos
+function comportamiento_uploader(){
+    $("#archivo_adjunto").on('change', function () {
+        $("#nombre_del_archivo_adjunto").html("Archivo cargado correctamente");
+    });
+}
 function comportamiento_boton_clonar(){
 
     $('#escritos__boton_clonar').on('ajax:success', function (e, data, status, xhr) {
@@ -87,6 +90,26 @@ function comportamiento_buscador() {
     habilitar_deshabilitar_segun_corresponda();
 
     habilitar_enter_para_buscar();
+
+    $('#panel_izquierdo__buscador').on('ajax:success', function (e, data, status, xhr) {
+
+        var filas_clientes = data['clientes'].map(function( cliente ) {
+            return "<tr><td>"+link_to(cliente['cliente_id'], cliente['cliente_nombre'], 'clientes')+"</td></tr>";
+        });
+        $('#buscador_clientes__table_body').html(filas_clientes);
+
+        var filas_expedientes = data['expedientes'].map(function( expediente ) {
+            return "<tr><td>"+link_to(expediente['expediente_id'], expediente['expediente_titulo'], 'clientes/'+expediente['cliente_id']+'/expedientes')+"</td></tr>";
+        });
+        $('#buscador_expedientes__table_body').html(filas_expedientes);
+
+        var filas_escritos = data['escritos'].map(function( escrito ) {
+            return "<tr><td>"+link_to(escrito['escrito_id'], escrito['escrito_titulo'], 'expedientes/'+escrito['expediente_id']+'/'+escrito['tipo'])+"</td></tr>";
+        });
+        $('#buscador_escritos__table_body').html(filas_escritos);
+
+        $('#buscador-modal').modal('show');
+    });
 }
 function comportamiento_alertas() {
     borrarAlertaDentroDe(7000);

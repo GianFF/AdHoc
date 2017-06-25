@@ -4,4 +4,8 @@ class ContestacionDeDemanda < Escrito
   def encabezado(abogado, expediente, cliente)
     self.encabezado = EncabezadoConDatosDelExpediente.value(abogado, expediente, cliente) unless @encabezado #TODO test: unless self.encabezado
   end
+
+  def url
+    'contestacion_de_demandas'
+  end
 end
