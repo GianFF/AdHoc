@@ -94,19 +94,25 @@ function comportamiento_buscador() {
     $('#panel_izquierdo__buscador').on('ajax:success', function (e, data, status, xhr) {
 
         var filas_clientes = data['clientes'].map(function( cliente ) {
-            return "<tr><td>"+link_to(cliente['cliente_id'], cliente['cliente_nombre'], 'clientes')+"</td></tr>";
+            return "<tr><td>"+link_to(cliente['id'], cliente['nombre'], 'clientes')+"</td></tr>";
         });
         $('#buscador_clientes__table_body').html(filas_clientes);
 
         var filas_expedientes = data['expedientes'].map(function( expediente ) {
-            return "<tr><td>"+link_to(expediente['expediente_id'], expediente['expediente_titulo'], 'clientes/'+expediente['cliente_id']+'/expedientes')+"</td></tr>";
+            return "<tr><td>"+link_to(expediente['id'], expediente['titulo'], 'clientes/'+expediente['cliente_id']+'/expedientes')+"</td></tr>";
         });
         $('#buscador_expedientes__table_body').html(filas_expedientes);
 
         var filas_escritos = data['escritos'].map(function( escrito ) {
-            return "<tr><td>"+link_to(escrito['escrito_id'], escrito['escrito_titulo'], 'expedientes/'+escrito['expediente_id']+'/'+escrito['tipo'])+"</td></tr>";
+            return "<tr><td>"+link_to(escrito['id'], escrito['titulo'], 'expedientes/'+escrito['expediente_id']+'/'+escrito['tipo'])+"</td></tr>";
         });
         $('#buscador_escritos__table_body').html(filas_escritos);
+
+        var filas_adjuntos = data['adjuntos'].map(function( adjunto ) {
+            return "<tr><td>"+link_to(adjunto['id'], adjunto['titulo'], 'expedientes/'+adjunto['expediente_id']+'/adjuntos')+"</td></tr>";
+        });
+        $('#buscador_adjuntos__table_body').html(filas_adjuntos);
+
 
         $('#buscador-modal').modal('show');
     });

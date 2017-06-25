@@ -7,17 +7,21 @@ class AdHocAplicacion
 
     clientes = clientes_de(un_abogado)
                    .where('nombre like :query or apellido like :query', {query: query})
-                   .map { |cliente| {cliente_id: cliente.id, cliente_nombre: cliente.nombre_completo} }
+                   .map { |cliente| {id: cliente.id, nombre: cliente.nombre_completo} }
 
     escritos = escritos_de(un_abogado)
                    .where('titulo like :query or cuerpo like :query', {query: query})
-                   .map { |escrito| {escrito_id: escrito.id, escrito_titulo: escrito.titulo, tipo: escrito.url, expediente_id: escrito.expediente.id} }
+                   .map { |escrito| {id: escrito.id, titulo: escrito.titulo, tipo: escrito.url, expediente_id: escrito.expediente.id} }
+
+    adjuntos = adjuntos_de(un_abogado)
+                   .where('titulo like :query', {query: query})
+                   .map { |adjunto| {id: adjunto.id, titulo: adjunto.titulo, expediente_id: adjunto.expediente.id} }
 
     expedientes = expedientes_de(un_abogado)
                       .where('actor like :query or demandado like :query or materia like :query', {query: query})
-                      .map { |expediente| {expediente_id: expediente.id, expediente_titulo: expediente.titulo, cliente_id: expediente.cliente.id} }
+                      .map { |expediente| {id: expediente.id, titulo: expediente.titulo, cliente_id: expediente.cliente.id} }
 
-    {clientes: clientes, escritos: escritos, expedientes: expedientes}
+    {clientes: clientes, escritos: escritos, adjuntos: adjuntos, expedientes: expedientes}
   end
 
   # Abogados
@@ -399,6 +403,10 @@ class AdHocAplicacion
 
   def escritos_de(un_abogado)
     Escrito.left_outer_joins(expediente: [cliente: [:abogado]]).where(abogados: {id: un_abogado.id})
+  end
+
+  def adjuntos_de(un_abogado)
+    Adjunto.left_outer_joins(expediente: [cliente: [:abogado]]).where(abogados: {id: un_abogado.id})
   end
 
   def expedientes_de(un_abogado)

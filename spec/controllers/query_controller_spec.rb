@@ -5,8 +5,8 @@ def devuelve_un_expediente
 
   subject
 
-  expect(resultado_de_la_busqueda['expedientes'].first['expediente_id']).to be expediente.id
-  expect(resultado_de_la_busqueda['expedientes'].first['expediente_titulo']).to eq expediente.titulo
+  expect(resultado_de_la_busqueda['expedientes'].first['id']).to be expediente.id
+  expect(resultado_de_la_busqueda['expedientes'].first['titulo']).to eq expediente.titulo
 end
 
 def devuelve_un_escrito
@@ -14,8 +14,8 @@ def devuelve_un_escrito
 
   subject
 
-  expect(resultado_de_la_busqueda['escritos'].first['escrito_id']).to be escrito.id
-  expect(resultado_de_la_busqueda['escritos'].first['escrito_titulo']).to eq escrito.titulo
+  expect(resultado_de_la_busqueda['escritos'].first['id']).to be escrito.id
+  expect(resultado_de_la_busqueda['escritos'].first['titulo']).to eq escrito.titulo
 end
 
 describe QueryController do
@@ -60,8 +60,8 @@ describe QueryController do
     it 'devuelve ese cliente' do
       subject
 
-      expect(resultado_de_la_busqueda['clientes'].first['cliente_id']).to be cliente.id
-      expect(resultado_de_la_busqueda['clientes'].first['cliente_nombre']).to eq cliente.nombre_completo
+      expect(resultado_de_la_busqueda['clientes'].first['id']).to be cliente.id
+      expect(resultado_de_la_busqueda['clientes'].first['nombre']).to eq cliente.nombre_completo
     end
   end
 
@@ -115,6 +115,19 @@ describe QueryController do
     end
   end
 
+  context 'Cuando se busca un adjunto por titulo' do
+    let(:query) { fabrica_de_objetos.un_titulo_para_un_adjunto }
+
+    it 'devuelve ese adjunto' do
+      adjunto = fabrica_de_objetos.un_adjunto(expediente)
+
+      subject
+
+      expect(resultado_de_la_busqueda['adjuntos'].first['id']).to be adjunto.id
+      expect(resultado_de_la_busqueda['adjuntos'].first['titulo']).to eq adjunto.titulo
+    end
+  end
+
   context 'Cuando se busca por una palabra clave que machea con todo' do
     let(:query) { un_nombre }
 
@@ -125,12 +138,12 @@ describe QueryController do
 
       subject
 
-      expect(resultado_de_la_busqueda['clientes'].first['cliente_id']).to be cliente.id
-      expect(resultado_de_la_busqueda['clientes'].first['cliente_nombre']).to eq cliente.nombre_completo
-      expect(resultado_de_la_busqueda['escritos'].first['escrito_id']).to be escrito.id
-      expect(resultado_de_la_busqueda['escritos'].first['escrito_titulo']).to eq escrito.titulo
-      expect(resultado_de_la_busqueda['expedientes'].first['expediente_id']).to be expediente.id
-      expect(resultado_de_la_busqueda['expedientes'].first['expediente_titulo']).to eq expediente.titulo
+      expect(resultado_de_la_busqueda['clientes'].first['id']).to be cliente.id
+      expect(resultado_de_la_busqueda['clientes'].first['nombre']).to eq cliente.nombre_completo
+      expect(resultado_de_la_busqueda['escritos'].first['id']).to be escrito.id
+      expect(resultado_de_la_busqueda['escritos'].first['titulo']).to eq escrito.titulo
+      expect(resultado_de_la_busqueda['expedientes'].first['id']).to be expediente.id
+      expect(resultado_de_la_busqueda['expedientes'].first['titulo']).to eq expediente.titulo
     end
   end
 end
