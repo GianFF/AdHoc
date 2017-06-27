@@ -50,6 +50,15 @@
   background-color: #f8f8f8;
 }
 
+.cabecera__container{
+  background-color: #f0f0f0;
+}
+
+.modal-header {
+  border-radius: 8px 8px 0 0;
+  background-color: #f0f0f0;
+}
+
 .cabecera__nombre-abogado{
   font-size: 125%;
 }
@@ -124,3 +133,7 @@
 .boton_presentar{
    margin-top: 5px;
  }
+
+#panel_izquierdo__archivador{
+  padding: 6px 12px;
+}
