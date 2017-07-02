@@ -34,9 +34,9 @@ class AdHocAplicacion
     end
   end
 
-  def validar_contrasenia(contrasenia_del_abogado, abogado, &block)
-    validar_que_la_contrasenia_no_sea_blanca(contrasenia_del_abogado, &block)
-    validar_que_la_contrasenia_no_sea_invalida(contrasenia_del_abogado, abogado, &block)
+  def validar_contrasenia(contrasenia_del_abogado, abogado)
+    validar_que_la_contrasenia_no_sea_blanca(contrasenia_del_abogado)
+    validar_que_la_contrasenia_no_sea_invalida(contrasenia_del_abogado, abogado)
   end
 
   # Clientes
@@ -385,15 +385,15 @@ class AdHocAplicacion
     contrasenia_del_abogado.blank?
   end
 
-  def validar_que_la_contrasenia_no_sea_invalida(contrasenia_del_abogado, abogado, &block)
+  def validar_que_la_contrasenia_no_sea_invalida(contrasenia_del_abogado, abogado)
     unless la_contrasenia_es_valida?(contrasenia_del_abogado, abogado)
-      block.call(mensaje_de_error_para_contrasenia_invalida)
+      raise AdHocUIExcepcion.new([mensaje_de_error_para_contrasenia_invalida])
     end
   end
 
-  def validar_que_la_contrasenia_no_sea_blanca(contrasenia_del_abogado, &block)
+  def validar_que_la_contrasenia_no_sea_blanca(contrasenia_del_abogado)
     if la_contrasenia_es_blanca?(contrasenia_del_abogado)
-      block.call(mensaje_de_error_para_contrasenia_no_proveida)
+      raise AdHocUIExcepcion.new([mensaje_de_error_para_contrasenia_no_proveida])
     end
   end
 

@@ -30,8 +30,8 @@
           </div>
         <% else %>
           <!-- LOGIN -->
+          <%= render 'shared/alertas' %>
           <div class="col-xs-9">
-            <%= render 'shared/alertas' %>
             <%= yield %>
           </div>
         <% end %>

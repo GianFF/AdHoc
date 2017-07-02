@@ -1,5 +1,5 @@
 <div class="row">
-  <%= form_for(resource, url: registration_path(resource)) do |f| %>
+  <%= form_for(resource, url: registration_path(resource), remote: true, html: {id: 'editar_perfil__form'}) do |f| %>
 
     <div class="col-xs-4">
       <div class="field">
@@ -59,13 +59,13 @@
       </div>
 
       <div class="field">
-        <%= f.label :contraseña_actual, id: 'perfil_password' %> <br />
-        <%= f.password_field :current_password, autocomplete: 'off', class: 'form-control registrations__input' %>
+        <%= f.label :contraseña_actual %> <br />
+        <%= f.password_field :current_password, autocomplete: 'off', class: 'form-control registrations__input', id: 'editar_perfil__password' %>
       </div>
 
       <div class="actions">
         <br>
-        <%= f.submit 'Guardar', {class: 'btn btn-success'}%>
+        <%= f.submit 'Guardar', {class: 'btn btn-success', id: 'editar_perfil__guardar'}%>
       </div>
     </div>
   <% end %>
