@@ -97,8 +97,8 @@ class AdHocAplicacion
     expediente
   end
 
-  def buscar_expedientes_archivados
-    expedientes_archivados = Expediente.where(ha_sido_archivado: true) || []
+  def buscar_expedientes_archivados(un_abogado)
+    expedientes_archivados = expedientes_de(un_abogado).where(ha_sido_archivado: true)
     expedientes_archivados.map do |expediente|
       {
           id: expediente.id,

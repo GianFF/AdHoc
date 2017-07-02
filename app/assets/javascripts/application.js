@@ -72,13 +72,30 @@ function comportamiento_archivador(){
     $('#panel_izquierdo__archivador').on('ajax:success', function (e, data, status, xhr) {
         var filas = data.map(function( expediente_archivado ) {
             return "<tr>"+
-                "<td>" + link_to(expediente_archivado['cliente_id'], expediente_archivado['cliente_nombre'], 'clientes') + "</td>" +
+                    "<td>" + link_to(expediente_archivado['cliente_id'], expediente_archivado['cliente_nombre'], 'clientes') + "</td>" +
                 "<td>" + link_to(expediente_archivado['id'], expediente_archivado['titulo'], 'expedientes') + "</td>" +
                 "<td>" + dropdown(expediente_archivado['escritos'])+"</td>" +
                 "</tr>";
         });
 
-        $('#expedientes_archivados__table_body').html(filas);
+        if(filas.length == 0){
+            $('#expedientes_archivados__modal_body').html('<p>Aún no se han archivdo expedientes</p>');
+        }else{
+            $('#expedientes_archivados__modal_body').html(
+                "<table class='table table-bordered'>"+
+                "<thead>"+
+                "<tr>"+
+                "<th>Cliente</th>"+
+                "<th>Expediente</th>"+
+                "<th>Escritos</th>"+
+                "</tr>"+
+                "</thead>"+
+                "<tbody>"+
+                    filas +
+                "</tbody>"+
+                "</table>"
+            );
+        }
 
         $('#archivador-modal').modal('show');
     });
