@@ -24,6 +24,7 @@ document.addEventListener("turbolinks:load", function() {
     comportamiento_archivador();
     comportamiento_boton_clonar();
     comportamiento_uploader();
+    comportamiento_modal_perfil();
 });
 
 // private
@@ -71,13 +72,30 @@ function comportamiento_archivador(){
     $('#panel_izquierdo__archivador').on('ajax:success', function (e, data, status, xhr) {
         var filas = data.map(function( expediente_archivado ) {
             return "<tr>"+
-                "<td>" + link_to(expediente_archivado['cliente_id'], expediente_archivado['cliente_nombre'], 'clientes') + "</td>" +
+                    "<td>" + link_to(expediente_archivado['cliente_id'], expediente_archivado['cliente_nombre'], 'clientes') + "</td>" +
                 "<td>" + link_to(expediente_archivado['id'], expediente_archivado['titulo'], 'expedientes') + "</td>" +
                 "<td>" + dropdown(expediente_archivado['escritos'])+"</td>" +
                 "</tr>";
         });
 
-        $('#expedientes_archivados__table_body').html(filas);
+        if(filas.length == 0){
+            $('#expedientes_archivados__modal_body').html('<p>Aún no se han archivdo expedientes</p>');
+        }else{
+            $('#expedientes_archivados__modal_body').html(
+                "<table class='table table-bordered'>"+
+                "<thead>"+
+                "<tr>"+
+                "<th>Cliente</th>"+
+                "<th>Expediente</th>"+
+                "<th>Escritos</th>"+
+                "</tr>"+
+                "</thead>"+
+                "<tbody>"+
+                    filas +
+                "</tbody>"+
+                "</table>"
+            );
+        }
 
         $('#archivador-modal').modal('show');
     });
@@ -130,6 +148,27 @@ function comportamiento_alertas() {
     cerrarAlerta();
 }
 
+function comportamiento_modal_perfil() {
+    $('#boton_perfil__abrir').on('click', function () {
+
+        $('#registracion__perfil-modal').modal('show');
+
+        $('#editar_perfil__form').on('ajax:error', function (e, data, status, xhr) {
+            $('#editar_perfil__password').val("");
+            var errores = JSON.parse(data.responseText);
+            $('#editar_perfil__alertas').html(
+                "<div class='alert alert-danger .alert-dismissible' role='alert' style='margin-left: 10px; margin-right: 10px;'>" +
+                errores.map(function (error) {
+                    return "<li>" + error + "</li>";
+                }) +
+                "</div>"
+            );
+            borrarAlertaDentroDe(5000);
+        });
+
+        $('#registracion__perfil_cerrar').on('click', function () { borrarAlertaDentroDe(0); });
+    });
+}
 
 /// Alertas
 

@@ -4,7 +4,7 @@ class Abogado < ApplicationRecord
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable and :omniauthable
   devise :database_authenticatable, :registerable, :recoverable,
-         :rememberable, :validatable, :timeoutable, :lockable
+         :rememberable, :timeoutable, :lockable
 
 
   def self.mensaje_de_error_para_sexo_en_invalido

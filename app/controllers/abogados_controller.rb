@@ -10,16 +10,15 @@ class AbogadosController < Devise::RegistrationsController
 
   def update
     begin
-      @ad_hoc.validar_contrasenia(params[:abogado][:current_password], @abogado) do |mensaje_de_error|
-        flash[:error] = mensaje_de_error
-        redirect_to root_path and return
-      end
+      @ad_hoc.validar_contrasenia(params[:abogado][:current_password], @abogado)
       @abogado = @ad_hoc.editar_abogado!(@abogado, validar_parametros_abogado)
       flash.keep[:success] = 'Perfil editado satisfactoriamente'
+      redirect_to root_path
     rescue AdHocUIExcepcion => error
-      mostrar_errores(error, mantener_error: true)
+      respond_to do |format|
+        format.json { render plain: error.errores, status: :found }
+      end
     end
-    redirect_to root_path
   end
 
   protected

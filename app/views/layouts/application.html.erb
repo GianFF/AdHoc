@@ -6,7 +6,7 @@
 
     <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track': 'reload' %>
     <%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>
-
+    <%= favicon_link_tag '/assets/adhoc-logo.png' %>
     <!-- TinyMCE -->
     <script src="https://cloud.tinymce.com/stable/tinymce.min.js?apiKey=dj1lnmrq393pmzosuh4k3yts0zbzige6zs3hjl7789fksu4d"></script>
   </head>
@@ -30,8 +30,8 @@
           </div>
         <% else %>
           <!-- LOGIN -->
+          <%= render 'shared/alertas' %>
           <div class="col-xs-9">
-            <%= render 'shared/alertas' %>
             <%= yield %>
           </div>
         <% end %>

@@ -75,7 +75,7 @@ class ExpedientesController < ApplicationController
   end
 
   def expedientes_archivados
-    @expedientes_archivados = @ad_hoc.buscar_expedientes_archivados
+    @expedientes_archivados = @ad_hoc.buscar_expedientes_archivados(abogado_actual)
 
     respond_to { |format| format.json { render json: @expedientes_archivados } }
   end

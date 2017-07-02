@@ -387,7 +387,7 @@ describe ExpedientesController do
         expediente.reload
         expediente_archivado = fabrica_de_objetos.un_expediente_archivado(expediente)
 
-        expedientes_archivados = ad_hoc.buscar_expedientes_archivados
+        expedientes_archivados = ad_hoc.buscar_expedientes_archivados(abogado)
 
         expect(expedientes_archivados.count).to eq 1
         expect(expedientes_archivados.first).to eq expediente_archivado
@@ -397,7 +397,7 @@ describe ExpedientesController do
         subject
         expediente.reload
 
-        expediente_archivado = ad_hoc.buscar_expedientes_archivados.first
+        expediente_archivado = ad_hoc.buscar_expedientes_archivados(abogado).first
 
         expect(expediente_archivado[:id]).to eq expediente.id
         expect(expediente_archivado[:titulo]).to eq expediente.titulo
@@ -407,7 +407,7 @@ describe ExpedientesController do
         subject
         expediente.reload
 
-        expediente_archivado = ad_hoc.buscar_expedientes_archivados.first
+        expediente_archivado = ad_hoc.buscar_expedientes_archivados(abogado).first
 
         expect(expediente_archivado[:cliente_id]).to eq cliente.id
         expect(expediente_archivado[:cliente_nombre]).to eq cliente.nombre_completo
@@ -418,7 +418,7 @@ describe ExpedientesController do
         escrito = ad_hoc.crear_nueva_demanda!({cuerpo: 'un cuerpo', titulo: 'un titulo'}, expediente.id, abogado)
         expediente.reload
 
-        expediente_archivado = ad_hoc.buscar_expedientes_archivados.first
+        expediente_archivado = ad_hoc.buscar_expedientes_archivados(abogado).first
 
         expect(expediente_archivado[:escritos].count).to eq 1
         expect(expediente_archivado[:escritos].first[:escrito_id]).to eq escrito.id

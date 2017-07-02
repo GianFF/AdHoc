@@ -2,7 +2,7 @@ require_relative '../rails_helper'
 
 def asertar_mensaje_de_error_respuesta_y_redireccion(mensaje_de_error)
   asertar_que_se_incluye_un_mensaje_de_error(mensaje_de_error)
-  asertar_que_la_respuesta_tiene_estado(response, :found)
+  asertar_que_la_respuesta_tiene_estado(response, :ok)
   asertar_que_se_redirecciono_a(root_path)
 end
 
@@ -30,7 +30,7 @@ describe AbogadosController do
 
   let(:un_abogado){ login_abogado(parametros_del_abogado) }
 
-  subject { put :update, params: {id: un_abogado.id, abogado: parametros} }
+  subject { put :update, params: {id: un_abogado.id, abogado: parametros }, xhr: true }
 
   context 'En la correcta edicion de un abogado' do
     let(:parametros){ {
@@ -45,7 +45,7 @@ describe AbogadosController do
 
       expect(abogado.nombre).to eq fabrica_de_objetos.otro_nombre_para_un_abogado
       expect(abogado.apellido).to eq fabrica_de_objetos.otro_apellido_para_un_abogado
-      asertar_que_la_respuesta_tiene_estado(response, :found)
+      asertar_que_la_respuesta_tiene_estado(response, :ok)
     end
 
     context 'Un abogado puede editar su matricula' do
@@ -59,7 +59,7 @@ describe AbogadosController do
         abogado = Abogado.find(un_abogado.id)
 
         expect(abogado.matricula).to eq fabrica_de_objetos.otra_matricula
-        asertar_que_la_respuesta_tiene_estado(response, :found)
+        asertar_que_la_respuesta_tiene_estado(response, :ok)
       }
     end
 
@@ -74,7 +74,7 @@ describe AbogadosController do
         abogado = Abogado.find(un_abogado.id)
 
         expect(abogado.nombre_del_colegio_de_abogados).to eq fabrica_de_objetos.otro_colegio
-        asertar_que_la_respuesta_tiene_estado(response, :found)
+        asertar_que_la_respuesta_tiene_estado(response, :ok)
       }
     end
 
@@ -89,7 +89,7 @@ describe AbogadosController do
         abogado = Abogado.find(un_abogado.id)
 
         expect(abogado.cuit).to eq fabrica_de_objetos.otro_cuit
-        asertar_que_la_respuesta_tiene_estado(response, :found)
+        asertar_que_la_respuesta_tiene_estado(response, :ok)
       }
     end
 
@@ -104,7 +104,7 @@ describe AbogadosController do
         abogado = Abogado.find(un_abogado.id)
 
         expect(abogado.domicilio_procesal).to eq fabrica_de_objetos.otro_domicilio_procesal
-        asertar_que_la_respuesta_tiene_estado(response, :found)
+        asertar_que_la_respuesta_tiene_estado(response, :ok)
       }
     end
 
@@ -119,7 +119,7 @@ describe AbogadosController do
         abogado = Abogado.find(un_abogado.id)
 
         expect(abogado.domicilio_electronico).to eq fabrica_de_objetos.otro_domicilio_electronico
-        asertar_que_la_respuesta_tiene_estado(response, :found)
+        asertar_que_la_respuesta_tiene_estado(response, :ok)
       }
     end
 
@@ -139,6 +139,7 @@ describe AbogadosController do
   end
 
   context 'En la incorrecta edicion de un abogado' do
+    let(:respuesta) { ActiveSupport::JSON.decode @response.body }
 
     context 'Cuando no se provee la contraseña' do
       let(:parametros){ {
@@ -150,9 +151,8 @@ describe AbogadosController do
         subject
 
 
-        asertar_que_se_muestra_un_mensaje_de_error(@controller.ad_hoc.mensaje_de_error_para_contrasenia_no_proveida)
+        expect(respuesta).to eq ['Debes completar tu contraseña actual para poder editar tu perfil']
         asertar_que_la_respuesta_tiene_estado(response, :found)
-        asertar_que_se_redirecciono_a(root_path)
       end
     end
 
@@ -166,9 +166,8 @@ describe AbogadosController do
       it 'se muestra un mensaje de error y se redirije a la pagina de inicio' do
         subject
 
-        asertar_que_se_muestra_un_mensaje_de_error(@controller.ad_hoc.mensaje_de_error_para_contrasenia_invalida)
+        expect(respuesta).to eq ['La contraseña es incorrecta']
         asertar_que_la_respuesta_tiene_estado(response, :found)
-        asertar_que_se_redirecciono_a(root_path)
       end
     end
 
@@ -198,7 +197,7 @@ describe AbogadosController do
         it 'no puede ser editado' do
           subject
 
-          asertar_mensaje_de_error_respuesta_y_redireccion("Nombre #{Abogado.mensaje_de_error_para_campo_vacio}")
+          expect(respuesta).to eq ["Nombre #{Abogado.mensaje_de_error_para_campo_vacio}"]
         end
       end
 
@@ -211,7 +210,7 @@ describe AbogadosController do
         it 'no puede ser editado' do
           subject
 
-          asertar_mensaje_de_error_respuesta_y_redireccion("Apellido #{Abogado.mensaje_de_error_para_campo_vacio}")
+          expect(respuesta).to eq ["Apellido #{Abogado.mensaje_de_error_para_campo_vacio}"]
         end
       end
 
@@ -224,7 +223,7 @@ describe AbogadosController do
         it 'no puede ser editado' do
           subject
 
-          asertar_mensaje_de_error_respuesta_y_redireccion("Email #{Abogado.mensaje_de_error_para_campo_vacio}")
+          expect(respuesta).to eq ["Email #{Abogado.mensaje_de_error_para_campo_vacio}"]
         end
       end
 
@@ -237,7 +236,7 @@ describe AbogadosController do
         it 'no puede ser editado' do
           subject
 
-          asertar_mensaje_de_error_respuesta_y_redireccion("Email #{Abogado.mensaje_de_error_para_campo_tomado}")
+          expect(respuesta).to eq ["Email #{Abogado.mensaje_de_error_para_campo_tomado}"]
         end
       end
 
@@ -250,7 +249,7 @@ describe AbogadosController do
         it 'no puede ser editado' do
           subject
 
-          asertar_mensaje_de_error_respuesta_y_redireccion("Nombre del colegio de abogados #{Abogado.mensaje_de_error_para_campo_vacio}")
+          expect(respuesta).to eq ["Nombre del colegio de abogados #{Abogado.mensaje_de_error_para_campo_vacio}"]
         end
       end
 
@@ -263,7 +262,7 @@ describe AbogadosController do
         it 'no puede ser editado' do
           subject
 
-          asertar_mensaje_de_error_respuesta_y_redireccion("Matricula #{Abogado.mensaje_de_error_para_campo_vacio}")
+          expect(respuesta).to eq ["Matricula #{Abogado.mensaje_de_error_para_campo_vacio}"]
         end
       end
 
@@ -276,7 +275,7 @@ describe AbogadosController do
         it 'no puede ser editado' do
           subject
 
-          asertar_mensaje_de_error_respuesta_y_redireccion("Matricula #{Abogado.mensaje_de_error_para_campo_tomado}")
+          expect(respuesta).to eq ["Matricula #{Abogado.mensaje_de_error_para_campo_tomado}"]
         end
       end
 
@@ -289,7 +288,7 @@ describe AbogadosController do
         it 'no puede ser editado' do
           subject
 
-          asertar_mensaje_de_error_respuesta_y_redireccion("Cuit #{Abogado.mensaje_de_error_para_campo_vacio}")
+          expect(respuesta).to eq ["Cuit #{Abogado.mensaje_de_error_para_campo_vacio}"]
         end
       end
 
@@ -302,7 +301,7 @@ describe AbogadosController do
         it 'no puede ser editado' do
           subject
 
-          asertar_mensaje_de_error_respuesta_y_redireccion("Cuit #{Abogado.mensaje_de_error_para_campo_tomado}")
+          expect(respuesta).to eq ["Cuit #{Abogado.mensaje_de_error_para_campo_tomado}"]
         end
       end
 
@@ -315,7 +314,7 @@ describe AbogadosController do
         it 'no puede ser editado' do
           subject
 
-          asertar_mensaje_de_error_respuesta_y_redireccion("Domicilio procesal #{Abogado.mensaje_de_error_para_campo_vacio}")
+          expect(respuesta).to eq ["Domicilio procesal #{Abogado.mensaje_de_error_para_campo_vacio}"]
         end
       end
 
@@ -328,7 +327,7 @@ describe AbogadosController do
         it 'no puede ser editado' do
           subject
 
-          asertar_mensaje_de_error_respuesta_y_redireccion("Domicilio electronico #{Abogado.mensaje_de_error_para_campo_vacio}")
+          expect(respuesta).to eq ["Domicilio electronico #{Abogado.mensaje_de_error_para_campo_vacio}"]
         end
       end
 
@@ -341,7 +340,7 @@ describe AbogadosController do
         it 'no puede ser editado' do
           subject
 
-          asertar_mensaje_de_error_respuesta_y_redireccion("Domicilio electronico #{Abogado.mensaje_de_error_para_campo_tomado}")
+          expect(respuesta).to eq ["Domicilio electronico #{Abogado.mensaje_de_error_para_campo_tomado}"]
         end
       end
     end
