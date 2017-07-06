@@ -3,44 +3,44 @@
   <div class="row">
 
     <div class="col-xs-4 field">
-      <%= f.label :nombre %><br />
+      <%= f.label :nombre %> *
       <%= f.text_field :nombre, autofocus: true, class: 'form-control'%>
 
-      <%= f.label :apellido %><br />
+      <%= f.label :apellido %> *
       <%= f.text_field :apellido, class: 'form-control'%>
 
-      <%= f.label :email %><br />
+      <%= f.label :email %> *
       <%= f.email_field :email, class: 'form-control'%>
 
-      <%= f.label :matricula %><br />
+      <%= f.label :matricula %> *
       <%= f.text_field :matricula, class: 'form-control'%>
     </div>
 
     <div class="col-xs-4 field">
-      <%= f.label :nombre_del_colegio_de_abogados %><br />
+      <%= f.label :colegio_de_abogados %> *
       <%= f.text_field :nombre_del_colegio_de_abogados, class: 'form-control'%>
 
-      <%= f.label :cuit %><br />
-      <%= f.number_field :cuit, class: 'form-control', id:'cuit'%>
+      <%= f.label :cuit %> *
+      <%= f.number_field :cuit, min: '0', class: 'form-control', id:'cuit'%>
 
-      <%= f.label :domicilio_procesal %><br />
+      <%= f.label :domicilio_procesal %> *
       <%= f.text_field :domicilio_procesal, class: 'form-control'%>
 
-      <%= f.label :domicilio_electronico %><br />
+      <%= f.label :domicilio_electronico %> *
       <%= f.text_field :domicilio_electronico, class: 'form-control'%>
     </div>
 
     <div class="col-xs-4 field">
-      <%= f.label :sexo %><br />
+      <%= f.label :sexo %> *
       <%= f.select(:sexo, Sexo.sexos, options = {include_blank: true}, html_options = {class: 'form-control'}) %>
 
-      <%= f.label :contraseña %>
+      <%= f.label :contraseña %> *
       <% if @minimum_password_length%>
         <em>(<%= @minimum_password_length %> caracteres minimo)</em>
-      <% end %><br />
+      <% end %>
       <%= f.password_field :password, autocomplete: 'off', class: 'form-control' %>
 
-      <%= f.label :confirmar_contraseña %><br />
+      <%= f.label :confirmar_contraseña %> *
       <%= f.password_field :password_confirmation, autocomplete: 'off', class: 'form-control'%>
     </div>
   </div>
