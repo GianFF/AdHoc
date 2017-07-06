@@ -30,7 +30,7 @@
       </div>
       <div class="field">
         <%= f.label :cuit %><br />
-        <%= f.number_field :cuit, class: 'form-control registrations__input'%>
+        <%= f.number_field :cuit, min: '0', class: 'form-control registrations__input'%>
       </div>
       <div class="field">
         <%= f.label :domicilio_procesal %><br />
