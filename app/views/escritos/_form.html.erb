@@ -35,11 +35,11 @@
           <%= f.submit 'Guardar', {class: 'btn btn-success escrito__form-guardar'}%>
         </div>
       </div>
+      <%= render 'boton_clonar' %>
     <% end %>
 
     <% if @escrito.persisted? %>
       <%= render 'boton_presentar' %>
-      <%= render 'boton_clonar' %>
     <% end %>
   <% end %>
 <% end %>

@@ -2,6 +2,12 @@ class EscritosController < ApplicationController
   before_action :authenticate_abogado!
   attr_reader :escrito
 
+  def index
+    respond_to do |format|
+      format.json { render json: @ad_hoc.buscar_escritos_de(abogado_actual) }
+    end
+  end
+
   def show
     show_escrito_expediente_y_cliente
   end
@@ -54,19 +60,6 @@ class EscritosController < ApplicationController
       show_escrito_expediente_y_cliente
     end
 
-    render :show
-  end
-
-  def escritos_para_clonar
-    respond_to do |format|
-      format.json { render json: @ad_hoc.buscar_escritos_para_clonar_en(params[:id], abogado_actual) }
-    end
-  end
-
-  def clonar
-    @ad_hoc.clonar_cuerpo(params[:id], params[:en_id], abogado_actual)
-    params[:id] = params[:en_id]
-    show_escrito_expediente_y_cliente
     render :show
   end
 

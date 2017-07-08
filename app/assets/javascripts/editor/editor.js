@@ -122,6 +122,10 @@ function formularioParaNotificacion() {
     tinymce.activeEditor.setContent(contenidoDelFormularioParaNotificacion());
 }
 
+function setearContenido(contenido) {
+    tinymce.activeEditor.setContent(contenido);
+}
+
 // Contenido
 
 function contenidoDelEncabezadoParaDemanda() {

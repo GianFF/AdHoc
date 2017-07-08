@@ -188,21 +188,20 @@ describe DemandasController, type: :controller do
       escrito = fabrica_de_objetos.una_demanda_para(expediente.id)
       escrito_dao = {
           id: escrito.id,
-          hasta_id: escrito.id,
           titulo: escrito.titulo,
-          tipo: escrito.type,
+          cuerpo: escrito.cuerpo,
           expediente: escrito.expediente.titulo,
-          expediente_id: escrito.expediente.id,
           cliente: escrito.expediente.cliente.nombre_completo,
       }
 
-      escritos = ad_hoc.buscar_escritos_para_clonar_en(escrito.id, abogado)
+      escritos = ad_hoc.buscar_escritos_de(abogado)
 
       expect(escritos.count).to be 1
       expect(escritos.first).to eq escrito_dao
     end
 
-    it 'se puede clonar el cuerpo de un escrito en otro escrito' do
+    pending 'pendiente ya que se movio la implementacion a javascript' do
+      #TODO: 'se puede clonar el cuerpo de un escrito en otro escrito'
       desde_escrito = fabrica_de_objetos.una_demanda_para(expediente.id)
       hasta_escrito = fabrica_de_objetos.una_contestacion_de_demanda_para(expediente.id)
 
@@ -212,7 +211,8 @@ describe DemandasController, type: :controller do
       expect(hasta_escrito.cuerpo).to eq desde_escrito.cuerpo
     end
 
-    it 'no se puede clonar un escrito en otro que ya haya sido presentado' do
+    pending 'pendiente ya que se movio la implementacion a javascript' do
+      # TODO: 'no se puede clonar un escrito en otro que ya haya sido presentado' do
       desde_escrito = fabrica_de_objetos.una_demanda_para(expediente.id)
       hasta_escrito = fabrica_de_objetos.una_contestacion_de_demanda_para(expediente.id)
       ad_hoc.presentar_escrito!(hasta_escrito.id, abogado)

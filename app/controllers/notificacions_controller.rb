@@ -11,12 +11,6 @@ class NotificacionsController < EscritosController
     end
   end
 
-  def clonar
-    super do
-      render :show
-    end
-  end
-
   private
 
   def new_escrito_expediente_y_cliente

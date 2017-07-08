@@ -163,16 +163,19 @@ class AdHocAplicacion
 
   # Escritos
 
-  def buscar_escritos_para_clonar_en(escrito_id, un_abogado)
+  def buscar_escritos_de(un_abogado)
     escritos = escritos_de(un_abogado)
-    escritos.map do |escrito|
+
+    escritos_sin_notificaciones = escritos.to_a.delete_if do |escrito|
+      escrito.type == 'Notificacion'
+    end
+
+    escritos_sin_notificaciones.map do |escrito|
       {
           id: escrito.id,
-          hasta_id: escrito_id,
+          cuerpo: escrito.cuerpo,
           titulo: escrito.titulo,
-          tipo: escrito.type,
           expediente: escrito.expediente.titulo,
-          expediente_id: escrito.expediente.id,
           cliente: escrito.expediente.cliente.nombre_completo,
       }
     end
@@ -244,13 +247,6 @@ class AdHocAplicacion
     escrito.marcar_como_presentado!
     escrito.save!
     escrito
-  end
-
-  def clonar_cuerpo(desde_id, hasta_id, un_abogado)
-    hasta_escrito = buscar_escrito_por_id!(hasta_id, un_abogado)
-    hasta_escrito.validar_que_no_haya_sido_presentado
-    desde_escrito = buscar_escrito_por_id!(desde_id, un_abogado)
-    hasta_escrito.update!({cuerpo: desde_escrito.cuerpo})
   end
 
   # Adjuntos

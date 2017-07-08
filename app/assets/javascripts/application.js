@@ -39,12 +39,12 @@ function dropdown(escritos) {
                     return "<option value=''>" + escrito['escrito_titulo'] + "</option>";
                 });
 }
-function link_to_clonar(expediente_id, desde_id, hasta_id, titulo) {
-    var id = "clonar_escrito"+desde_id;
-    var link = "<a id='"+id+"' href='/expedientes/" + expediente_id + "/clonar/" + desde_id+"/"+hasta_id+"'"+ ">"+titulo+"</a>";
-    return link;
+function link_to_clonar_id(id) {
+    return "clonar_escrito_" + id;
 }
-
+function link_to_clonar(id, titulo, cuerpo) {
+    return "<a id='"+link_to_clonar_id(id)+"'>"+titulo+"</a>";
+}
 
 /// Comportamientos
 function comportamiento_uploader(){
@@ -57,13 +57,20 @@ function comportamiento_boton_clonar(){
     $('#escritos__boton_clonar').on('ajax:success', function (e, data, status, xhr) {
         var filas = data.map(function( escrito ) {
             return "<tr>" +
-                        "<td>" + link_to_clonar(escrito['expediente_id'], escrito['id'], escrito['hasta_id'], escrito['titulo']) + "</td>" +
+                        "<td>" + link_to_clonar(escrito['id'], escrito['titulo'], escrito['cuerpo']) + "</td>" +
                         "<td>" + escrito['expediente'] + "</td>" +
                         "<td>" + escrito['cliente'] + "</td>" +
                     "</tr>";
         });
-
         $('#escritos__table_body').html(filas);
+
+        $.each(data, function(index, escrito){
+            $('#'+link_to_clonar_id(escrito['id'])).on('click', function () {
+                setearContenido(escrito['cuerpo']);
+                $('#clonar-modal').modal('hide');
+            });
+        });
+
         $('#clonar-modal').modal('show');
     });
 }

@@ -1,4 +1,5 @@
 class DemandasController < EscritosController
+
   def create
     super do
       @escrito = @ad_hoc.crear_nueva_demanda!(validar_parametros_escrito, validar_parametros_expediente, abogado_actual)
@@ -6,12 +7,6 @@ class DemandasController < EscritosController
   end
 
   def presentar
-    super do
-      render :show
-    end
-  end
-
-  def clonar
     super do
       render :show
     end
