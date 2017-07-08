@@ -1,9 +1,8 @@
 <%= link_to 'Copiar contenido desde',
-            expediente_escritos_para_clonar_path(@expediente.id, @escrito.id),
+            escritos_path,
             class: 'btn btn-success boton_presentar',
             id: 'escritos__boton_clonar',
             remote: true,
-            data: {turbolinks: false},
             disabled: @escrito.fue_presentado?
 %>
 <div id="clonar-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">

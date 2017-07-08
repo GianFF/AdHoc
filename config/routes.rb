@@ -11,7 +11,6 @@ Rails.application.routes.draw do
   get 'expedientes_archivados', to: 'expedientes#expedientes_archivados', as: :expedientes_archivados
 
   resources :expedientes do
-    get 'escritos_para_clonar/:id', to: 'escritos#escritos_para_clonar', as: :escritos_para_clonar
     resources :demandas
     resources :contestacion_de_demandas
     resources :mero_tramites
@@ -22,12 +21,9 @@ Rails.application.routes.draw do
     put 'presentar/:id', to: 'contestacion_de_demandas#presentar', as: :presentar_contestacion_de_demanda
     put 'presentar/:id', to: 'mero_tramites#presentar', as: :presentar_mero_tramite
     put 'presentar/:id', to: 'notificacions#presentar', as: :presentar_notificacion
-
-    get 'clonar/:id/:en_id', to: 'demandas#clonar', as: :clonar_demanda
-    get 'clonar/:id/:en_id', to: 'contestacion_de_demandas#clonar', as: :clonar_contestacion_de_demanda
-    get 'clonar/:id/:en_id', to: 'mero_tramites#clonar', as: :clonar_mero_tramite
-    get 'clonar/:id/:en_id', to: 'notificacions#clonar', as: :clonar_notificacion
   end
+
+  resources :escritos
 
   get 'buscar', to: 'query#buscar', as: :buscar
 
