@@ -17,14 +17,22 @@
 @import "bootstrap-sprockets";
 @import "bootstrap";
 
+html {
+  min-height: 100%;
+}
+body {
+  min-height: 100vh;
+}
+
 .body__body-adhoc{
+  align-items: stretch;
   background: gray; /* For browsers that do not support gradients */
   background: -webkit-linear-gradient(gray, whitesmoke); /* For Safari 5.1 to 6.0 */
   background: -o-linear-gradient(gray, whitesmoke); /* For Opera 11.1 to 12.0 */
   background: -moz-linear-gradient(gray, whitesmoke); /* For Firefox 3.6 to 15 */
   background: linear-gradient(gray, whitesmoke); /* Standard syntax */
   height: initial;
-  margin-bottom: 15%;
+  //margin-bottom: 15%;
 }
 
 .body__adhoc{
