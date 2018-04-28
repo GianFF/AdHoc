@@ -37,6 +37,7 @@ group :development, :test do
   gem 'rake'
   gem 'rails-controller-testing'
   gem 'simplecov', :require => false
+  gem 'factory_bot_rails'
 end
 
 

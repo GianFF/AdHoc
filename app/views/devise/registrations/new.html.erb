@@ -31,8 +31,8 @@
     </div>
 
     <div class="col-xs-4 field">
-      <%= f.label :sexo %><br />
-      <%= f.select(:sexo, Sexo.sexos, options = {include_blank: true}, html_options = {class: 'form-control'}) %>
+      <%= f.label :genero %><br />
+      <%= f.select(:genero, Sexo.generos, options = {include_blank: true}, html_options = {class: 'form-control'}) %>
 
       <%= f.label :contraseña %>
       <% if @minimum_password_length%>

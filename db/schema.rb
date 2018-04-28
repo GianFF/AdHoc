@@ -17,7 +17,7 @@ ActiveRecord::Schema.define(version: 20170610171959) do
     t.string   "encrypted_password"
     t.string   "nombre"
     t.string   "apellido"
-    t.string   "sexo"
+    t.string   "genero"
     t.string   "matricula"
     t.string   "nombre_del_colegio_de_abogados"
     t.string   "cuit"

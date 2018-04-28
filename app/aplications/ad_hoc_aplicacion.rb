@@ -1,20 +1,5 @@
 class AdHocAplicacion
 
-  # Abogados
-
-  def editar_abogado!(un_abogado, parametros_abogado)
-    begin
-      un_abogado.update!(parametros_abogado)
-    rescue ActiveRecord::RecordInvalid => error
-      raise AdHocUIExcepcion.new(error.record.errors.full_messages)
-    end
-  end
-
-  def validar_contrasenia(contrasenia_del_abogado, abogado, &block)
-    validar_que_la_contrasenia_no_sea_blanca(contrasenia_del_abogado, &block)
-    validar_que_la_contrasenia_no_sea_invalida(contrasenia_del_abogado, abogado, &block)
-  end
-
   # Clientes
 
   def buscar_cliente_por_nombre_o_apellido!(query, abogado_id)
@@ -23,7 +8,7 @@ class AdHocAplicacion
           where('abogado_id = :abogado_id', {abogado_id: abogado_id}).
           take!
     rescue ActiveRecord::RecordNotFound
-      raise AdHocUIExcepcion.new([mensaje_de_error_para_busqueda_de_cliente_fallida(query)])
+      raise Errores::AdHocDomainError.new([mensaje_de_error_para_busqueda_de_cliente_fallida(query)])
     end
   end
 
@@ -31,7 +16,7 @@ class AdHocAplicacion
     begin
       Cliente.find_by!({id: cliente_id, abogado_id: abogado_id})
     rescue ActiveRecord::RecordNotFound
-      raise AdHocHackExcepcion.new([mensaje_de_error_para_cliente_inexistente])
+      raise Errores::AdHocHackExcepcion.new([mensaje_de_error_para_cliente_inexistente])
     end
   end
 
@@ -41,7 +26,7 @@ class AdHocAplicacion
     begin
       cliente.save!
     rescue ActiveRecord::RecordInvalid => error
-      raise AdHocUIExcepcion.new(error.record.errors.full_messages)
+      raise Errores::AdHocDomainError.new(error.record.errors.full_messages)
     end
     cliente
   end
@@ -51,7 +36,7 @@ class AdHocAplicacion
     begin
       cliente.update!(parametros_cliente)
     rescue ActiveRecord::RecordInvalid => error
-      raise AdHocUIExcepcion.new(error.record.errors.full_messages)
+      raise Errores::AdHocDomainError.new(error.record.errors.full_messages)
     end
     cliente
   end
@@ -67,7 +52,7 @@ class AdHocAplicacion
     begin
       expediente = Expediente.find(expediente_id)
     rescue ActiveRecord::RecordNotFound
-      raise AdHocUIExcepcion.new([mensaje_de_error_para_expediente_inexistente])
+      raise Errores::AdHocDomainError.new([mensaje_de_error_para_expediente_inexistente])
     end
     validar_que_pertenece_al_abogado(expediente, un_abogado, mensaje_de_error_para_expediente_inexistente)
     expediente
@@ -79,7 +64,7 @@ class AdHocAplicacion
     begin
       expediente.save!
     rescue ActiveRecord::RecordInvalid => error
-      raise AdHocUIExcepcion.new(error.record.errors.full_messages)
+      raise Errores::AdHocDomainError.new(error.record.errors.full_messages)
     end
     expediente
   end
@@ -90,9 +75,9 @@ class AdHocAplicacion
       expediente.validar_que_no_falte_ningun_dato_para_la_numeracion!(parametros_expediente) if expediente.ha_sido_numerado?
       expediente.update!(parametros_expediente)
     rescue ArgumentError => error # TODO: ¿ smell ?
-      raise AdHocUIExcepcion.new([error.message])
+      raise Errores::AdHocDomainError.new([error.message])
     rescue ActiveRecord::RecordInvalid => error
-      raise AdHocUIExcepcion.new(error.record.errors.full_messages)
+      raise Errores::AdHocDomainError.new(error.record.errors.full_messages)
     end
     expediente
   end
@@ -107,7 +92,7 @@ class AdHocAplicacion
     begin
       expediente.numerar!(datos_para_numerar_expediente)
     rescue Exception => error
-      raise AdHocUIExcepcion.new([error.message])
+      raise Errores::AdHocDomainError.new([error.message])
     end
     expediente.update!(datos_para_numerar_expediente)
     expediente
@@ -119,7 +104,7 @@ class AdHocAplicacion
     begin
       escrito = Escrito.find(escrito_id) #TODO: deberia recibir el expediente_id tambien y buscar por los dos campos.
     rescue ActiveRecord::RecordNotFound
-      raise AdHocUIExcepcion.new([mensaje_de_error_para_escrito_invalido])
+      raise Errores::AdHocDomainError.new([mensaje_de_error_para_escrito_invalido])
     end
     validar_que_pertenece_al_abogado(escrito, un_abogado, mensaje_de_error_para_escrito_invalido)
     escrito
@@ -131,7 +116,7 @@ class AdHocAplicacion
     begin
       escrito.save!
     rescue ActiveRecord::RecordInvalid => error
-      raise AdHocUIExcepcion.new(error.record.errors.full_messages)
+      raise Errores::AdHocDomainError.new(error.record.errors.full_messages)
     end
     escrito
   end
@@ -166,7 +151,7 @@ class AdHocAplicacion
       escrito.validar_que_no_haya_sido_presentado
       escrito.update!(parametros_escrito)
     rescue ActiveRecord::RecordInvalid => error
-      raise AdHocUIExcepcion.new(error.record.errors.full_messages)
+      raise Errores::AdHocDomainError.new(error.record.errors.full_messages)
     end
     escrito
   end
@@ -189,7 +174,7 @@ class AdHocAplicacion
     begin
       adjunto = Adjunto.find_by!({id: adjunto_id, expediente_id: expediente_id})
     rescue ActiveRecord::RecordNotFound
-      raise AdHocUIExcepcion.new([mensaje_de_error_para_adjunto_invalido])
+      raise Errores::AdHocDomainError.new([mensaje_de_error_para_adjunto_invalido])
     end
     validar_que_pertenece_al_abogado(adjunto, un_abogado, mensaje_de_error_para_adjunto_invalido)
     adjunto
@@ -201,7 +186,7 @@ class AdHocAplicacion
     begin
       adjunto.save!
     rescue ActiveRecord::RecordInvalid => error
-      raise AdHocUIExcepcion.new(error.record.errors.full_messages)
+      raise Errores::AdHocDomainError.new(error.record.errors.full_messages)
     end
     adjunto
   end
@@ -211,7 +196,7 @@ class AdHocAplicacion
     begin
       adjunto.update!(parametros_adjunto)
     rescue ActiveRecord::RecordInvalid => error
-      raise AdHocUIExcepcion.new(error.record.errors.full_messages)
+      raise Errores::AdHocDomainError.new(error.record.errors.full_messages)
     end
     adjunto
   end
@@ -267,10 +252,6 @@ class AdHocAplicacion
     "No se encontraron clientes con nombre: #{nombre_de_cliente}"
   end
 
-  def mensaje_de_error_para_contrasenia_invalida
-    'La contraseña es incorrecta'
-  end
-
   def mensaje_de_error_para_contrasenia_no_proveida
     'Debes completar tu contraseña actual para poder editar tu perfil'
   end
@@ -297,33 +278,11 @@ class AdHocAplicacion
     begin
       expediente.validar_que_el_expediente_no_haya_sido_numerado!
     rescue StandardError => excepcion
-      raise AdHocHackExcepcion.new([excepcion.message])
+      raise Errores::AdHocHackExcepcion.new([excepcion.message])
     end
   end
 
   def validar_que_pertenece_al_abogado(una_cosa, un_abogado, un_mensaje_de_error)
-    raise AdHocHackExcepcion.new([un_mensaje_de_error]) unless una_cosa.pertenece_a? un_abogado
-  end
-
-  private
-
-  def la_contrasenia_es_valida?(contrasenia_del_abogado, abogado)
-    abogado.valid_password? contrasenia_del_abogado
-  end
-
-  def la_contrasenia_es_blanca?(contrasenia_del_abogado)
-    contrasenia_del_abogado.blank?
-  end
-
-  def validar_que_la_contrasenia_no_sea_invalida(contrasenia_del_abogado, abogado, &block)
-    unless la_contrasenia_es_valida?(contrasenia_del_abogado, abogado)
-      block.call(mensaje_de_error_para_contrasenia_invalida)
-    end
-  end
-
-  def validar_que_la_contrasenia_no_sea_blanca(contrasenia_del_abogado, &block)
-    if la_contrasenia_es_blanca?(contrasenia_del_abogado)
-      block.call(mensaje_de_error_para_contrasenia_no_proveida)
-    end
+    raise Errores::AdHocHackExcepcion.new([un_mensaje_de_error]) unless una_cosa.pertenece_a? un_abogado
   end
 end

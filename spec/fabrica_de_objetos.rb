@@ -2,7 +2,7 @@ class FabricaDeObjetos
   #Abogados:
   def parametros_para_un_abogado(mail, contrasenia, nombre, apellido, sexo, una_matricula, un_colegio, un_cuit,
                                  un_domicilio_procesal, un_domicilio_electronico)
-    {email: mail, password: contrasenia, nombre: nombre, apellido: apellido, sexo: sexo,
+    {email: mail, password: contrasenia, nombre: nombre, apellido: apellido, genero: sexo,
      matricula: una_matricula, nombre_del_colegio_de_abogados: un_colegio, cuit: un_cuit,
      domicilio_procesal: un_domicilio_procesal, domicilio_electronico: un_domicilio_electronico}
   end

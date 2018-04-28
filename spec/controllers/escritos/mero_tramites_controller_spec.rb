@@ -9,14 +9,14 @@ describe MeroTramitesController, type: :controller do
                                                                    fabrica_de_objetos.una_contrasenia,
                                                                    fabrica_de_objetos.un_nombre_para_un_abogado,
                                                                    fabrica_de_objetos.un_apellido_para_un_abogado,
-                                                                   Sexo::MASCULINO,
+                                                                   Genero::Genero::MASCULINO,
                                                                    fabrica_de_objetos.una_matricula,
                                                                    fabrica_de_objetos.un_colegio,
                                                                    fabrica_de_objetos.un_cuit,
                                                                    fabrica_de_objetos.un_domicilio_procesal,
                                                                    fabrica_de_objetos.un_domicilio_electronico) }
 
-  let(:abogado){ login_abogado(parametros) }
+  let(:abogado){ abogado_logeado(parametros) }
 
   let(:cliente){ fabrica_de_objetos.crear_cliente(abogado.id) }
 
@@ -30,7 +30,7 @@ describe MeroTramitesController, type: :controller do
                                                     fabrica_de_objetos.una_contrasenia,
                                                     fabrica_de_objetos.otro_nombre_para_un_abogado,
                                                     fabrica_de_objetos.otro_apellido_para_un_abogado,
-                                                    Sexo::MASCULINO,
+                                                    Genero::Genero::MASCULINO,
                                                     fabrica_de_objetos.otra_matricula,
                                                     fabrica_de_objetos.un_colegio,
                                                     fabrica_de_objetos.otro_cuit,

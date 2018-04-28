@@ -17,7 +17,7 @@ describe ExpedientesController do
                                                                    fabrica_de_objetos.un_domicilio_procesal,
                                                                    fabrica_de_objetos.un_domicilio_electronico) }
 
-  let(:abogado){ login_abogado(parametros_del_abogado) }
+  let(:abogado){ abogado_logeado(parametros_del_abogado) }
 
   let(:cliente){ fabrica_de_objetos.crear_cliente(abogado.id) }
 

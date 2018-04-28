@@ -18,7 +18,7 @@ describe ClientesController do
                                                   fabrica_de_objetos.un_domicilio_electronico)
   }
 
-  let(:abogado){ login_abogado(parametros_del_abogado) }
+  let(:abogado){ abogado_logeado(parametros_del_abogado) }
 
   let(:ad_hoc){ AdHocAplicacion.new }
 

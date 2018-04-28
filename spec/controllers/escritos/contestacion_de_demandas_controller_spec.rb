@@ -16,7 +16,7 @@ describe ContestacionDeDemandasController, type: :controller do
                                                                    fabrica_de_objetos.un_domicilio_procesal,
                                                                    fabrica_de_objetos.un_domicilio_electronico) }
 
-  let(:abogado){ login_abogado(parametros) }
+  let(:abogado){ abogado_logeado(parametros) }
 
   let(:cliente){ fabrica_de_objetos.crear_cliente(abogado.id) }
 

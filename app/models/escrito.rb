@@ -29,6 +29,6 @@ class Escrito < ApplicationRecord
   end
 
   def validar_que_no_haya_sido_presentado
-    raise AdHocUIExcepcion.new([mensaje_de_error_para_escrito_presentado]) if fue_presentado?
+    raise Errores::AdHocDomainError.new([mensaje_de_error_para_escrito_presentado]) if fue_presentado?
   end
 end

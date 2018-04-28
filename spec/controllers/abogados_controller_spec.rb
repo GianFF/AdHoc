@@ -8,341 +8,242 @@ end
 
 describe AbogadosController do
   include ::ControllersHelper
+  include FactoryBot::Syntax::Methods
 
   before :each do
     @request.env['devise.mapping'] = Devise.mappings[:abogado]
   end
 
-  let(:fabrica_de_objetos){ FabricaDeObjetos.new }
-
-  let(:parametros_del_abogado) {
-    fabrica_de_objetos.parametros_para_un_abogado(fabrica_de_objetos.un_mail_para_un_abogado,
-                                                  fabrica_de_objetos.una_contrasenia,
-                                                  fabrica_de_objetos.un_nombre_para_un_abogado,
-                                                  fabrica_de_objetos.un_apellido_para_un_abogado,
-                                                  Sexo::MASCULINO,
-                                                  fabrica_de_objetos.una_matricula,
-                                                  fabrica_de_objetos.un_colegio,
-                                                  fabrica_de_objetos.un_cuit,
-                                                  fabrica_de_objetos.un_domicilio_procesal,
-                                                  fabrica_de_objetos.un_domicilio_electronico)
-  }
-
-  let(:un_abogado){ login_abogado(parametros_del_abogado) }
+  let(:un_abogado){ abogado_logeado }
 
   subject { put :update, params: {id: un_abogado.id, abogado: parametros} }
 
-  context 'En la correcta edicion de un abogado' do
-    let(:parametros){ {
-        nombre: fabrica_de_objetos.otro_nombre_para_un_abogado,
-        apellido: fabrica_de_objetos.otro_apellido_para_un_abogado,
-        current_password: fabrica_de_objetos.una_contrasenia
-    }}
+  let(:parametros){ {
+      nombre: 'otro nombre',
+      apellido: 'otro apellido',
+      matricula: 'otra matricula',
+      nombre_del_colegio_de_abogados: 'otro colegio',
+      cuit: 'otro cuit',
+      domicilio_procesal: 'otro_domicilio_procesal',
+      domicilio_electronico: 'otro_domicilio_electronico',
+      email: 'otro@mail.com',
+      password: 'otrapassword123',
+      encrypted_password: un_abogado.password
+  }}
 
-    it 'un abogado puede editar su nombre y apellido' do
-      subject
-      abogado = Abogado.find(un_abogado.id)
+  it 'un abogado puede editar sus datos' do
+    subject
 
-      expect(abogado.nombre).to eq fabrica_de_objetos.otro_nombre_para_un_abogado
-      expect(abogado.apellido).to eq fabrica_de_objetos.otro_apellido_para_un_abogado
-      asertar_que_la_respuesta_tiene_estado(response, :found)
-    end
+    abogado = Abogado.find(un_abogado.id)
 
-    context 'Un abogado puede editar su matricula' do
-      let(:parametros){ {
-          matricula: fabrica_de_objetos.otra_matricula,
-          current_password: fabrica_de_objetos.una_contrasenia
-      }}
-
-      it {
-        subject
-        abogado = Abogado.find(un_abogado.id)
-
-        expect(abogado.matricula).to eq fabrica_de_objetos.otra_matricula
-        asertar_que_la_respuesta_tiene_estado(response, :found)
-      }
-    end
-
-    context 'Un abogado puede editar el nombre del colegio de abogados' do
-      let(:parametros){ {
-          nombre_del_colegio_de_abogados: fabrica_de_objetos.otro_colegio,
-          current_password: fabrica_de_objetos.una_contrasenia
-      }}
-
-      it {
-        subject
-        abogado = Abogado.find(un_abogado.id)
-
-        expect(abogado.nombre_del_colegio_de_abogados).to eq fabrica_de_objetos.otro_colegio
-        asertar_que_la_respuesta_tiene_estado(response, :found)
-      }
-    end
-
-    context 'Un abogado puede editar su cuit' do
-      let(:parametros){ {
-          cuit: fabrica_de_objetos.otro_cuit,
-          current_password: fabrica_de_objetos.una_contrasenia
-      }}
-
-      it {
-        subject
-        abogado = Abogado.find(un_abogado.id)
-
-        expect(abogado.cuit).to eq fabrica_de_objetos.otro_cuit
-        asertar_que_la_respuesta_tiene_estado(response, :found)
-      }
-    end
-
-    context 'Un abogado puede editar su domicilio procesal' do
-      let(:parametros){ {
-          domicilio_procesal: fabrica_de_objetos.otro_domicilio_procesal,
-          current_password: fabrica_de_objetos.una_contrasenia
-      }}
-
-      it {
-        subject
-        abogado = Abogado.find(un_abogado.id)
-
-        expect(abogado.domicilio_procesal).to eq fabrica_de_objetos.otro_domicilio_procesal
-        asertar_que_la_respuesta_tiene_estado(response, :found)
-      }
-    end
-
-    context 'Un abogado puede editar su domicilio electronico' do
-      let(:parametros){ {
-          domicilio_electronico: fabrica_de_objetos.otro_domicilio_electronico,
-          current_password: fabrica_de_objetos.una_contrasenia
-      }}
-
-      it {
-        subject
-        abogado = Abogado.find(un_abogado.id)
-
-        expect(abogado.domicilio_electronico).to eq fabrica_de_objetos.otro_domicilio_electronico
-        asertar_que_la_respuesta_tiene_estado(response, :found)
-      }
-    end
-
-    context 'Se puede modificar el email' do
-      let(:parametros){ {
-          email: fabrica_de_objetos.otro_mail_para_un_abogado,
-          current_password: fabrica_de_objetos.una_contrasenia
-      }}
-
-      it 'un abogado puede cambiar su email' do
-        subject
-        abogado = Abogado.find(un_abogado.id)
-
-        expect(abogado.email).to eq fabrica_de_objetos.otro_mail_para_un_abogado
-      end
-    end
+    expect(abogado.nombre).to eq 'otro nombre'
+    expect(abogado.apellido).to eq 'otro apellido'
+    expect(abogado.matricula).to eq 'otra matricula'
+    expect(abogado.nombre_del_colegio_de_abogados).to eq 'otro colegio'
+    expect(abogado.cuit).to eq 'otro cuit'
+    expect(abogado.domicilio_procesal).to eq 'otro_domicilio_procesal'
+    expect(abogado.domicilio_electronico).to eq 'otro_domicilio_electronico'
+    expect(abogado.email).to eq 'otro@mail.com'
+    asertar_que_la_respuesta_tiene_estado(response, :found)
   end
 
-  context 'En la incorrecta edicion de un abogado' do
+  it 'un abogado puede editar su contraseña' do
+    subject
 
-    context 'Cuando no se provee la contraseña' do
+    un_abogado.reload
+
+    expect(un_abogado.valid_password? parametros[:password]).to be true
+  end
+
+  describe 'No se puede editar un abogado cuando' do
+
+    context 'no se provee la contraseña' do
       let(:parametros){ {
-          nombre: fabrica_de_objetos.otro_nombre_para_un_abogado,
-          apellido: fabrica_de_objetos.otro_apellido_para_un_abogado
+          nombre: 'otro nombre'
       }}
 
       it 'se muestra un mensaje de error y se redirije a la pagina de inicio' do
         subject
 
-
-        asertar_que_se_muestra_un_mensaje_de_error(@controller.ad_hoc.mensaje_de_error_para_contrasenia_no_proveida)
+        asertar_que_se_muestra_un_mensaje_de_error(AdHocAbogados.new.mensaje_de_error_para_contrasenia_incorrecta)
         asertar_que_la_respuesta_tiene_estado(response, :found)
         asertar_que_se_redirecciono_a(root_path)
       end
     end
 
-    context 'Cuando la contraseña es incorrecta' do
+    context 'la contraseña es incorrecta' do
       let(:parametros){ {
-          nombre: fabrica_de_objetos.otro_nombre_para_un_abogado,
-          apellido: fabrica_de_objetos.otro_apellido_para_un_abogado,
-          current_password: fabrica_de_objetos.una_contrasenia_incorrecta
+          nombre: 'otro nombre',
+          encrypted_password: 'passwordIncorrecta'
       }}
 
       it 'se muestra un mensaje de error y se redirije a la pagina de inicio' do
         subject
 
-        asertar_que_se_muestra_un_mensaje_de_error(@controller.ad_hoc.mensaje_de_error_para_contrasenia_invalida)
+        asertar_que_se_muestra_un_mensaje_de_error(AdHocAbogados.new.mensaje_de_error_para_contrasenia_incorrecta)
         asertar_que_la_respuesta_tiene_estado(response, :found)
         asertar_que_se_redirecciono_a(root_path)
       end
     end
 
-    context 'Cuando la contraseña es correcta' do
+    context 'el nombre esta en blanco' do
+      let(:parametros){ {
+          nombre: '',
+          encrypted_password: un_abogado.password
+      }}
 
-      let(:parametros_de_otro_abogado) {
-        fabrica_de_objetos.parametros_para_un_abogado(fabrica_de_objetos.otro_mail_para_un_abogado,
-                                                      fabrica_de_objetos.una_contrasenia,
-                                                      fabrica_de_objetos.otro_nombre_para_un_abogado,
-                                                      fabrica_de_objetos.otro_apellido_para_un_abogado,
-                                                      Sexo::FEMENINO,
-                                                      fabrica_de_objetos.otra_matricula,
-                                                      fabrica_de_objetos.un_colegio,
-                                                      fabrica_de_objetos.otro_cuit,
-                                                      fabrica_de_objetos.un_domicilio_procesal,
-                                                      fabrica_de_objetos.otro_domicilio_electronico)
-      }
+      it 'no puede ser editado' do
+        subject
 
-      let(:otro_abogado){ crear_cuenta_para_abogado(parametros_de_otro_abogado) }
-
-      context 'Y no se probee el Nombre' do
-        let(:parametros){ {
-            nombre: '',
-            current_password: fabrica_de_objetos.una_contrasenia
-        }}
-
-        it 'no puede ser editado' do
-          subject
-
-          asertar_mensaje_de_error_respuesta_y_redireccion("Nombre #{Abogado.mensaje_de_error_para_campo_vacio}")
-        end
+        asertar_mensaje_de_error_respuesta_y_redireccion("Nombre #{Abogado.mensaje_de_error_para_campo_vacio}")
       end
+    end
 
-      context 'Y no se probee el Apellido' do
-        let(:parametros){ {
-            apellido: '',
-            current_password: fabrica_de_objetos.una_contrasenia
-        }}
+    context 'el apellido esta en blanco' do
+      let(:parametros){ {
+          apellido: '',
+          encrypted_password: un_abogado.password
+      }}
 
-        it 'no puede ser editado' do
-          subject
+      it 'no puede ser editado' do
+        subject
 
-          asertar_mensaje_de_error_respuesta_y_redireccion("Apellido #{Abogado.mensaje_de_error_para_campo_vacio}")
-        end
+        asertar_mensaje_de_error_respuesta_y_redireccion("Apellido #{Abogado.mensaje_de_error_para_campo_vacio}")
       end
+    end
 
-      context 'Y no se probee el Email' do
-        let(:parametros){ {
-            email: '',
-            current_password: fabrica_de_objetos.una_contrasenia
-        }}
+    context 'el email esta en blanco' do
+      let(:parametros){ {
+          email: '',
+          encrypted_password: un_abogado.password
+      }}
 
-        it 'no puede ser editado' do
-          subject
+      it 'no puede ser editado' do
+        subject
 
-          asertar_mensaje_de_error_respuesta_y_redireccion("Email #{Abogado.mensaje_de_error_para_campo_vacio}")
-        end
+        asertar_mensaje_de_error_respuesta_y_redireccion("Email #{Abogado.mensaje_de_error_para_campo_vacio}")
       end
+    end
 
-      context 'Y el Email ya fue tomado' do
-        let(:parametros){ {
-            email: otro_abogado.email,
-            current_password: fabrica_de_objetos.una_contrasenia
-        }}
+    context 'el email ya fue tomado' do
+      let(:una_abogada) { create(:abogada) }
+      let(:parametros){ {
+          email: una_abogada.email,
+          encrypted_password: un_abogado.password
+      }}
 
-        it 'no puede ser editado' do
-          subject
+      it 'no puede ser editado' do
+        subject
 
-          asertar_mensaje_de_error_respuesta_y_redireccion("Email #{Abogado.mensaje_de_error_para_campo_tomado}")
-        end
+        asertar_mensaje_de_error_respuesta_y_redireccion("Email #{Abogado.mensaje_de_error_para_campo_tomado}")
       end
+    end
 
-      context 'Y no se probee el Colegio de Abogados' do
-        let(:parametros){ {
-            nombre_del_colegio_de_abogados: '',
-            current_password: fabrica_de_objetos.una_contrasenia
-        }}
+    context 'el Colegio de Abogados esta en blanco' do
+      let(:parametros){ {
+          nombre_del_colegio_de_abogados: '',
+          encrypted_password: un_abogado.password
+      }}
 
-        it 'no puede ser editado' do
-          subject
+      it 'no puede ser editado' do
+        subject
 
-          asertar_mensaje_de_error_respuesta_y_redireccion("Nombre del colegio de abogados #{Abogado.mensaje_de_error_para_campo_vacio}")
-        end
+        asertar_mensaje_de_error_respuesta_y_redireccion("Nombre del colegio de abogados #{Abogado.mensaje_de_error_para_campo_vacio}")
       end
+    end
 
-      context 'Y no se probee la Matricula' do
-        let(:parametros){ {
-            matricula: '',
-            current_password: fabrica_de_objetos.una_contrasenia
-        }}
+    context 'la Matricula esta en blanco' do
+      let(:parametros){ {
+          matricula: '',
+          encrypted_password: un_abogado.password
+      }}
 
-        it 'no puede ser editado' do
-          subject
+      it 'no puede ser editado' do
+        subject
 
-          asertar_mensaje_de_error_respuesta_y_redireccion("Matricula #{Abogado.mensaje_de_error_para_campo_vacio}")
-        end
+        asertar_mensaje_de_error_respuesta_y_redireccion("Matricula #{Abogado.mensaje_de_error_para_campo_vacio}")
       end
+    end
 
-      context 'Y la Matricula ya fue tomada' do
-        let(:parametros){ {
-            matricula: otro_abogado.matricula,
-            current_password: fabrica_de_objetos.una_contrasenia
-        }}
+    context 'la Matricula ya fue tomada' do
+      let(:una_abogada) { create(:abogada) }
 
-        it 'no puede ser editado' do
-          subject
+      let(:parametros){ {
+          matricula: una_abogada.matricula,
+          encrypted_password: un_abogado.password
+      }}
 
-          asertar_mensaje_de_error_respuesta_y_redireccion("Matricula #{Abogado.mensaje_de_error_para_campo_tomado}")
-        end
+      it 'no puede ser editado' do
+        subject
+
+        asertar_mensaje_de_error_respuesta_y_redireccion("Matricula #{Abogado.mensaje_de_error_para_campo_tomado}")
       end
+    end
 
-      context 'Y no se probee el cuit' do
-        let(:parametros){ {
-            cuit: '',
-            current_password: fabrica_de_objetos.una_contrasenia
-        }}
+    context 'el cuit esta en blanco' do
+      let(:parametros){ {
+          cuit: '',
+          encrypted_password: un_abogado.password
+      }}
 
-        it 'no puede ser editado' do
-          subject
+      it 'no puede ser editado' do
+        subject
 
-          asertar_mensaje_de_error_respuesta_y_redireccion("Cuit #{Abogado.mensaje_de_error_para_campo_vacio}")
-        end
+        asertar_mensaje_de_error_respuesta_y_redireccion("Cuit #{Abogado.mensaje_de_error_para_campo_vacio}")
       end
+    end
 
-      context 'Y el Cuit ya fue tomado' do
-        let(:parametros){ {
-            cuit: otro_abogado.cuit,
-            current_password: fabrica_de_objetos.una_contrasenia
-        }}
+    context 'el cuit ya fue tomado' do
+      let(:una_abogada) { create(:abogada) }
+      let(:parametros){ {
+          cuit: una_abogada.cuit,
+          encrypted_password: un_abogado.password
+      }}
 
-        it 'no puede ser editado' do
-          subject
+      it 'no puede ser editado' do
+        subject
 
-          asertar_mensaje_de_error_respuesta_y_redireccion("Cuit #{Abogado.mensaje_de_error_para_campo_tomado}")
-        end
+        asertar_mensaje_de_error_respuesta_y_redireccion("Cuit #{Abogado.mensaje_de_error_para_campo_tomado}")
       end
+    end
 
-      context 'Y no se probee el Domicilio Procesal' do
-        let(:parametros){ {
-            domicilio_procesal: '',
-            current_password: fabrica_de_objetos.una_contrasenia
-        }}
+    context 'el Domicilio Procesal esta en blanco' do
+      let(:parametros){ {
+          domicilio_procesal: '',
+          encrypted_password: un_abogado.password
+      }}
 
-        it 'no puede ser editado' do
-          subject
+      it 'no puede ser editado' do
+        subject
 
-          asertar_mensaje_de_error_respuesta_y_redireccion("Domicilio procesal #{Abogado.mensaje_de_error_para_campo_vacio}")
-        end
+        asertar_mensaje_de_error_respuesta_y_redireccion("Domicilio procesal #{Abogado.mensaje_de_error_para_campo_vacio}")
       end
+    end
 
-      context 'Y no se probee el Domicilio Electronico' do
-        let(:parametros){ {
-            domicilio_electronico: '',
-            current_password: fabrica_de_objetos.una_contrasenia
-        }}
+    context 'el Domicilio Electronico esta en blanco' do
+      let(:parametros){ {
+          domicilio_electronico: '',
+          encrypted_password: un_abogado.password
+      }}
 
-        it 'no puede ser editado' do
-          subject
+      it 'no puede ser editado' do
+        subject
 
-          asertar_mensaje_de_error_respuesta_y_redireccion("Domicilio electronico #{Abogado.mensaje_de_error_para_campo_vacio}")
-        end
+        asertar_mensaje_de_error_respuesta_y_redireccion("Domicilio electronico #{Abogado.mensaje_de_error_para_campo_vacio}")
       end
+    end
 
-      context 'Y el Domicilio Electronico ya fue tomado' do
-        let(:parametros){ {
-            domicilio_electronico: otro_abogado.domicilio_electronico,
-            current_password: fabrica_de_objetos.una_contrasenia
-        }}
+    context 'el Domicilio Electronico ya fue tomado' do
+      let(:una_abogada) { create(:abogada) }
+      let(:parametros){ {
+          domicilio_electronico: una_abogada.domicilio_electronico,
+          encrypted_password: un_abogado.password
+      }}
 
-        it 'no puede ser editado' do
-          subject
+      it 'no puede ser editado' do
+        subject
 
-          asertar_mensaje_de_error_respuesta_y_redireccion("Domicilio electronico #{Abogado.mensaje_de_error_para_campo_tomado}")
-        end
+        asertar_mensaje_de_error_respuesta_y_redireccion("Domicilio electronico #{Abogado.mensaje_de_error_para_campo_tomado}")
       end
     end
   end

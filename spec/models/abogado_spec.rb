@@ -1,142 +1,110 @@
 require 'rails_helper'
 
 describe Abogado, type: :model do
+  include FactoryBot::Syntax::Methods
 
-  let(:fabrica_de_objetos){ FabricaDeObjetos.new }
+  let(:abogado){ create(:abogado) }
 
-  context 'En la correcta registracion de un abogado' do
+  context 'Un abogado no puede crearse sin' do
 
-    # mail, contrasenia, nombre, apellido, sexo, una_matricula, un_colegio, un_cuit, un_domicilio_procesal, un_domicilio_electronico
-
-    let(:parametros) {
-      fabrica_de_objetos.parametros_para_un_abogado(fabrica_de_objetos.un_mail_para_un_abogado,
-                                                    fabrica_de_objetos.una_contrasenia,
-                                                    fabrica_de_objetos.un_nombre_para_un_abogado,
-                                                    fabrica_de_objetos.un_apellido_para_un_abogado,
-                                                    Sexo::MASCULINO,
-                                                    fabrica_de_objetos.una_matricula,
-                                                    fabrica_de_objetos.un_colegio,
-                                                    fabrica_de_objetos.un_cuit,
-                                                    fabrica_de_objetos.un_domicilio_procesal,
-                                                    fabrica_de_objetos.un_domicilio_electronico)
-    }
-
-    subject { Abogado.create!(parametros) }
-
-    context 'Se compone de' do
-
-      it 'nombre' do
-        abogado = subject
-
-        expect(abogado.nombre).to eq fabrica_de_objetos.un_nombre_para_un_abogado
-      end
-
-      it 'apellido' do
-        abogado = subject
-
-        expect(abogado.apellido).to eq fabrica_de_objetos.un_apellido_para_un_abogado
-      end
-
-      it 'email' do
-        abogado = subject
-
-        expect(abogado.email).to eq fabrica_de_objetos.un_mail_para_un_abogado
-      end
-
-      it 'sexo' do
-        abogado = subject
-
-        expect(abogado.sexo).to eq Sexo::MASCULINO
-      end
-
-      it 'matricula' do
-        abogado = subject
-
-        expect(abogado.matricula).to eq fabrica_de_objetos.una_matricula
-      end
-
-      it 'nombre del colegio de abogados' do
-        abogado = subject
-
-        expect(abogado.nombre_del_colegio_de_abogados).to eq fabrica_de_objetos.un_colegio
-      end
-
-      it 'cuit' do
-        abogado = subject
-
-        expect(abogado.cuit).to eq fabrica_de_objetos.un_cuit
-      end
-
-      it 'domicilio procesal' do
-        abogado = subject
-
-        expect(abogado.domicilio_procesal).to eq fabrica_de_objetos.un_domicilio_procesal
-      end
-
-      it 'domicilio electronico' do
-        abogado = subject
-
-        expect(abogado.domicilio_electronico).to eq fabrica_de_objetos.un_domicilio_electronico
-      end
+    it 'nombre' do
+      expect{create(:abogado, nombre: '')}.to raise_error ActiveRecord::RecordInvalid
+      expect{create(:abogado, nombre: nil)}.to raise_error ActiveRecord::RecordInvalid
     end
 
-    it 'dos abogados no pueden tener el mismo email' do
-      subject
-      abogado = Abogado.create(parametros)
+    it 'apellido' do
+      expect{create(:abogado, apellido: '')}.to raise_error ActiveRecord::RecordInvalid
+      expect{create(:abogado, apellido: nil)}.to raise_error ActiveRecord::RecordInvalid
+    end
 
-      expect{Abogado.create!(parametros)}.to raise_error ActiveRecord::RecordInvalid
-      expect(abogado.errors.full_messages).to include("Email #{Abogado.mensaje_de_error_para_campo_tomado}")
-      expect(Abogado.count).to be 1
+    it 'email' do
+      expect{create(:abogado, email: '')}.to raise_error ActiveRecord::RecordInvalid
+      expect{create(:abogado, email: nil)}.to raise_error ActiveRecord::RecordInvalid
+    end
+
+    it 'sexo' do
+      expect{create(:abogado, genero: '')}.to raise_error ActiveRecord::RecordInvalid
+      expect{create(:abogado, genero: nil)}.to raise_error ActiveRecord::RecordInvalid
+    end
+
+    it 'cuit' do
+      expect{create(:abogado, cuit: '')}.to raise_error ActiveRecord::RecordInvalid
+      expect{create(:abogado, cuit: nil)}.to raise_error ActiveRecord::RecordInvalid
+    end
+
+    it 'matricula' do
+      expect{create(:abogado, matricula: '')}.to raise_error ActiveRecord::RecordInvalid
+      expect{create(:abogado, matricula: nil)}.to raise_error ActiveRecord::RecordInvalid
+    end
+
+    it 'domicilio procesal' do
+      expect{create(:abogado, domicilio_procesal: '')}.to raise_error ActiveRecord::RecordInvalid
+      expect{create(:abogado, domicilio_procesal: nil)}.to raise_error ActiveRecord::RecordInvalid
+    end
+
+    it 'domicilio electronico' do
+      expect{create(:abogado, domicilio_electronico: '')}.to raise_error ActiveRecord::RecordInvalid
+      expect{create(:abogado, domicilio_electronico: nil)}.to raise_error ActiveRecord::RecordInvalid
     end
   end
 
-  context 'En la incorrecta registracion de un abogado' do
+  context 'Dos abogados no pueden tener el mismo' do
 
-    it 'un abogado no puede registrarse sin nombre' do
-      parametros = { apellido: 'Bar', sexo: 'Masculino', email: 'ejemplo@mail.com', password: 'password'}
-      abogado = Abogado.create(parametros)
-
-      expect{Abogado.create!(parametros)}.to raise_error ActiveRecord::RecordInvalid
-      expect(abogado.errors.full_messages).to include("Nombre #{Abogado.mensaje_de_error_para_campo_vacio}")
+    it 'email' do
+      expect{create(:abogada, email: abogado.email)}.to raise_error ActiveRecord::RecordInvalid
     end
 
-    it 'un abogado no puede registrarse sin apellido' do
-      parametros = { nombre: 'Foo', sexo: 'Masculino', email: 'ejemplo@mail.com', password: 'password'}
-      abogado = Abogado.create(parametros)
-
-      expect{Abogado.create!(parametros)}.to raise_error ActiveRecord::RecordInvalid
-      expect(abogado.errors.full_messages).to include("Apellido #{Abogado.mensaje_de_error_para_campo_vacio}")
+    it 'matricula' do
+      expect{create(:abogada, matricula: abogado.matricula)}.to raise_error ActiveRecord::RecordInvalid
     end
 
-    it 'un abogado no puede registrarse sin email' do
-      parametros = { nombre: 'Foo', apellido: 'Bar', sexo: 'Masculino', password: 'password'}
-      abogado = Abogado.create(parametros)
-
-      expect{Abogado.create!(parametros)}.to raise_error ActiveRecord::RecordInvalid
-      expect(abogado.errors.full_messages).to include("Email #{Abogado.mensaje_de_error_para_campo_vacio}")
+    it 'domicilio electronico' do
+      expect{create(:abogada, domicilio_electronico: abogado.domicilio_electronico)}.to raise_error ActiveRecord::RecordInvalid
     end
 
-    it 'un abogado no puede registrarse sin sexo' do
-      parametros = { nombre: 'Foo', apellido: 'Bar', email: 'ejemplo@mail.com', password: 'password'}
-      abogado = Abogado.create(parametros)
-
-      expect{Abogado.create!(parametros)}.to raise_error ActiveRecord::RecordInvalid
-      expect(abogado.errors.full_messages).to include("Sexo #{Abogado.mensaje_de_error_para_campo_vacio}")
+    it 'cuit' do
+      expect{create(:abogada, cuit: abogado.cuit)}.to raise_error ActiveRecord::RecordInvalid
     end
-
-    it 'un abogado no puede registrase si su contraseña es menor a 6 digitos' do
-      parametros = { nombre: 'Foo', apellido: 'Bar', email: 'ejemplo@mail.com', sexo: 'Masculino', password: 'abc'}
-
-      expect{Abogado.create!(parametros)}.to raise_error ActiveRecord::RecordInvalid
-    end
-
   end
 
-  it 'el sexo de un abogado solo puede ser Masculino o Femenino' do
-    parametros = { nombre: 'Foo', apellido: 'Bar', email: 'ejemplo@mail.com', sexo: 'Otro sexo', password: 'password'}
-    abogado = Abogado.create(parametros)
+  it 'el sexo de un abogado solo puede ser Masculino o Femenino' do #TODO: esto no es inclusivo
+    expect{create(:abogada, genero: "Ni masculino ni femenino")}.to raise_error ActiveRecord::RecordInvalid
+  end
 
-    expect{Abogado.create!(parametros)}.to raise_error ActiveRecord::RecordInvalid
-    expect(abogado.errors.full_messages).to include("Sexo #{Abogado.mensaje_de_error_para_sexo_en_invalido}")
+  it 'no puede crearse si su contraseña es menor a 6 digitos' do
+    expect{create(:abogada, password: 'abc')}.to raise_error ActiveRecord::RecordInvalid
+  end
+
+  it '#nombre_completo' do
+    expect(abogado.nombre_completo).to eq 'Caceres Pablo'
+  end
+
+  it '#presentacion' do
+    expect(abogado.presentacion).to eq 'Dr. Caceres Pablo'
+  end
+
+  it '#tu_email_es?' do
+    expect(abogado.tu_email_es? abogado.email).to be true
+    expect(abogado.tu_email_es? 'otromail@mail.com').to be false
+  end
+
+  it '#doctor_o_doctora' do
+    expect(abogado.doctor_o_doctora).to eq 'Dr.'
+  end
+
+  it '#inscripta_inscripto' do
+    expect(abogado.inscripta_inscripto).to eq 'inscripto'
+  end
+
+  it '#abogada_abogado' do
+    expect(abogado.abogada_abogado).to eq  'abogado'
+  end
+
+  it '#la_el' do
+    expect(abogado.la_el).to eq 'el'
+  end
+
+  it '#letrada_letrado' do
+    expect(abogado.letrada_letrado).to eq 'letrado'
   end
 end

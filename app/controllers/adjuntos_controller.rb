@@ -10,7 +10,7 @@ class AdjuntosController < ApplicationController
   def show
     begin
       show_adjunto
-    rescue AdHocHackExcepcion => excepcion
+    rescue Errores::AdHocHackExcepcion => excepcion
       mostrar_errores(excepcion, mantener_error: true)
       redirect_back(fallback_location: root_path)
     end
@@ -21,10 +21,10 @@ class AdjuntosController < ApplicationController
       create_adjunto
 
       render :show
-    rescue AdHocUIExcepcion => excepcion
+    rescue Errores::AdHocDomainError => excepcion
       mostrar_errores(excepcion)
       render :new
-    rescue AdHocHackExcepcion => excepcion
+    rescue Errores::AdHocHackExcepcion => excepcion
       mostrar_errores(excepcion, mantener_error: true)
       redirect_back(fallback_location: root_path)
     end
@@ -35,10 +35,10 @@ class AdjuntosController < ApplicationController
       update_adjunto
 
       render :show
-    rescue AdHocUIExcepcion => excepcion
+    rescue Errores::AdHocDomainError => excepcion
       mostrar_errores(excepcion)
       render :show
-    rescue AdHocHackExcepcion => excepcion
+    rescue Errores::AdHocHackExcepcion => excepcion
       mostrar_errores(excepcion, mantener_error: true)
       redirect_back(fallback_location: root_path)
     end
@@ -54,7 +54,7 @@ class AdjuntosController < ApplicationController
       @cliente = @expediente.cliente
 
       redirect_to expediente_url(validar_parametros_expediente)
-    rescue AdHocHackExcepcion => excepcion
+    rescue Errores::AdHocHackExcepcion => excepcion
       mostrar_errores(excepcion, mantener_error: true)
       redirect_back(fallback_location: root_path)
     end

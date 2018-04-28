@@ -1,17 +1,13 @@
 module ControllersHelper
   include ::RSpec::Matchers
+  include FactoryBot::Syntax::Methods
 
-  def login_abogado(parametros)
-    abogado = crear_cuenta_para_abogado(parametros)
+  def abogado_logeado
+    abogado = create(:abogado)
     sign_in abogado
     abogado
   end
 
-  def crear_cuenta_para_abogado(parametros)
-    abogado = fabrica_de_objetos.crear_un_abogado(parametros)
-    #abogado.confirm
-    abogado
-  end
 
   def asertar_que_los_datos_del_cliente_son_correctos(cliente)
     expect(cliente.nombre).to eq fabrica_de_objetos.un_nombre_para_un_cliente

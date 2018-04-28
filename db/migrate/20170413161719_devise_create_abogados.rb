@@ -6,7 +6,7 @@ class DeviseCreateAbogados < ActiveRecord::Migration[5.0]
       t.string :encrypted_password
       t.string :nombre
       t.string :apellido
-      t.string :sexo
+      t.string :genero
       t.string :matricula
       t.string :nombre_del_colegio_de_abogados
       t.string :cuit

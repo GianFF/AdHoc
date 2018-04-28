@@ -31,7 +31,7 @@ describe AdjuntosController, type: :controller do
                                                   fabrica_de_objetos.otro_domicilio_electronico)
   }
 
-  let(:abogado){ login_abogado(parametros_de_un_abogado) }
+  let(:abogado){ abogado_logeado(parametros_de_un_abogado) }
 
   let(:cliente){ fabrica_de_objetos.crear_cliente(abogado.id) }
 
@@ -113,7 +113,7 @@ describe AdjuntosController, type: :controller do
         adjunto = Adjunto.first
 
         sign_out(abogado)
-        otro_abogado = login_abogado(parametros_de_otro_abogado)
+        otro_abogado = abogado_logeado(parametros_de_otro_abogado)
         get :show, params: {id: adjunto.id, expediente_id: expediente.id}
 
         expect(adjunto.pertenece_a?(abogado)).to eq true
