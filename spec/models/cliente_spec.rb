@@ -1,86 +1,43 @@
-require_relative '../rails_helper'
+require 'rails_helper'
 
-describe 'Cliente', type: :model do
+describe Cliente, type: :model do
+  include FactoryBot::Syntax::Methods
 
-  context 'En la correcta creacion de un cliente' do
+  let(:cliente){ create(:cliente) }
 
-    let(:cliente) { Cliente.new(nombre: 'Foo', apellido: 'Bar') }
+  context 'un cliente no puede crearse sin' do
 
-    it 'el cliente debe ser creado con un nombre completo' do
+    subject{ create(:cliente, nombre: '') }
 
-      expect(cliente.nombre).to eq "Foo"
-      expect(cliente.apellido).to eq "Bar"
+    it 'nombre' do
+      expect{subject}.to raise_error ActiveRecord::RecordInvalid
+      expect{create(:cliente, nombre: nil)}.to raise_error ActiveRecord::RecordInvalid
     end
 
-    it 'el cliente tiene un correo_electronico valido' do
-      cliente.correo_electronico = "foo_bar@zaz.com"
-
-      expect(cliente.correo_electronico).to eq "foo_bar@zaz.com"
+    it 'apellido' do
+      expect{create(:cliente, apellido: '')}.to raise_error ActiveRecord::RecordInvalid
+      expect{create(:cliente, apellido: nil)}.to raise_error ActiveRecord::RecordInvalid
     end
 
-    it 'el cliente tiene una direccion' do
-      calle = "Alem 123"
-      localidad = "CABA"
-      provincia = "Buenos Aires"
-      pais = "Argentina"
-      direccion = Direccion.new(calle: calle, localidad: localidad, provincia: provincia, pais: pais)
-
-      cliente.direccion = direccion
-
-      expect(cliente.calle).to eq calle
-      expect(cliente.localidad).to eq localidad
-      expect(cliente.provincia).to eq provincia
-      expect(cliente.pais).to eq pais
+    it 'el abogado al que pertenece' do
+      expect{create(:cliente, abogado: nil)}.to raise_error ActiveRecord::RecordInvalid
     end
+  end
 
-    it 'el cliente tiene un telefono' do
-      cliente.telefono = 12341234
+  it 'un cliente puede tener conyuge' do
+    cliente.conyuge = create(:conyuge, cliente: cliente)
 
-      expect(cliente.telefono).to eq 12341234
-    end
+    expect(cliente.nombre_conyuge).to eq "Florencia"
+    expect(cliente.apellido_conyuge).to eq "Giuliani"
+  end
 
-    it 'el cliente tiene un estado civil' do
-      cliente.estado_civil = "Soltero"
+  it 'Un cliente puede tener hijos' do
+    un_hijo = create(:hijo, cliente: cliente)
+    una_hija = create(:hija, cliente: cliente)
 
-      expect(cliente.estado_civil).to eq "Soltero"
-    end
+    cliente.agregar_hijo un_hijo
+    cliente.agregar_hijo una_hija
 
-    it 'se debe especificar el nombre de la empresa para la que trabaja' do
-      cliente.empresa = "Edymberg"
-
-      expect(cliente.empresa).to eq "Edymberg"
-    end
-
-    it 'se debe especificar si trabaja en blanco' do
-      cliente.esta_en_blanco = true
-
-      expect(cliente.esta_en_blanco).to eq true
-    end
-
-    context 'En La carga opcional de los datos del conyuge' do
-
-      it 'se debe especificar el nombre completo del conyuge' do
-        conyuge = Conyuge.new(nombre: "Bar", apellido: "Foo")
-
-        cliente.conyuge = conyuge
-
-        expect(cliente.nombre_conyuge).to eq "Bar"
-        expect(cliente.apellido_conyuge).to eq "Foo"
-      end
-    end
-
-    context 'En La carga opcional de los datos de los hijos' do
-      let(:hijo){ Hijo.new(nombre: "Zaz", apellido: "Bar") }
-
-      it 'se puede cargar mas de un hijo' do
-        otro_hijo = Hijo.new(nombre: "Zaz", apellido: "Bar")
-        hijos = [hijo, otro_hijo]
-
-        cliente.agregar_hijo hijo
-        cliente.agregar_hijo otro_hijo
-
-        expect(cliente.hijos).to eq hijos
-      end
-    end
+    expect(cliente.hijos).to contain_exactly(un_hijo, una_hija)
   end
 end

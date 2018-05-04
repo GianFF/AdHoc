@@ -4,8 +4,8 @@ class ClientesController < ApplicationController
 
   def index
     begin
-      @cliente = @ad_hoc.buscar_cliente_por_nombre_o_apellido!(validar_parametro_query, abogado_actual.id)
-      @expedientes = @cliente.expedientes
+      @cliente = ad_hoc.buscar_cliente_por_nombre_o_apellido!(params.require(:query), abogado_actual.id)
+      inicializar_expedientes
       render :show
     rescue Errores::AdHocDomainError => excepcion
       mostrar_errores(excepcion)
@@ -14,13 +14,8 @@ class ClientesController < ApplicationController
   end
 
   def show
-    begin
-      @cliente = @ad_hoc.buscar_cliente_por_id!(params[:id], abogado_actual.id)
-      @expedientes = @cliente.expedientes
-    rescue Errores::AdHocHackExcepcion => excepcion
-      mostrar_errores(excepcion, mantener_error: true)
-      redirect_back(fallback_location: root_path)
-    end
+    @cliente = ad_hoc.buscar_cliente_por_id!(params[:id], abogado_actual.id)
+    inicializar_expedientes
   end
 
   def new
@@ -28,20 +23,15 @@ class ClientesController < ApplicationController
   end
 
   def edit
-    begin
-      @cliente = @ad_hoc.buscar_cliente_por_id!(cliente_id, abogado_actual.id)
-    rescue Errores::AdHocHackExcepcion => excepcion
-      mostrar_errores(excepcion, mantener_error: true)
-      redirect_back(fallback_location: root_path)
-    end
+    @cliente = ad_hoc.buscar_cliente_por_id!(cliente_id, abogado_actual.id)
   end
 
   def create
     begin
-      @cliente = @ad_hoc.crear_cliente_nuevo!(validar_parametros_cliente, abogado_actual)
-      @expedientes = @cliente.expedientes
-      flash.now[:success] = @ad_hoc.mensaje_de_confirmacion_para_la_correcta_creacion_de_un_cliente
-      render :show
+      @cliente = ad_hoc.crear_cliente_nuevo!(validar_parametros_cliente, abogado_actual)
+      inicializar_expedientes
+      flash.now[:success] = ad_hoc.mensaje_cliente_creado_correctamente
+      render :show, status: :ok
     rescue Errores::AdHocDomainError => excepcion
       mostrar_errores(excepcion)
       render :new
@@ -50,41 +40,37 @@ class ClientesController < ApplicationController
 
   def update
     begin
-      @cliente = @ad_hoc.editar_cliente!(cliente_id, validar_parametros_cliente, abogado_actual)
-      @expedientes = @cliente.expedientes
-      flash.now[:success] = @ad_hoc.mensaje_de_confirmacion_para_la_correcta_edicion_de_un_cliente
+      @cliente = ad_hoc.editar_cliente!(cliente_id, validar_parametros_cliente, abogado_actual)
+      inicializar_expedientes
+      flash.now[:success] = ad_hoc.mensaje_de_confirmacion_para_la_correcta_edicion_de_un_cliente
       render :show
     rescue Errores::AdHocDomainError => excepcion
       mostrar_errores(excepcion)
-      @cliente = @ad_hoc.buscar_cliente_por_id!(cliente_id, abogado_actual.id)
+      @cliente = ad_hoc.buscar_cliente_por_id!(cliente_id, abogado_actual.id)
       render :edit
-    rescue Errores::AdHocHackExcepcion => excepcion
-      mostrar_errores(excepcion, mantener_error: true)
-      redirect_back(fallback_location: root_path)
     end
   end
 
   def destroy
-    begin
-      @ad_hoc.eliminar_cliente!(params[:id], abogado_actual.id)
-      flash.now[:success] = @ad_hoc.mensaje_de_confirmacion_para_correcta_eliminacion_de_un_cliente
-      @cliente = nil
-      render :new
-    rescue Errores::AdHocHackExcepcion => excepcion
-      mostrar_errores(excepcion, mantener_error: true)
-      redirect_back(fallback_location: root_path)
-    end
+    ad_hoc.eliminar_cliente!(params[:id], abogado_actual.id)
+    flash.now[:success] = ad_hoc.mensaje_de_confirmacion_para_correcta_eliminacion_de_un_cliente
+    @cliente = nil
+    render :new
   end
 
   private
 
-  def validar_parametro_query
-    params.require(:query)
+  def ad_hoc
+    AdHocClientes.new
+  end
+
+  def inicializar_expedientes
+    @expedientes = @cliente.expedientes
   end
 
   def validar_parametros_cliente
     params.require(:cliente).permit(:nombre, :apellido, :correo_electronico, :telefono,
-                                    :estado_civil, :empresa, :esta_en_blanco)
+                                    :estado_civil, :empresa, :trabaja_en_blanco)
   end
 
   # TODO: eliminar cuanto antes este parche.

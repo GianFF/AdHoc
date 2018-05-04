@@ -3,6 +3,7 @@ class ApplicationController < ActionController::Base
   layout 'application'
   before_action :crear_aplicacion
   protect_from_forgery with: :exception
+  rescue_from Errores::AdHocHackExcepcion, with: :rescue_hack_exception
 
   def abogado_actual
     current_abogado
@@ -10,7 +11,7 @@ class ApplicationController < ActionController::Base
 
   def rescue_hack_exception(excepcion)
     mostrar_errores(excepcion, mantener_error: true)
-    redirect_back(fallback_location: root_path)
+    redirect_back(fallback_location: root_path, status: :bad_request)
   end
 
   def mostrar_errores(excepcion, mantener_error: false)

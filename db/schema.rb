@@ -55,7 +55,7 @@ ActiveRecord::Schema.define(version: 20170610171959) do
     t.integer  "telefono"
     t.string   "estado_civil"
     t.string   "empresa"
-    t.boolean  "esta_en_blanco"
+    t.boolean  "trabaja_en_blanco"
     t.integer  "abogado_id"
     t.datetime "created_at",         null: false
     t.datetime "updated_at",         null: false

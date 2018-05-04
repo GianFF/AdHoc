@@ -1,4 +1,4 @@
-require_relative '../rails_helper'
+require 'rails_helper'
 
 describe AdHocAbogados do
   include FactoryBot::Syntax::Methods
@@ -75,7 +75,6 @@ describe AdHocAbogados do
   end
 
   context 'No se puede editar un abogado cuando' do
-    let(:un_abogado){ create(:abogado) }
 
     it 'su contraseña es incorrecta' do
       parametros[:password] = 'algoIncorrecto'

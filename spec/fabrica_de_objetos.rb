@@ -131,7 +131,7 @@ class FabricaDeObjetos
         correo_electronico: un_mail,
         estado_civil: un_estado_civil,
         empresa: una_empresa,
-        esta_en_blanco: trabaja_en_blanco
+        trabaja_en_blanco: trabaja_en_blanco
     }
   end
 

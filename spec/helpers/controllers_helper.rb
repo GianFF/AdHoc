@@ -9,11 +9,6 @@ module ControllersHelper
   end
 
 
-  def asertar_que_los_datos_del_cliente_son_correctos(cliente)
-    expect(cliente.nombre).to eq fabrica_de_objetos.un_nombre_para_un_cliente
-    expect(cliente.apellido).to eq fabrica_de_objetos.un_apellido_para_un_cliente
-  end
-
   def asertar_que_se_muestra_un_mensaje_de_confirmacion(un_mensaje)
     expect(flash[:success]).to eq un_mensaje
   end

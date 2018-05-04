@@ -7,7 +7,7 @@ class CreateClientes < ActiveRecord::Migration[5.0]
       t.integer :telefono
       t.string  :estado_civil
       t.string  :empresa
-      t.boolean :esta_en_blanco
+      t.boolean :trabaja_en_blanco
       t.references :abogado, foreign_key: true
 
       t.timestamps
