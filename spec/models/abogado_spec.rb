@@ -22,7 +22,7 @@ describe Abogado, type: :model do
       expect{create(:abogado, email: nil)}.to raise_error ActiveRecord::RecordInvalid
     end
 
-    it 'sexo' do
+    it 'genero' do
       expect{create(:abogado, genero: '')}.to raise_error ActiveRecord::RecordInvalid
       expect{create(:abogado, genero: nil)}.to raise_error ActiveRecord::RecordInvalid
     end
@@ -67,7 +67,7 @@ describe Abogado, type: :model do
     end
   end
 
-  it 'el sexo de un abogado solo puede ser Masculino o Femenino' do #TODO: esto no es inclusivo
+  it 'el genero de un abogado solo puede ser Masculino o Femenino' do #TODO: esto no es inclusivo
     expect{create(:abogada, genero: "Ni masculino ni femenino")}.to raise_error ActiveRecord::RecordInvalid
   end
 

@@ -1,15 +1,16 @@
 default: &default
- encoding: unicode
- adapter: postgresql
- username: postgres
- password: postgres
- host: localhost
- pool: 5
+  adapter: postgresql
+  encoding: unicode
+  host: db
+  username: postgres
+  password:
+  pool: 5
 
 development:
- <<: *default
- database: adhoc_development
+  <<: *default
+  database: adhoc_development
+
 
 test:
- <<: *default
- database: adhoc_test
+  <<: *default
+  database: adhoc_test

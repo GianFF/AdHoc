@@ -20,8 +20,8 @@ module Genero
       'letrado'
     end
 
-    def self.es(sexo)
-      sexo == Sexo::MASCULINO
+    def self.es(genero)
+      genero == Genero::Genero::MASCULINO
     end
   end
 end
