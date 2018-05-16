@@ -60,8 +60,8 @@ describe DemandasController, type: :controller do
       it 'el cuerpo no puede ser vacio' do
         subject
 
-        asertar_que_se_incluye_un_mensaje_de_error("Cuerpo #{Demanda.mensaje_de_error_para_campo_vacio}")
-        asertar_que_la_respuesta_tiene_estado(response, :ok)
+        expect(flash[:error]).to include "Cuerpo #{Demanda.mensaje_de_error_para_campo_vacio}"
+        expect(response).to have_http_status(:ok)
         asertar_que_el_template_es(:new)
       end
     end

@@ -36,7 +36,7 @@ class Encabezado
   end
 
   def caratula_del_expediente
-    @expediente.caratula_para_el_encabezado_automatico
+    @expediente.caratula_para_encabezado
   end
 
   def organo_que_actua_en_ese_expediente

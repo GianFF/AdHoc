@@ -9,11 +9,6 @@ module ExpedientesHelper
     expect(un_expediente.materia).to eq fabrica_de_objetos.una_materia
   end
 
-  def asertar_que_el_expediente_no_fue_creado
-    un_expediente = Expediente.first
-
-    expect(un_expediente).to be nil
-  end
 
   def asertar_que_el_expediente_no_fue_numerado
     expect(expediente.ha_sido_numerado?).to be false
@@ -41,9 +36,6 @@ module ExpedientesHelper
     expect(expediente.materia).to eq una_materia
   end
 
-  def asertar_que_se_elimino_el_expediente
-    expect(Expediente.all.count).to eq 0
-  end
 
   def numerar_expediente
     post :realizar_numeraracion,

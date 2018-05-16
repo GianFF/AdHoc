@@ -9,7 +9,7 @@ describe DemandasController, type: :controller do
                                                                    fabrica_de_objetos.una_contrasenia,
                                                                    fabrica_de_objetos.un_nombre_para_un_abogado,
                                                                    fabrica_de_objetos.un_apellido_para_un_abogado,
-                                                                   Sexo::MASCULINO,
+                                                                   Genero::Genero::MASCULINO,
                                                                    fabrica_de_objetos.una_matricula,
                                                                    fabrica_de_objetos.un_colegio,
                                                                    fabrica_de_objetos.un_cuit,
@@ -30,7 +30,7 @@ describe DemandasController, type: :controller do
                                                     fabrica_de_objetos.una_contrasenia,
                                                     fabrica_de_objetos.otro_nombre_para_un_abogado,
                                                     fabrica_de_objetos.otro_apellido_para_un_abogado,
-                                                    Sexo::MASCULINO,
+                                                    Genero::Genero::MASCULINO,
                                                     fabrica_de_objetos.otra_matricula,
                                                     fabrica_de_objetos.un_colegio,
                                                     fabrica_de_objetos.otro_cuit,
@@ -50,7 +50,7 @@ describe DemandasController, type: :controller do
       expect(un_escrito.pertenece_a? abogado).to be true
       expect(un_escrito.pertenece_a? otro_abogado).to be false
       asertar_que_el_template_es(:show)
-      asertar_que_la_respuesta_tiene_estado(response, :ok)
+      expect(response).to have_http_status(:ok)
     end
 
     it 'otro abogado no puede ver los escritos de un abogado' do
@@ -62,8 +62,8 @@ describe DemandasController, type: :controller do
       get :show, params: {id: un_escrito.id, expediente_id: expediente.id}
 
       asertar_que_se_redirecciono_a(root_path)
-      asertar_que_la_respuesta_tiene_estado(response, :found)
-      asertar_que_se_incluye_un_mensaje_de_error(@controller.ad_hoc.mensaje_de_error_para_escrito_invalido)
+      expect(response).to have_http_status(:found)
+      expect(flash[:error]).to include @controller.ad_hoc.mensaje_de_error_para_escrito_invalido
     end
 
     context 'Cuando es incorrecta' do
@@ -72,8 +72,8 @@ describe DemandasController, type: :controller do
       it 'el titulo no puede ser vacio' do
         subject
 
-        asertar_que_se_incluye_un_mensaje_de_error("Titulo #{Demanda.mensaje_de_error_para_campo_vacio}")
-        asertar_que_la_respuesta_tiene_estado(response, :ok)
+        expect(flash[:error]).to include "Titulo #{Demanda.mensaje_de_error_para_campo_vacio}"
+        expect(response).to have_http_status(:ok)
         asertar_que_el_template_es(:new)
       end
     end
@@ -103,7 +103,7 @@ describe DemandasController, type: :controller do
         expect(demanda.titulo).to eq fabrica_de_objetos.otro_titulo_de_una_demanda
         expect(demanda.cuerpo).to eq fabrica_de_objetos.otro_cuerpo_de_una_demanda
         asertar_que_el_template_es(:show)
-        asertar_que_la_respuesta_tiene_estado(response, :ok)
+        expect(response).to have_http_status(:ok)
         asertar_que_se_muestra_un_mensaje_de_confirmacion(ad_hoc.mensaje_de_confirmacion_para_la_correcta_edicion_de_un_escrito)
       end
     end
@@ -117,8 +117,8 @@ describe DemandasController, type: :controller do
 
         expect(demanda.titulo).to eq fabrica_de_objetos.un_titulo_de_una_demanda
         expect(demanda.cuerpo).to eq fabrica_de_objetos.un_cuerpo_de_una_demanda
-        asertar_que_se_incluye_un_mensaje_de_error("Titulo #{Demanda.mensaje_de_error_para_campo_vacio}")
-        asertar_que_la_respuesta_tiene_estado(response, :ok)
+        expect(flash[:error]).to include "Titulo #{Demanda.mensaje_de_error_para_campo_vacio}"
+        expect(response).to have_http_status(:ok)
         asertar_que_el_template_es(:show)
       end
 
@@ -128,8 +128,8 @@ describe DemandasController, type: :controller do
 
         expect(demanda.titulo).to eq fabrica_de_objetos.un_titulo_de_una_demanda
         expect(demanda.cuerpo).to eq fabrica_de_objetos.un_cuerpo_de_una_demanda
-        asertar_que_se_incluye_un_mensaje_de_error("Cuerpo #{Demanda.mensaje_de_error_para_campo_vacio}")
-        asertar_que_la_respuesta_tiene_estado(response, :ok)
+        expect(flash[:error]).to include "Cuerpo #{Demanda.mensaje_de_error_para_campo_vacio}"
+        expect(response).to have_http_status(:ok)
         asertar_que_el_template_es(:show)
       end
     end
@@ -151,7 +151,7 @@ describe DemandasController, type: :controller do
 
       asertar_que_se_muestra_un_mensaje_de_confirmacion(ad_hoc.mensaje_de_confirmacion_para_la_correcta_eliminacion_de_un_escrito)
       asertar_que_se_redirecciono_a(expediente_url(expediente.id))
-      asertar_que_la_respuesta_tiene_estado(response, :found)
+      expect(response).to have_http_status(:found)
       expect(Demanda.all.count).to eq 0
     end
   end
@@ -166,7 +166,7 @@ describe DemandasController, type: :controller do
 
       asertar_que_se_muestra_un_mensaje_de_confirmacion(ad_hoc.mensaje_de_confirmacion_para_la_correcta_presentacion_de_un_escrito)
       asertar_que_el_template_es(:show)
-      asertar_que_la_respuesta_tiene_estado(response, :ok)
+      expect(response).to have_http_status(:ok)
     end
 
     context 'Una vez presentado el escrito' do
@@ -195,8 +195,8 @@ describe DemandasController, type: :controller do
         expect(demanda.fue_presentado?).to be true
         expect(demanda.titulo).to eq fabrica_de_objetos.un_titulo_de_una_demanda
         expect(demanda.cuerpo).to eq fabrica_de_objetos.un_cuerpo_de_una_demanda
-        asertar_que_se_incluye_un_mensaje_de_error(demanda.mensaje_de_error_para_escrito_presentado)
-        asertar_que_la_respuesta_tiene_estado(response, :ok)
+        expect(flash[:error]).to include demanda.mensaje_de_error_para_escrito_presentado
+        expect(response).to have_http_status(:ok)
         asertar_que_el_template_es(:show)
       end
     end

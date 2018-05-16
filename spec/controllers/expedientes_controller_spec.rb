@@ -1,340 +1,245 @@
-require_relative '../rails_helper'
+require 'rails_helper'
 
 describe ExpedientesController do
+  include FactoryBot::Syntax::Methods
   include ::ControllersHelper
   include ::ExpedientesHelper
 
-  let(:fabrica_de_objetos){ FabricaDeObjetos.new }
+  let(:abogado){ abogado_logeado }
+  let(:cliente){ create(:cliente, abogado: abogado) }
+  let(:expediente){ create(:expediente, cliente: cliente) }
+  let(:ad_hoc){ AdHocExpedientes.new }
 
-  let(:parametros_del_abogado) { fabrica_de_objetos.parametros_para_un_abogado(fabrica_de_objetos.un_mail_para_un_abogado,
-                                                                   fabrica_de_objetos.una_contrasenia,
-                                                                   fabrica_de_objetos.un_nombre_para_un_abogado,
-                                                                   fabrica_de_objetos.un_apellido_para_un_abogado,
-                                                                   Sexo::MASCULINO,
-                                                                   fabrica_de_objetos.una_matricula,
-                                                                   fabrica_de_objetos.un_colegio,
-                                                                   fabrica_de_objetos.un_cuit,
-                                                                   fabrica_de_objetos.un_domicilio_procesal,
-                                                                   fabrica_de_objetos.un_domicilio_electronico) }
+  describe '#create' do
+    subject { post :create, params: parametros }
 
-  let(:abogado){ abogado_logeado(parametros_del_abogado) }
-
-  let(:cliente){ fabrica_de_objetos.crear_cliente(abogado.id) }
-
-  let(:ad_hoc){ AdHocAplicacion.new }
-
-  subject { post :create, params: {
-      expediente: {
-          actor: "#{cliente.nombre_completo}",
-          demandado: fabrica_de_objetos.un_demandado,
-          materia: fabrica_de_objetos.una_materia
-      },
-      cliente_id: cliente.id
-    }
-  }
-
-  it 'un expediente pertenece a un cliente' do
-    subject
-
-    un_expediente = Expediente.first
-
-    expect(un_expediente.actor).to eq "#{cliente.nombre_completo}"
-  end
-
-  it 'un abogado no puede ver los expedientes de otro abogado' do
-    otros_parametros = fabrica_de_objetos.parametros_para_un_abogado(fabrica_de_objetos.otro_mail_para_un_abogado,
-                                                                     fabrica_de_objetos.una_contrasenia,
-                                                                     fabrica_de_objetos.otro_nombre_para_un_abogado,
-                                                                     fabrica_de_objetos.otro_apellido_para_un_abogado,
-                                                                     Sexo::MASCULINO,
-                                                                     fabrica_de_objetos.otra_matricula,
-                                                                     fabrica_de_objetos.un_colegio,
-                                                                     fabrica_de_objetos.otro_cuit,
-                                                                     fabrica_de_objetos.un_domicilio_procesal,
-                                                                     fabrica_de_objetos.otro_domicilio_electronico)
-    otro_abogado = crear_cuenta_para_abogado(otros_parametros)
-
-    subject
-
-    asertar_que_un_expediente_no_pertenece_a(otro_abogado)
-  end
-
-  context 'Creacion de Expedientes' do
-
-    context 'En la correcta creacion de un Expediente' do
-      subject { post :create, params: {
-          expediente: {
-              actor: "#{cliente.nombre_completo}",
-              demandado: fabrica_de_objetos.un_demandado,
-              materia: fabrica_de_objetos.una_materia
-          },
+    let(:parametros) do
+      {
+          expediente: attributes_for(:expediente, actor: cliente.nombre_completo),
           cliente_id: cliente.id
+      }
+    end
+
+    context 'cuando todo sale bien' do
+
+      it 'te redirije a la vista del expediente con un mensaje de confirmacion' do
+        subject
+
+        expect(response).to have_http_status :ok
+        assert_template :show
+        expect(flash[:success]).to eq ad_hoc.mensaje_de_confirmacion_para_la_correcta_creacion_de_un_expediente
+      end
+    end
+
+    context 'cuando falta algún parametro' do
+
+      context 'sin actor' do
+
+        let(:parametros) do
+          {
+              expediente: attributes_for(:expediente, actor: nil),
+              cliente_id: cliente.id
+          }
+        end
+
+        it 'devuelve un mensaje de error y bad_request' do
+          subject
+
+          expect(response).to have_http_status(:bad_request)
+          assert_template :new
+          expect(flash[:error]).to include "Actor #{Expediente.mensaje_de_error_para_campo_vacio}"
+          expect(Expediente.count).to be 0
+        end
+      end
+
+      context 'sin demandado' do
+
+        let(:parametros) do
+          {
+              expediente: attributes_for(:expediente, demandado: nil),
+              cliente_id: cliente.id
+          }
+        end
+
+        it 'devuelve un mensaje de error y bad_request' do
+          subject
+
+          expect(response).to have_http_status(:bad_request)
+          assert_template :new
+          expect(flash[:error]).to include "Demandado #{Expediente.mensaje_de_error_para_campo_vacio}"
+          expect(Expediente.count).to be 0
+        end
+      end
+
+      context 'sin materia' do
+
+        let(:parametros) do
+          {
+              expediente: attributes_for(:expediente, materia: nil),
+              cliente_id: cliente.id
+          }
+        end
+
+        it 'devuelve un mensaje de error y bad_request' do
+          subject
+
+          expect(response).to have_http_status(:bad_request)
+          assert_template :new
+          expect(flash[:error]).to include "Materia #{Expediente.mensaje_de_error_para_campo_vacio}"
+          expect(Expediente.count).to be 0
+        end
+      end
+    end
+  end
+
+  describe '#update' do
+    subject do
+      put :update, params: parametros
+    end
+
+    context 'en la correcta edicion de un Expediente' do
+      let(:parametros) do
+        {
+            id: expediente.id,
+            expediente: attributes_for(:expediente),
+            cliente_id: cliente.id,
         }
-      }
+      end
 
-      it 'se compone de actor, demandado y materia' do
+      it 'devuelve un mensaje de confirmación y estado ok' do
         subject
 
-        asertar_que_la_respuesta_tiene_estado(response, :ok)
-        asertar_que_el_template_es(:show)
-        asertar_que_se_muestra_un_mensaje_de_confirmacion(ad_hoc.mensaje_de_confirmacion_para_la_correcta_creacion_de_un_expediente)
-        asertar_que_el_expediente_fue_correctamente_creado
+        expect(response).to have_http_status(:ok)
+        expect(flash[:success]).to eq ad_hoc.mensaje_de_confirmacion_para_la_correcta_edicion_de_un_expediente
       end
     end
 
-    context 'En la incorrecta creacion de un Expediente' do
-      subject {post :create, params: parametros}
+    context 'en la incorrecta edicion de un Expediente' do
 
-      context 'Sin Actor' do
+      context 'sin actor' do
+        let(:parametros) do
+          {
+              id: expediente.id,
+              expediente: attributes_for(:expediente, actor: ''),
+              cliente_id: cliente.id,
+          }
+        end
 
-        let(:parametros) {{
-            expediente: {
-                demandado: fabrica_de_objetos.un_demandado,
-                materia: fabrica_de_objetos.una_materia
-            },
-            cliente_id: cliente.id
-        }}
-
-        it 'no se puede crear' do
+        it 'devuelve un mensaje de error y bad_request' do
           subject
 
-          asertar_que_la_respuesta_tiene_estado(response, :ok)
-          assert_template :new
-          asertar_que_se_incluye_un_mensaje_de_error("Actor #{Expediente.mensaje_de_error_para_campo_vacio}")
-          asertar_que_el_expediente_no_fue_creado
+          expect(response).to have_http_status(:bad_request)
+          expect(flash[:error]).to include "Actor #{Expediente.mensaje_de_error_para_campo_vacio}"
         end
       end
 
-      context 'Sin Demandado' do
+      context 'sin demandado' do
+        let(:parametros) do
+          {
+              id: expediente.id,
+              expediente: attributes_for(:expediente, demandado: ''),
+              cliente_id: cliente.id,
+          }
+        end
 
-        let(:parametros) {{
-            expediente: {
-                actor: "#{cliente.nombre} #{cliente.apellido}",
-                materia: fabrica_de_objetos.una_materia
-            },
-            cliente_id: cliente.id
-        }}
-
-        it 'no se puede crear' do
+        it 'devuelve un mensaje de error y bad_request' do
           subject
 
-          asertar_que_la_respuesta_tiene_estado(response, :ok)
-          assert_template :new
-          asertar_que_se_incluye_un_mensaje_de_error("Demandado #{Expediente.mensaje_de_error_para_campo_vacio}")
-          asertar_que_el_expediente_no_fue_creado
+          expect(response).to have_http_status(:bad_request)
+          expect(flash[:error]).to include "Demandado #{Expediente.mensaje_de_error_para_campo_vacio}"
         end
       end
 
-      context 'Sin Materia' do
+      context 'sin materia' do
+        let(:parametros) do
+          {
+              id: expediente.id,
+              expediente: attributes_for(:expediente, materia: ''),
+              cliente_id: cliente.id,
+          }
+        end
 
-        let(:parametros) {{
-            expediente: {
-                actor: "#{cliente.nombre} #{cliente.apellido}",
-                demandado: fabrica_de_objetos.un_demandado
-            },
-            cliente_id: cliente.id
-        }}
-
-        it 'no se puede crear' do
+        it 'devuelve un mensaje de error y bad_request' do
           subject
 
-          asertar_que_la_respuesta_tiene_estado(response, :ok)
-          assert_template :new
-          asertar_que_se_incluye_un_mensaje_de_error("Materia #{Expediente.mensaje_de_error_para_campo_vacio}")
-          asertar_que_el_expediente_no_fue_creado
+          expect(response).to have_http_status(:bad_request)
+          expect(flash[:error]).to include "Materia #{Expediente.mensaje_de_error_para_campo_vacio}"
         end
       end
     end
   end
 
-  context 'Edicion de Expedientes' do
-    let(:expediente) {fabrica_de_objetos.crear_expediente(cliente.id)}
+  describe '#delete' do
+    subject { delete :destroy, params: { id: expediente.id,  cliente_id: cliente.id } }
 
-    context 'En la correcta edicion de un Expediente' do
-
-      subject {
-        put :update,
-            params: {
-                id: expediente.id,
-                expediente: {
-                    actor: fabrica_de_objetos.otro_actor,
-                    demandado: fabrica_de_objetos.otro_demandado,
-                    materia: fabrica_de_objetos.otra_materia
-                },
-                cliente_id: cliente.id,
-            }
-      }
-
-      it 'se le puede cambiar el actor, demandado y materia' do
-        subject
-
-        expediente.reload
-
-        asertar_que_la_respuesta_tiene_estado(response, :ok)
-        asertar_que_se_muestra_un_mensaje_de_confirmacion(ad_hoc.mensaje_de_confirmacion_para_la_correcta_edicion_de_un_expediente)
-        asertar_que_el_expediente_cambio(fabrica_de_objetos.otro_actor, fabrica_de_objetos.otro_demandado, fabrica_de_objetos.otra_materia)
-      end
-    end
-
-    context 'En la incorrecta edicion de un Expediente' do
-
-      subject {
-        put :update,
-            params: {
-                id: expediente.id,
-                expediente: parametros_del_expediente,
-                cliente_id: cliente.id,
-            }
-      }
-
-      context 'Sin Actor' do
-        let(:parametros_del_expediente) { {
-            actor: '',
-            demandado: fabrica_de_objetos.otro_demandado,
-            materia: fabrica_de_objetos.otra_materia
-        } }
-
-        it 'no puede ser editado' do
-          subject
-
-          expediente.reload
-
-          asertar_que_la_respuesta_tiene_estado(response, :bad_request)
-          asertar_que_se_incluye_un_mensaje_de_error("Actor #{Expediente.mensaje_de_error_para_campo_vacio}")
-          asertar_que_el_expediente_no_cambio(fabrica_de_objetos.un_actor, fabrica_de_objetos.un_demandado, fabrica_de_objetos.una_materia)
-        end
-      end
-
-      context 'Sin Demandado' do
-
-        let(:parametros_del_expediente) { {
-            actor: "#{cliente.nombre_completo}",
-            demandado: '',
-            materia: 'Otra Materia'
-        } }
-
-        it 'no puede ser editado' do
-          subject
-
-          expediente.reload
-
-          asertar_que_la_respuesta_tiene_estado(response, :bad_request)
-          asertar_que_se_incluye_un_mensaje_de_error("Demandado #{Expediente.mensaje_de_error_para_campo_vacio}")
-          asertar_que_el_expediente_no_cambio(fabrica_de_objetos.un_actor, fabrica_de_objetos.un_demandado, fabrica_de_objetos.una_materia)
-        end
-      end
-
-      context 'Sin Materia' do
-        let(:parametros_del_expediente) { {
-            actor: "#{cliente.nombre_completo}",
-            demandado: fabrica_de_objetos.otro_demandado,
-            materia: ''
-        } }
-
-        it 'la materia no puede estar vacia' do
-          subject
-
-          expediente.reload
-
-          asertar_que_la_respuesta_tiene_estado(response, :bad_request)
-          asertar_que_se_incluye_un_mensaje_de_error("Materia #{Expediente.mensaje_de_error_para_campo_vacio}")
-          asertar_que_el_expediente_no_cambio(fabrica_de_objetos.un_actor, fabrica_de_objetos.un_demandado, fabrica_de_objetos.una_materia)
-        end
-      end
-    end
-  end
-
-  context 'Borrado de Expedientes' do
-    let(:expediente) {Expediente.create!(actor: "#{cliente.nombre_completo}",
-                                         demandado: fabrica_de_objetos.un_demandado,
-                                         materia: fabrica_de_objetos.una_materia,
-                                         cliente_id: cliente.id)}
-
-    subject { delete :destroy, params: {
-        id: expediente.id,
-        cliente_id: cliente.id,
-    }}
-
-    it 'se puede eliminar un expediente' do
+    it 'devuelve un mensaje de confirmación y redirecciona al usuario a la vista del cliente' do
       subject
 
-      asertar_que_se_muestra_un_mensaje_de_confirmacion(ad_hoc.mensaje_de_confirmacion_para_la_correcta_eliminacion_de_un_expediente)
-      asertar_que_se_redirecciono_a(cliente_url(cliente.id))
-      asertar_que_la_respuesta_tiene_estado(response, :found)
-      asertar_que_se_elimino_el_expediente
+      expect(flash[:success]).to eq ad_hoc.mensaje_de_confirmacion_para_la_correcta_eliminacion_de_un_expediente
+      assert_redirected_to cliente_url(cliente.id)
+      expect(response).to have_http_status(:found)
+      expect(Expediente.all.count).to eq 0
+    end
+
+    context 'no se puede eliminar un expediente que no pertenece al abogado logeado' do
+
+      it 'devuelve un mensaje de error y bad request' do
+        sign_out abogado
+        abogada_logeada
+
+        subject
+
+        expect(flash[:error]).to include ad_hoc.mensaje_de_error_para_expediente_inexistente
+        expect(response).to have_http_status(:bad_request)
+        expect(Expediente.all.count).to eq 1
+      end
     end
   end
 
-  context 'Numeracion de Expedientes' do
-    subject { numerar_expediente }
-
-    let(:expediente) {Expediente.create!(actor: "#{cliente.nombre_completo}",
-                                         demandado: fabrica_de_objetos.un_demandado,
-                                         materia: fabrica_de_objetos.una_materia,
-                                         cliente_id: cliente.id)}
+  describe '#realizar_numeraracion' do
+    subject do
+      post :realizar_numeraracion,
+           params: {
+               id: expediente.id,
+               cliente_id: cliente.id,
+               expediente: parametros
+           }
+    end
 
     context 'En la correcta numeracion de un Expediente' do
+      let(:parametros){attributes_for(:expediente_numerado)}
 
-      let(:caratula_del_expediente_numerado){
-        fabrica_de_objetos.una_caratula_numerada(expediente, numero, anio, juzgado, numero_de_juzgado,
-                                                 departamento, ubicacion_del_departamento)
-      }
-
-      let(:ubicacion_del_departamento){ fabrica_de_objetos.una_ubicacion_de_un_departamento }
-
-      let(:departamento){ fabrica_de_objetos.un_departamento } #TODO: este dato podria ir capturandolo para guardar en una base de datos retroalimentable.
-
-      let(:numero_de_juzgado){ fabrica_de_objetos.un_numero_de_juzgado }
-
-      let(:juzgado){ fabrica_de_objetos.un_juzgado } #TODO: extraer a un ENUM, para ello averiguar que entidad engloba a un Juzgado o un Tribunal
-
-      let(:anio){ fabrica_de_objetos.un_anio }
-
-      let(:numero){ fabrica_de_objetos.un_numero_de_expediente }
-
-      it 'puede ser numerado' do
+      it 'devuelve mensaje de confirmación y estado ok, redirecciona a la vista del expediente' do
         subject
-        expediente.reload
 
-        asertar_que_la_respuesta_tiene_estado(response, :ok)
-        asertar_que_el_template_es(:show)
-        asertar_que_se_muestra_un_mensaje_de_confirmacion(ad_hoc.mensaje_de_confirmacion_para_la_correcta_numeracion_de_un_expediente)
-        expect(expediente.caratula).to eq caratula_del_expediente_numerado
+        expect(response).to have_http_status(:ok)
+        assert_template :show
+        expect(flash[:success]).to eq ad_hoc.mensaje_de_confirmacion_para_la_correcta_numeracion_de_un_expediente
       end
 
-      it 'no puede ser numerado dos veces' do
-        subject
-        expediente.reload
-        numerar_expediente
+      context 'no puede ser numerado dos veces' do
 
-        asertar_que_la_respuesta_tiene_estado(response, :ok)
-        asertar_que_el_template_es(:numerar)
-        asertar_que_se_incluye_un_mensaje_de_error(expediente.mensaje_de_error_para_expediente_numerado)
-        asertar_que_el_expediente_fue_numerado
+        it 'devuelve un mensaje de error y bad request, te deja en la vista de numerar expediente' do
+          post :realizar_numeraracion, params: { id: expediente.id, cliente_id: cliente.id, expediente: attributes_for(:expediente_numerado)}
+
+          subject
+
+          expect(response).to have_http_status(:bad_request)
+          assert_template :numerar
+          expect(flash[:error]).to include expediente.mensaje_de_error_expediente_numerado
+        end
       end
     end
 
     context 'En la incorrecta numeracion de un Expediente' do
-      subject{
-        post :realizar_numeraracion,
-             params: {
-                 id: expediente.id,
-                 cliente_id: cliente.id,
-                 expediente: {
-                     numero: nil,
-                     juzgado: nil,
-                     numero_de_juzgado: nil,
-                     departamento: nil,
-                     ubicacion_del_departamento: nil
-                 }
-             }
-      }
-      it 'todos los campos son requeridos a la hora de numerar' do
+      let(:parametros){ attributes_for(:expediente_numerado, actor: '') }
+
+      it 'si falta un dato devuelve mensaje de error y bad_request, te deja en al vista de numerar expediente' do
         subject
 
-        asertar_que_la_respuesta_tiene_estado(response, :ok)
+        expect(response).to have_http_status(:bad_request)
         assert_template :numerar
-        asertar_que_se_incluye_un_mensaje_de_error(expediente.mensaje_de_error_para_datos_faltantes_en_la_numeracion)
+        expect(flash[:error]).to include expediente.mensaje_de_error_datos_faltantes_para_numerar
         asertar_que_el_expediente_no_fue_numerado
       end
     end

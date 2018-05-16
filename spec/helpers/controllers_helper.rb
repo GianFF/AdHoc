@@ -8,6 +8,12 @@ module ControllersHelper
     abogado
   end
 
+  def abogada_logeada
+    abogada = create(:abogada)
+    sign_in abogada
+    abogada
+  end
+
 
   def asertar_que_se_muestra_un_mensaje_de_confirmacion(un_mensaje)
     expect(flash[:success]).to eq un_mensaje
@@ -17,13 +23,6 @@ module ControllersHelper
     expect(flash[:error]).to eq un_mensaje
   end
 
-  def asertar_que_se_incluye_un_mensaje_de_error(un_mensaje)
-    expect(flash[:error]).to include un_mensaje
-  end
-
-  def asertar_que_la_respuesta_tiene_estado(una_response, un_estado)
-    expect(una_response).to have_http_status(un_estado)
-  end
 
   def asertar_que_se_redirecciono_a(url)
     assert_redirected_to url

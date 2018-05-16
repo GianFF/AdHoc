@@ -9,7 +9,7 @@ describe ContestacionDeDemandasController, type: :controller do
                                                                    fabrica_de_objetos.una_contrasenia,
                                                                    fabrica_de_objetos.un_nombre_para_un_abogado,
                                                                    fabrica_de_objetos.un_apellido_para_un_abogado,
-                                                                   Sexo::MASCULINO,
+                                                                   Genero::Genero::MASCULINO,
                                                                    fabrica_de_objetos.una_matricula,
                                                                    fabrica_de_objetos.un_colegio,
                                                                    fabrica_de_objetos.un_cuit,
@@ -30,7 +30,7 @@ describe ContestacionDeDemandasController, type: :controller do
                                                     fabrica_de_objetos.una_contrasenia,
                                                     fabrica_de_objetos.otro_nombre_para_un_abogado,
                                                     fabrica_de_objetos.otro_apellido_para_un_abogado,
-                                                    Sexo::MASCULINO,
+                                                    Genero::Genero::MASCULINO,
                                                     fabrica_de_objetos.otra_matricula,
                                                     fabrica_de_objetos.un_colegio,
                                                     fabrica_de_objetos.otro_cuit,
@@ -60,8 +60,8 @@ describe ContestacionDeDemandasController, type: :controller do
       it 'el cuerpo no puede ser vacio' do
         subject
 
-        asertar_que_se_incluye_un_mensaje_de_error("Cuerpo #{ContestacionDeDemanda.mensaje_de_error_para_campo_vacio}")
-        asertar_que_la_respuesta_tiene_estado(response, :ok)
+        expect(flash[:error]).to include "Cuerpo #{ContestacionDeDemanda.mensaje_de_error_para_campo_vacio}"
+        expect(response).to have_http_status(:ok)
         asertar_que_el_template_es(:new)
       end
     end

@@ -10,7 +10,7 @@ describe AdjuntosController, type: :controller do
                                                   fabrica_de_objetos.una_contrasenia,
                                                   fabrica_de_objetos.un_nombre_para_un_abogado,
                                                   fabrica_de_objetos.un_apellido_para_un_abogado,
-                                                  Sexo::MASCULINO,
+                                                  Genero::Genero::MASCULINO,
                                                   fabrica_de_objetos.una_matricula,
                                                   fabrica_de_objetos.un_colegio,
                                                   fabrica_de_objetos.un_cuit,
@@ -23,7 +23,7 @@ describe AdjuntosController, type: :controller do
                                                   fabrica_de_objetos.una_contrasenia,
                                                   fabrica_de_objetos.otro_nombre_para_un_abogado,
                                                   fabrica_de_objetos.otro_apellido_para_un_abogado,
-                                                  Sexo::FEMENINO,
+                                                  Genero::Genero::FEMENINO,
                                                   fabrica_de_objetos.otra_matricula,
                                                   fabrica_de_objetos.otro_colegio,
                                                   fabrica_de_objetos.otro_cuit,
@@ -119,8 +119,8 @@ describe AdjuntosController, type: :controller do
         expect(adjunto.pertenece_a?(abogado)).to eq true
         expect(adjunto.pertenece_a?(otro_abogado)).to eq false
         asertar_que_se_redirecciono_a(root_path)
-        asertar_que_la_respuesta_tiene_estado(response, :found)
-        asertar_que_se_incluye_un_mensaje_de_error(ad_hoc.mensaje_de_error_para_adjunto_invalido)
+        expect(response).to have_http_status(:found)
+        expect(flash[:error]).to include ad_hoc.mensaje_de_error_para_adjunto_invalido
       end
     end
 
@@ -145,8 +145,8 @@ describe AdjuntosController, type: :controller do
           subject
 
           expect(Adjunto.all.count).to eq 0
-          asertar_que_se_incluye_un_mensaje_de_error('Archivo adjunto formato invalido. Sólo se admite jpg, png, jpeg o pdf')
-          asertar_que_la_respuesta_tiene_estado(response, :ok)
+          expect(flash[:error]).to include 'Archivo adjunto formato invalido. Sólo se admite jpg, png, jpeg o pdf'
+          expect(response).to have_http_status(:ok)
           asertar_que_el_template_es(:new)
         end
       end
@@ -164,8 +164,8 @@ describe AdjuntosController, type: :controller do
           subject
 
           expect(Adjunto.all.count).to eq 0
-          asertar_que_se_incluye_un_mensaje_de_error("Titulo #{Adjunto.mensaje_de_error_para_campo_vacio}")
-          asertar_que_la_respuesta_tiene_estado(response, :ok)
+          expect(flash[:error]).to include "Titulo #{Adjunto.mensaje_de_error_para_campo_vacio}"
+          expect(response).to have_http_status(:ok)
           asertar_que_el_template_es(:new)
         end
       end
@@ -243,8 +243,8 @@ describe AdjuntosController, type: :controller do
         expect(adjunto.archivo_adjunto.current_path).to eq uploader.complete_path_for(un_adjunto)
         expect(adjunto.archivo_adjunto_identifier).to eq un_adjunto.archivo_adjunto_identifier
 
-        asertar_que_se_incluye_un_mensaje_de_error('Archivo adjunto formato invalido. Sólo se admite jpg, png, jpeg o pdf')
-        asertar_que_se_incluye_un_mensaje_de_error("Titulo #{Adjunto.mensaje_de_error_para_campo_vacio}")
+        expect(flash[:error]).to include 'Archivo adjunto formato invalido. Sólo se admite jpg, png, jpeg o pdf'
+        expect(flash[:error]).to include "Titulo #{Adjunto.mensaje_de_error_para_campo_vacio}"
       end
     end
   end

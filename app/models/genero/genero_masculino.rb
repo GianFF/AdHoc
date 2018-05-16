@@ -21,7 +21,7 @@ module Genero
     end
 
     def self.es(sexo)
-      sexo == Sexo::MASCULINO
+      sexo == Genero::GeneroMasculino
     end
   end
 end

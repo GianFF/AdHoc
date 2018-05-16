@@ -4,6 +4,7 @@ class CreateExpedientes < ActiveRecord::Migration[5.0]
       t.text :actor, null: false
       t.text :demandado, null: false
       t.text :materia, null: false
+      t.text :caratula, null: false
       t.integer :numero
       t.integer :anio
       t.text :juzgado

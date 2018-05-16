@@ -12,6 +12,9 @@
 
 ActiveRecord::Schema.define(version: 20170610171959) do
 
+  # These are extensions that must be enabled in order to support this database
+  enable_extension "plpgsql"
+
   create_table "abogados", force: :cascade do |t|
     t.string   "email"
     t.string   "encrypted_password"
@@ -35,8 +38,8 @@ ActiveRecord::Schema.define(version: 20170610171959) do
     t.datetime "locked_at"
     t.datetime "created_at",                                 null: false
     t.datetime "updated_at",                                 null: false
-    t.index ["email"], name: "index_abogados_on_email"
-    t.index ["reset_password_token"], name: "index_abogados_on_reset_password_token", unique: true
+    t.index ["email"], name: "index_abogados_on_email", using: :btree
+    t.index ["reset_password_token"], name: "index_abogados_on_reset_password_token", unique: true, using: :btree
   end
 
   create_table "adjuntos", force: :cascade do |t|
@@ -45,7 +48,7 @@ ActiveRecord::Schema.define(version: 20170610171959) do
     t.integer  "expediente_id",   null: false
     t.datetime "created_at",      null: false
     t.datetime "updated_at",      null: false
-    t.index ["expediente_id"], name: "index_adjuntos_on_expediente_id"
+    t.index ["expediente_id"], name: "index_adjuntos_on_expediente_id", using: :btree
   end
 
   create_table "clientes", force: :cascade do |t|
@@ -59,7 +62,7 @@ ActiveRecord::Schema.define(version: 20170610171959) do
     t.integer  "abogado_id"
     t.datetime "created_at",         null: false
     t.datetime "updated_at",         null: false
-    t.index ["abogado_id"], name: "index_clientes_on_abogado_id"
+    t.index ["abogado_id"], name: "index_clientes_on_abogado_id", using: :btree
   end
 
   create_table "conyuges", force: :cascade do |t|
@@ -68,7 +71,7 @@ ActiveRecord::Schema.define(version: 20170610171959) do
     t.integer  "cliente_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["cliente_id"], name: "index_conyuges_on_cliente_id"
+    t.index ["cliente_id"], name: "index_conyuges_on_cliente_id", using: :btree
   end
 
   create_table "direccions", force: :cascade do |t|
@@ -79,7 +82,7 @@ ActiveRecord::Schema.define(version: 20170610171959) do
     t.integer  "cliente_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["cliente_id"], name: "index_direccions_on_cliente_id"
+    t.index ["cliente_id"], name: "index_direccions_on_cliente_id", using: :btree
   end
 
   create_table "escritos", force: :cascade do |t|
@@ -101,14 +104,15 @@ ActiveRecord::Schema.define(version: 20170610171959) do
     t.datetime "created_at",                      null: false
     t.datetime "updated_at",                      null: false
     t.string   "type"
-    t.index ["expediente_id"], name: "index_escritos_on_expediente_id"
-    t.index ["type"], name: "index_escritos_on_type"
+    t.index ["expediente_id"], name: "index_escritos_on_expediente_id", using: :btree
+    t.index ["type"], name: "index_escritos_on_type", using: :btree
   end
 
   create_table "expedientes", force: :cascade do |t|
     t.text     "actor",                                      null: false
     t.text     "demandado",                                  null: false
     t.text     "materia",                                    null: false
+    t.text     "caratula",                                   null: false
     t.integer  "numero"
     t.integer  "anio"
     t.text     "juzgado"
@@ -119,7 +123,7 @@ ActiveRecord::Schema.define(version: 20170610171959) do
     t.integer  "cliente_id"
     t.datetime "created_at",                                 null: false
     t.datetime "updated_at",                                 null: false
-    t.index ["cliente_id"], name: "index_expedientes_on_cliente_id"
+    t.index ["cliente_id"], name: "index_expedientes_on_cliente_id", using: :btree
   end
 
   create_table "hijos", force: :cascade do |t|
@@ -129,7 +133,7 @@ ActiveRecord::Schema.define(version: 20170610171959) do
     t.integer  "cliente_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["cliente_id"], name: "index_hijos_on_cliente_id"
+    t.index ["cliente_id"], name: "index_hijos_on_cliente_id", using: :btree
   end
 
 end

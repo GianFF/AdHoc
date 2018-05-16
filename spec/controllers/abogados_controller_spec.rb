@@ -1,8 +1,8 @@
 require_relative '../rails_helper'
 
 def asertar_mensaje_de_error_respuesta_y_redireccion(mensaje_de_error)
-  asertar_que_se_incluye_un_mensaje_de_error(mensaje_de_error)
-  asertar_que_la_respuesta_tiene_estado(response, :found)
+  expect(flash[:error]).to include mensaje_de_error
+  expect(response).to have_http_status(:found)
   asertar_que_se_redirecciono_a(root_path)
 end
 
@@ -44,7 +44,7 @@ describe AbogadosController do
     expect(abogado.domicilio_procesal).to eq 'otro_domicilio_procesal'
     expect(abogado.domicilio_electronico).to eq 'otro_domicilio_electronico'
     expect(abogado.email).to eq 'otro@mail.com'
-    asertar_que_la_respuesta_tiene_estado(response, :found)
+    expect(response).to have_http_status(:found)
   end
 
   it 'un abogado puede editar su contraseña' do
@@ -66,7 +66,7 @@ describe AbogadosController do
         subject
 
         asertar_que_se_muestra_un_mensaje_de_error(AdHocAbogados.new.mensaje_de_error_para_contrasenia_incorrecta)
-        asertar_que_la_respuesta_tiene_estado(response, :found)
+        expect(response).to have_http_status(:found)
         asertar_que_se_redirecciono_a(root_path)
       end
     end
@@ -81,7 +81,7 @@ describe AbogadosController do
         subject
 
         asertar_que_se_muestra_un_mensaje_de_error(AdHocAbogados.new.mensaje_de_error_para_contrasenia_incorrecta)
-        asertar_que_la_respuesta_tiene_estado(response, :found)
+        expect(response).to have_http_status(:found)
         asertar_que_se_redirecciono_a(root_path)
       end
     end
