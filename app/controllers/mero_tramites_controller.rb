@@ -1,7 +1,7 @@
 class MeroTramitesController < EscritosController
   def create
     super do
-      @escrito = @ad_hoc.crear_nuevo_mero_tramite!(validar_parametros_escrito, validar_parametros_expediente, abogado_actual)
+      @escrito = @ad_hoc.crear_tramite(validar_parametros_escrito, validar_parametros_expediente, abogado_actual)
     end
   end
 

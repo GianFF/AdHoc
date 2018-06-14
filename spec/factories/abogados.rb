@@ -4,7 +4,7 @@ FactoryBot.define do
     apellido 'Caceres'
     nombre_del_colegio_de_abogados 'C.A.Q'
     domicilio_procesal 'Mitre N° 262'
-    genero Genero::Genero::MASCULINO
+    genero Generos::Genero::MASCULINO
     matricula 'T° X F° 26'
     cuit '27-16965263-5'
     domicilio_electronico '27375970725@notificaciones.scba.gov.ar'
@@ -17,7 +17,7 @@ FactoryBot.define do
     apellido 'Fioriello'
     nombre_del_colegio_de_abogados 'C.A.Q'
     domicilio_procesal 'Mitre N° 262'
-    genero Genero::Genero::FEMENINO
+    genero Generos::Genero::FEMENINO
     matricula 'T° X F° 27'
     cuit '20-30568123-7'
     domicilio_electronico '20305681237@notificaciones.scba.gov.ar'

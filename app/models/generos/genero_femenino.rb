@@ -1,27 +1,27 @@
-module Genero
-  class GeneroMasculino < ApplicationRecord
+module Generos
+  class GeneroFemenino < ApplicationRecord
     def self.doctor_o_doctora
-      'Dr.'
+      'Dra.'
     end
 
     def self.inscripta_inscripto
-      'inscripto'
+      'inscripta'
     end
 
     def self.abogada_abogado
-      'abogado'
+      'abogada'
     end
 
     def self.la_el
-      'el'
+      'la'
     end
 
     def self.letrada_letrado
-      'letrado'
+      'letrada'
     end
 
-    def self.es(sexo)
-      sexo == Genero::GeneroMasculino
+    def self.es(genero)
+      genero == Generos::FEMENINO
     end
   end
 end

@@ -41,28 +41,28 @@ class Abogado < ApplicationRecord
   end
 
   def doctor_o_doctora
-    Genero::Genero.para(genero).doctor_o_doctora
+    Generos::Genero.para(genero).doctor_o_doctora
   end
 
   def inscripta_inscripto
-    Genero::Genero.para(genero).inscripta_inscripto
+    Generos::Genero.para(genero).inscripta_inscripto
   end
 
   def abogada_abogado
-    Genero::Genero.para(genero).abogada_abogado
+    Generos::Genero.para(genero).abogada_abogado
   end
 
   def la_el
-    Genero::Genero.para(genero).la_el
+    Generos::Genero.para(genero).la_el
   end
 
   def letrada_letrado
-    Genero::Genero.para(genero).letrada_letrado
+    Generos::Genero.para(genero).letrada_letrado
   end
 
   private
 
   def genero_es_valido
-    errors.add(:genero, Abogado.gensaje_de_error_para_genero_invalido) unless Genero::Genero.es_valido(genero)
+    errors.add(:genero, Abogado.gensaje_de_error_para_genero_invalido) unless Generos::Genero.es_valido(genero)
   end
 end

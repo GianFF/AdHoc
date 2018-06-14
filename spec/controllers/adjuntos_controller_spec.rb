@@ -10,7 +10,7 @@ describe AdjuntosController, type: :controller do
                                                   fabrica_de_objetos.una_contrasenia,
                                                   fabrica_de_objetos.un_nombre_para_un_abogado,
                                                   fabrica_de_objetos.un_apellido_para_un_abogado,
-                                                  Genero::Genero::MASCULINO,
+                                                  Generos::MASCULINO,
                                                   fabrica_de_objetos.una_matricula,
                                                   fabrica_de_objetos.un_colegio,
                                                   fabrica_de_objetos.un_cuit,
@@ -23,7 +23,7 @@ describe AdjuntosController, type: :controller do
                                                   fabrica_de_objetos.una_contrasenia,
                                                   fabrica_de_objetos.otro_nombre_para_un_abogado,
                                                   fabrica_de_objetos.otro_apellido_para_un_abogado,
-                                                  Genero::Genero::FEMENINO,
+                                                  Generos::FEMENINO,
                                                   fabrica_de_objetos.otra_matricula,
                                                   fabrica_de_objetos.otro_colegio,
                                                   fabrica_de_objetos.otro_cuit,
@@ -37,7 +37,7 @@ describe AdjuntosController, type: :controller do
 
   let(:expediente){ fabrica_de_objetos.crear_expediente(cliente.id) }
 
-  let(:ad_hoc){ AdHocAplicacion.new }
+  let(:ad_hoc){ AdHocEscritos.new }
 
   context 'En la creacion de un adjunto' do
     subject { post :create, params: parametros }

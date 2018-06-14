@@ -1,7 +1,7 @@
 class ContestacionDeDemandasController < EscritosController
   def create
     super do
-      @escrito = @ad_hoc.crear_nueva_contestacion_de_demanda!(validar_parametros_escrito, validar_parametros_expediente, abogado_actual)
+      @escrito = @ad_hoc.crear_contestacion_de_demanda(validar_parametros_escrito, validar_parametros_expediente, abogado_actual)
     end
   end
 

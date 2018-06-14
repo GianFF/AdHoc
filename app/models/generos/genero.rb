@@ -1,4 +1,4 @@
-module Genero
+module Generos
   class Genero
     MASCULINO = 'Masculino'
     FEMENINO  = 'Femenino'

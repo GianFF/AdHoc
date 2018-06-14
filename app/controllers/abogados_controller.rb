@@ -21,7 +21,7 @@ class AbogadosController < Devise::RegistrationsController
   protected
 
   def configurar_parametros_para_crear_cuenta
-    devise_parameter_sanitizer.permit(:sign_up, keys: [:nombre, :apellido, :genero, :email, :matricula,
+    devise_parameter_sanitizer.permit(:sign_up, keys: [:nombre, :apellido, :generos, :email, :matricula,
                                                        :nombre_del_colegio_de_abogados, :cuit, :domicilio_procesal,
                                                        :domicilio_electronico])
   end

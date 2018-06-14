@@ -30,7 +30,7 @@ class EscritosController < ApplicationController
 
   def update
     begin
-      @escrito = @ad_hoc.editar_escrito!(params[:id], validar_parametros_escrito, abogado_actual)
+      @escrito = @ad_hoc.editar_escrito(params[:id], validar_parametros_escrito, abogado_actual)
       buscar_expediente_y_cliente_para_escrito
       flash.now[:success] = @ad_hoc.mensaje_de_confirmacion_para_la_correcta_edicion_de_un_escrito
     rescue Errores::AdHocDomainError => excepcion
@@ -45,7 +45,7 @@ class EscritosController < ApplicationController
 
   def destroy
     begin
-      @ad_hoc.eliminar_escrito!(params[:id], abogado_actual)
+      @ad_hoc.eliminar_escrito(params[:id], abogado_actual)
       flash.now[:success] = @ad_hoc.mensaje_de_confirmacion_para_la_correcta_eliminacion_de_un_escrito
       redirect_to expediente_url(validar_parametros_expediente)
     rescue Errores::AdHocHackExcepcion => excepcion
@@ -56,7 +56,7 @@ class EscritosController < ApplicationController
 
   def presentar
     begin
-      @escrito = @ad_hoc.presentar_escrito!(params[:id], abogado_actual)
+      @escrito = @ad_hoc.presentar_escrito(params[:id], abogado_actual)
       buscar_expediente_y_cliente_para_escrito
       flash.now[:success] = @ad_hoc.mensaje_de_confirmacion_para_la_correcta_presentacion_de_un_escrito
     rescue Errores::AdHocDomainError => excepcion
@@ -79,7 +79,7 @@ class EscritosController < ApplicationController
   end
 
   def show_escrito_expediente_y_cliente
-    @escrito = @ad_hoc.buscar_escrito_por_id!(params[:id], abogado_actual)
+    @escrito = @ad_hoc.buscar_escrito_por_id(params[:id], abogado_actual)
     buscar_expediente_y_cliente_para_escrito
   end
 

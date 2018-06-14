@@ -1,10 +1,10 @@
-class AdHocAplicacion
+class AdHocEscritos
 
   # Escritos
 
-  def buscar_escrito_por_id!(escrito_id, un_abogado)
+  def buscar_escrito_por_id(escrito_id, un_abogado)
     begin
-      escrito = Escrito.find(escrito_id) #TODO: deberia recibir el expediente_id tambien y buscar por los dos campos.
+      escrito = Escritos::Escrito.find(escrito_id) #TODO: deberia recibir el expediente_id tambien y buscar por los dos campos.
     rescue ActiveRecord::RecordNotFound
       raise Errores::AdHocDomainError.new([mensaje_de_error_para_escrito_invalido])
     end
@@ -12,9 +12,9 @@ class AdHocAplicacion
     escrito
   end
 
-  def crear_nuevo_escrito!(un_id_de_un_expediente, un_abogado)
-    escrito = yield
-    escrito.expediente = buscar_expediente_por_id!(un_id_de_un_expediente, un_abogado)
+  def crear_escrito(expediente_id, un_abogado, tipo_de_escrito, parametros)
+    escrito = tipo_de_escrito.new(parametros)
+    escrito.expediente = AdHocExpedientes.new.buscar_expediente_por_id!(expediente_id, un_abogado)
     begin
       escrito.save!
     rescue ActiveRecord::RecordInvalid => error
@@ -23,32 +23,8 @@ class AdHocAplicacion
     escrito
   end
 
-  def crear_nueva_demanda!(parametros_de_un_escrito, un_id_de_un_expediente, un_abogado)
-    crear_nuevo_escrito!(un_id_de_un_expediente, un_abogado) do
-      Demanda.new(parametros_de_un_escrito)
-    end
-  end
-
-  def crear_nueva_contestacion_de_demanda!(parametros_de_un_escrito, un_id_de_un_expediente, un_abogado)
-    crear_nuevo_escrito!(un_id_de_un_expediente, un_abogado) do
-      ContestacionDeDemanda.new(parametros_de_un_escrito)
-    end
-  end
-
-  def crear_nuevo_mero_tramite!(parametros_de_un_escrito, un_id_de_un_expediente, un_abogado)
-    crear_nuevo_escrito!(un_id_de_un_expediente, un_abogado) do
-      MeroTramite.new(parametros_de_un_escrito)
-    end
-  end
-
-  def crear_nueva_notificacion!(parametros_de_un_escrito, un_id_de_un_expediente, un_abogado)
-    crear_nuevo_escrito!(un_id_de_un_expediente, un_abogado) do
-      Notificacion.new(parametros_de_un_escrito)
-    end
-  end
-
-  def editar_escrito!(escrito_id, parametros_escrito, un_abogado)
-    escrito = self.buscar_escrito_por_id!(escrito_id, un_abogado)
+  def editar_escrito(escrito_id, parametros_escrito, un_abogado)
+    escrito = self.buscar_escrito_por_id(escrito_id, un_abogado)
     begin
       escrito.validar_que_no_haya_sido_presentado
       escrito.update!(parametros_escrito)
@@ -58,16 +34,33 @@ class AdHocAplicacion
     escrito
   end
 
-  def eliminar_escrito!(escrito_id, un_abogado)
-    escrito = self.buscar_escrito_por_id!(escrito_id, un_abogado)
+  def eliminar_escrito(escrito_id, un_abogado)
+    escrito = self.buscar_escrito_por_id(escrito_id, un_abogado)
     escrito.destroy
   end
 
-  def presentar_escrito!(un_escrito_id, un_abogado)
-    escrito = self.buscar_escrito_por_id!(un_escrito_id, un_abogado)
+  def presentar_escrito(un_escrito_id, un_abogado)
+    escrito = self.buscar_escrito_por_id(un_escrito_id, un_abogado)
     escrito.marcar_como_presentado!
     escrito.save!
     escrito
+  end
+
+
+  def crear_demanda(parametros, un_id_de_un_expediente, un_abogado)
+    crear_escrito(un_id_de_un_expediente, un_abogado, Demanda, parametros)
+  end
+
+  def crear_contestacion_de_demanda(parametros, un_id_de_un_expediente, un_abogado)
+    crear_escrito(un_id_de_un_expediente, un_abogado, ContestacionDeDemanda, parametros)
+  end
+
+  def crear_tramite(parametros, un_id_de_un_expediente, un_abogado)
+    crear_escrito(un_id_de_un_expediente, un_abogado, MeroTramite, parametros)
+  end
+
+  def crear_notificacion(parametros, un_id_de_un_expediente, un_abogado)
+    crear_escrito(un_id_de_un_expediente, un_abogado, Notificacion, parametros)
   end
 
   # Adjuntos
@@ -84,7 +77,7 @@ class AdHocAplicacion
 
   def crear_nuevo_adjunto!(parametros_adjunto, expediente_id, abogado_actual)
     adjunto = Adjunto.new(parametros_adjunto)
-    adjunto.expediente = buscar_expediente_por_id!(expediente_id, abogado_actual)
+    adjunto.expediente = AdHocExpedientes.new.buscar_expediente_por_id!(expediente_id, abogado_actual)
     begin
       adjunto.save!
     rescue ActiveRecord::RecordInvalid => error
@@ -121,18 +114,6 @@ class AdHocAplicacion
     'Escrito marcado como presentado correctamente'
   end
 
-
-  def mensaje_de_error_para_busqueda_de_cliente_fallida(nombre_de_cliente)
-    "No se encontraron clientes con nombre: #{nombre_de_cliente}"
-  end
-
-  def mensaje_de_error_para_contrasenia_no_proveida
-    'Debes completar tu contraseña actual para poder editar tu perfil'
-  end
-
-  def mensaje_de_error_para_cliente_inexistente
-    'Cliente inexistente'
-  end
 
   def mensaje_de_error_para_escrito_invalido
     'Escrito inexistente'

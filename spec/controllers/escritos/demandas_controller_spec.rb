@@ -22,7 +22,7 @@ describe DemandasController, type: :controller do
 
   let(:expediente){ fabrica_de_objetos.crear_expediente(cliente.id) }
 
-  let(:ad_hoc){ AdHocAplicacion.new }
+  let(:ad_hoc){ AdHocEscritos.new }
 
   context 'En la creacion de una demanda' do
     let(:otros_parametros) {

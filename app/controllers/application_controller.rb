@@ -23,6 +23,6 @@ class ApplicationController < ActionController::Base
   private
 
   def crear_aplicacion
-    @ad_hoc = AdHocAplicacion.new
+    @ad_hoc = AdHocEscritos.new
   end
 end
